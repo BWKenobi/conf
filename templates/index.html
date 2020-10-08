@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+	{% if not user.is_authenticated %}
+		<div class="text-center mt-3 pt-5">
+			<h4>Всероссийская научно-практическая конференция</h4>
+			<h1>"КУЛЬТУРА, ИСКУССТВО, ОБРАЗОВАНИЕ:</h1>
+			<h1>ПОИСКИ И ОТКРЫТИЯ",</h1>
+			<h4><em>посвященная Году Памяти и Славы</em></h4>
+		</div>
+		<div class="text-center mt-5 pb-5">
+			<h4><a href="" class="text-danger">Регистрация скоро начнется</a></h4>
+		</div>
+	{% endif %}
+{% endblock %}
