@@ -1,0 +1,12 @@
+body{
+	font-family: 'Montserrat', sans-serif;
+	font-style: normal;
+	font-size: 20px !important;
+}
+
+.errorlist{
+	color: red;
+	text-align: center;
+	list-style-type: none;
+	padding-inline-start: 0px;
+}

@@ -18,7 +18,8 @@ class Profile(models.Model):
 	name2 = models.CharField(verbose_name="Отчество*", max_length=30, blank=True)
 	work_place = models.TextField(verbose_name="Место работы (полностью)*", max_length=30, blank=True)
 
-	registration_date = models.DateField(verbose_name="Дата регистрации:", default=timezone.now)
+	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
+	admin_access= models.BooleanField("Права администратора", default=False)
 
 
 	def __str__(self):

@@ -78,7 +78,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-#AUTH_PROFILE_MODULE = 'profileuser.Profile'
+AUTH_PROFILE_MODULE = 'profileuser.Profile'
 
 LANGUAGE_CODE = 'ru-ru'
 
@@ -90,4 +90,24 @@ USE_L10N = True
 
 USE_TZ = True
 
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.timeweb.ru'
+EMAIL_HOST_USER = ' conference@tdpi.ru'
+EMAIL_HOST_PASSWORD = '13DfvgbhboT'
+#EMAIL_PORT = 465
+#EMAIL_USE_SSL = True
+
+EMAIL_PORT = 2525
+EMAIL_USE_TLS = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
