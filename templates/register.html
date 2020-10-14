@@ -12,9 +12,12 @@
 		<div class="col-md-6 mx-auto mb-5">
 			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
 				{{form.as_p}}
+				<div class="text-center mb-5">
+					Нажимая на кнопку ЗАРЕГИСТРИРОВАТЬСЯ, Вы даете согласие на <u><a href="{% url 'policy' %}" target="_blank">обработку персональных данных</a></u>.
+				</div>
 				<div class="row align-middle">
 					<div class="col-md-6 text-left">
-						<a href="{% url 'home' %}">На главную</a>
+						<a href="{% url 'home' %}">Вернуться на главную</a>
 					</div>
 					<div class="col-md-6 text-right">
 						<input type="submit" value="Зарегистрироваться">

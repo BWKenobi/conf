@@ -9,13 +9,14 @@ from django.contrib.auth import views as auth_views
 
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 
-from . views import home_view, login_view, logout_view, register_view, activate
+from . views import home_view, policy_view, login_view, logout_view, register_view, activate
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name = 'home'),
+    path('policy', policy_view, name = 'policy'),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 

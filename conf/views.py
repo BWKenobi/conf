@@ -23,6 +23,9 @@ def home_view(request):
 	return render(request, 'index.html')
 
 
+def policy_view(request):
+	return render(request, 'policy.html')
+
 def login_view(request):
 	form = UserLoginForm(request.POST or None)
 	next_ = request.GET.get('next')
