@@ -28,11 +28,20 @@ class Profile(models.Model):
 		return self.username + ' (not active)'
 
 
-	def get_full_name(self):
+	def get_name(self):
 		if self.surname:
 			if self.name2:
 				return self.surname + ' ' + self.name[0] + '.' + self.name2[0]+ '.' 
 			return self.surname + ' ' + self.name[0]+ '.' 
+
+		return self.name
+
+
+	def get_full_name(self):
+		if self.surname:
+			if self.name2:
+				return self.surname + ' ' + self.name + ' ' + self.name2 
+			return self.surname + ' ' + self.name 
 
 		return self.name
 

@@ -67,17 +67,8 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class ChangePasswordForm(forms.Form):
-	oldpassword = forms.CharField(label = 'Старый пароль', widget=forms.PasswordInput(attrs={'class': 'password-input', 'autocomplete': 'off'}), required=False)
-	newpassword = forms.CharField(label = 'Новый пароль', widget=forms.PasswordInput(attrs={'class': 'password-input-2', 'autocomplete': 'off'}), required=False)
-
-	def __init__(self, *args, **kwargs):
-		self.username = kwargs.pop('username')
-		super(ChangePasswordForm, self).__init__(*args, **kwargs)
-		self.fields['oldpassword'].widget.attrs['placeholder'] = '* * * * * * * * * *'
-		self.fields['newpassword'].widget.attrs['placeholder'] = '* * * * * * * * * *'
-
-		for field in self.fields:
-			self.fields[field].widget.attrs['disabled'] = 'disabled'
+	oldpassword = forms.CharField(label = 'Старый пароль', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}), required=False)
+	newpassword = forms.CharField(label = 'Новый пароль', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}), required=False)
 
 
 	def clean(self):
@@ -98,17 +89,19 @@ class CustomPasswordResetForm(PasswordResetForm):
 
 	def __init__(self, *args, **kwargs):
 		super(CustomPasswordResetForm, self).__init__(*args, **kwargs)
-		self.fields['email'].widget.attrs['placeholder'] = 'Введите  e-mail*'
+		self.fields['email'].widget.attrs.update({'class': 'form-control'})
+		self.fields['email'].label = ''
 
 
 class CustomSetPasswordForm(SetPasswordForm):
-	new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'password-input'}))
-	new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'password-input'}), required=False)
+	new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+	new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
 	def __init__(self, *args, **kwargs):
 		super(CustomSetPasswordForm, self).__init__(*args, **kwargs)
-		self.fields['new_password1'].widget.attrs['placeholder'] = 'Введите пароль'
-		self.fields['new_password2'].widget.attrs['placeholder'] = 'Повторите пароль'
+		self.fields['new_password1'].label = 'Пароль'
+		self.fields['new_password2'].label = 'Пароль еще раз'
+
 
 	def clean_new_password2(self):
 		password1 = self.cleaned_data.get('new_password1')
