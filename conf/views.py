@@ -129,6 +129,34 @@ def activate(request, uidb64, token):
 
 	return render(request, 'failed_email.html')
 
+
+def change_password(request):
+	username = request.user.username
+
+	if request.method == 'POST':
+		form = ChangePasswordForm(request.POST, username=username)
+
+		if form.is_valid():
+			user = request.user
+			user.set_password(form.cleaned_data['newpassword1'])
+			user.save()
+			update_session_auth_hash(request, user)
+
+			return redirect('profiles:view_edit_profile')
+
+		args = {
+			'form': form
+		}
+		return render(request, 'change_password.html', args)
+
+	form = ChangePasswordForm(username=username)
+
+	args = {
+		'form': form
+	}
+	return render(request, 'change_password.html', args)
+
+
 # --------------------------------
 #           Для ajax'а
 # --------------------------------
@@ -146,42 +174,3 @@ def change_access(request):
 	
 	return HttpResponse(json.dumps('Статус изменен.'))
 
-'''
-
-
-def change_password(request):
-	if request.method == 'POST':
-		form = ChangePasswordForm(request.POST)
-
-		if form.is_valid():
-			newpassword = form.cleaned_data['password']
-			username = request.user.username
-			password = form.cleaned_data['oldpassword']
-
-			user = authenticate(username = username, password = password)
-			if user is not None:
-				user.set_password(newpassword)
-				user.save()
-				update_session_auth_hash(request, user)
-				
-				return render(request, 'change_success.html')
-			else:
-				args = {
-					'error': 'Неверный пароль!', 
-					'form': form
-				}
-				return render(request, 'change_password.html', args)
-		else:
-			args = {
-				'error': 'Введите старый пароль!', 
-				'form': form
-			}
-			return render(request, 'change_password.html', args)
-	else:
-		form = ChangePasswordForm()
-
-	args = {
-		'form': form
-	}
-	return render(request, 'change_password.html', args)
-	'''

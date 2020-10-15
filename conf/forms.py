@@ -40,7 +40,7 @@ class UserRegistrationForm(forms.ModelForm):
 	name  = forms.CharField(label = 'Ваше имя*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	name2  = forms.CharField(label = 'Ваше отчество*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	surname = forms.CharField(label = 'Ваша фамилия*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
-	work_place = forms.CharField(label = 'Место работы (полностью)*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	work_place = forms.CharField(label = 'Место работы (полностью)*', widget=forms.Textarea(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	password = forms.CharField(label = 'Задайте пароль*', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
 	def __init__(self, *args, **kwargs):
@@ -67,18 +67,26 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class ChangePasswordForm(forms.Form):
-	oldpassword = forms.CharField(label = 'Старый пароль', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}), required=False)
-	newpassword = forms.CharField(label = 'Новый пароль', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}), required=False)
+	oldpassword = forms.CharField(label = 'Старый пароль', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}), required=True)
+	newpassword1 = forms.CharField(label = 'Новый пароль', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}), required=True)
+	newpassword2 = forms.CharField(label = 'Новый пароль еще раз', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'off'}), required=True)
 
+	def __init__(self, *args, **kwargs):
+		self.username = kwargs.pop('username')
+		super(ChangePasswordForm, self).__init__(*args, **kwargs)
 
 	def clean(self):
 		oldpass = self.cleaned_data['oldpassword']
-		newpass = self.cleaned_data['newpassword']
+		newpass1 = self.cleaned_data['newpassword1']
+		newpass2 = self.cleaned_data['newpassword2']
 
-		if oldpass and newpass:
+		if oldpass and newpass1 and newpass2:
 			user = authenticate(username = self.username, password = oldpass)
 			if user is None:
 				raise forms.ValidationError('Неверный пароль!')
+
+			if newpass1 != newpass2:
+				raise forms.ValidationError('Парли не совпали!')
 		return self.cleaned_data
 
 
