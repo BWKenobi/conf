@@ -24,6 +24,35 @@
 				<h4>Здесь будет появляться вся актуальная информация<br>(дата и время коференции, ссылка-приглашение Zoom, сопроводительные документы).</h4>
 			</div>
 		{% else %}
+			<div class="text-center mt-3 mb-5">
+				<h4>Всероссийская научно-практическая конференция</h4>
+				<h1>"КУЛЬТУРА, ИСКУССТВО, ОБРАЗОВАНИЕ:</h1>
+				<h1>ПОИСКИ И ОТКРЫТИЯ",</h1>
+				<h4><em>посвященная Году Памяти и Славы</em></h4>
+			</div>
+			<div class="text-left mt-3 px-5">
+				<b>СПИСОК УЧАСТНИКОВ</b>
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col" class="table-cel-width-5 align-middle">№</th>
+							<th scope="col" class="table-cel-width-25 align-middle">Фамилия Имя Отчетво</th>
+							<th scope="col" class="table-cel-width-60 align-middle">Место работы</th>
+							<th scope="col" class="table-cel-width-10 align-middle">e-mail</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for user in users %}
+							<tr>
+								<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+								<td class="align-middle">{{ user.profile.get_full_name }}</td>
+								<td class="align-middle">{{ user.profile.work_place }}</td>
+								<td class="align-middle">{{ user.email }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		{% endif %}
 	{% endif %}
 {% endblock %}

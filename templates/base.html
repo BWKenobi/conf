@@ -1,7 +1,6 @@
 {% load static %}
-{% url 'home' as home_url %}
 
-
+{% with '1.0' as version %}
 <!DOCTYPE html>
 <html lang="ru">
     <head>
@@ -19,7 +18,7 @@
         <link rel="manifest" href="https://getbootstrap.com/docs/4.4/assets/img/favicons/manifest.json">
         <link rel="mask-icon" href="https://getbootstrap.com/docs/4.4/assets/img/favicons/safari-pinned-tab.svg" color="#563d7c">
 
-        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}?ver={{version}}">
 
         <meta name="msapplication-config" content="https://getbootstrap.com/docs/4.4/assets/img/favicons/browserconfig.xml">
         <meta name="theme-color" content="#563d7c">
@@ -78,3 +77,4 @@
 </body>
 
 </html>
+{% endwith %}

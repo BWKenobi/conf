@@ -20,7 +20,11 @@ from .tokens import accaunt_activation_token
 from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm
 
 def home_view(request):
-	return render(request, 'index.html')
+	users = User.objects.all().exclude(username='admin').exclude(username=request.user.username)
+	args = {
+		'users': users
+	}
+	return render(request, 'index.html', args)
 
 
 def policy_view(request):

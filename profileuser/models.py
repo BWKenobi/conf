@@ -29,12 +29,15 @@ class Profile(models.Model):
 
 
 	def get_name(self):
+		admin = ''
+		if self.admin_access:
+			admin = ' (Администратор)'
 		if self.surname:
 			if self.name2:
-				return self.surname + ' ' + self.name[0] + '.' + self.name2[0]+ '.' 
-			return self.surname + ' ' + self.name[0]+ '.' 
+				return self.surname + ' ' + self.name[0] + '.' + self.name2[0]+ '.' + admin
+			return self.surname + ' ' + self.name[0]+ '.'  + admin
 
-		return self.name
+		return self.name + admin
 
 
 	def get_full_name(self):
