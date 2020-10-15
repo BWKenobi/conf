@@ -17,10 +17,11 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMessage, send_mail
 from .tokens import accaunt_activation_token
 
+from profileuser.models import Profile
 from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm
 
 def home_view(request):
-	users = User.objects.all().exclude(username='admin').exclude(username=request.user.username)
+	users = Profile.objects.all().exclude(username='admin').exclude(username=request.user.username).order_by('surname', 'name', 'name2')
 	args = {
 		'users': users
 	}

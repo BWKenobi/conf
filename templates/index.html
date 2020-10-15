@@ -45,9 +45,9 @@
 						{% for user in users %}
 							<tr>
 								<th scope="row" class="align-middle">{{ forloop.counter}}</th>
-								<td class="align-middle">{{ user.profile.get_full_name }}</td>
-								<td class="align-middle">{{ user.profile.work_place }}</td>
-								<td class="align-middle">{{ user.email }}</td>
+								<td class="align-middle">{{ user.get_full_name }}</td>
+								<td class="align-middle">{{ user.work_place }}</td>
+								<td class="align-middle">{{ user.user.email }}</td>
 							</tr>
 						{% endfor %}
 					</tbody>
