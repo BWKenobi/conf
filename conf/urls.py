@@ -9,7 +9,8 @@ from django.contrib.auth import views as auth_views
 
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 
-from . views import home_view, policy_view, login_view, logout_view, register_view, activate
+from .views import home_view, policy_view, login_view, logout_view, register_view, activate
+from .views import change_access
 
 
 
@@ -34,4 +35,9 @@ urlpatterns += [
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', auth_views.PasswordResetConfirmView.as_view(form_class=CustomSetPasswordForm), name = 'password_reset_confirm'),
     url(r'^reset/done/$', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_comlete.html'), name = 'password_reset_complete'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', activate, name = 'activate'),
+]
+
+
+urlpatterns += [
+    path('ajax/change-access/', change_access, name = 'change_access'),
 ]

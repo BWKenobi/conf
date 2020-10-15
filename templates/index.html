@@ -37,17 +37,25 @@
 						<tr>
 							<th scope="col" class="table-cel-width-5 align-middle">№</th>
 							<th scope="col" class="table-cel-width-25 align-middle">Фамилия Имя Отчетво</th>
-							<th scope="col" class="table-cel-width-50 align-middle">Место работы</th>
+							<th scope="col" class="{% if user.profile.admin_access %}table-cel-width-45{% else %}table-cel-width-50{% endif %} align-middle">Место работы</th>
 							<th scope="col" class="table-cel-width-20 align-middle">e-mail</th>
+							{% if user.profile.admin_access %}
+								<th scope="col" class="table-cel-width-5 align-middle">Админ.</th>
+							{% endif %}
 						</tr>
 					</thead>
 					<tbody>
-						{% for user in users %}
+						{% for usr in users %}
 							<tr>
 								<th scope="row" class="align-middle">{{ forloop.counter}}</th>
-								<td class="align-middle">{{ user.get_full_name }}</td>
-								<td class="align-middle">{{ user.work_place }}</td>
-								<td class="align-middle">{{ user.user.email }}</td>
+								<td class="align-middle">{{ usr.get_full_name }}</td>
+								<td class="align-middle">{{ usr.work_place }}</td>
+								<td class="align-middle">{{ usr.user.email }}</td>
+								{% if user.profile.admin_access %}
+									<td class="align-middle text-center">
+										<input type="checkbox" id="{{usr.id }}" class="checking form-control" {% if usr.admin_access %} checked{% endif %} >
+									</td>
+								{% endif %}
 							</tr>
 						{% endfor %}
 					</tbody>
@@ -55,4 +63,28 @@
 			</div>
 		{% endif %}
 	{% endif %}
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.checking').change(function (){
+				var user_id = $(this).attr('id');
+				var access = $(this).prop('checked');
+
+				$.ajax({
+					url: "{% url 'change_access' %}",
+					dataType: 'json',
+					data: {
+						'user_id': user_id,
+						'access': access
+					},
+					success: function(data){
+						alert ('Статус изменен.');
+					}
+				});
+			});
+		});
+	</script>
 {% endblock %}

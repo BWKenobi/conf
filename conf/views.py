@@ -1,5 +1,6 @@
 from django.db.models import Q
 from datetime import date
+import json
 
 from django.conf import settings
 
@@ -127,6 +128,23 @@ def activate(request, uidb64, token):
 		return redirect('home')
 
 	return render(request, 'failed_email.html')
+
+# --------------------------------
+#           Для ajax'а
+# --------------------------------
+def change_access(request):
+	user_id = request.GET.get('user_id')
+	access = request.GET.get('access')
+	if access=='true':
+		access = True
+	else:
+		access = False
+	
+	profile = Profile.objects.get(id = user_id)
+	profile.admin_access = access
+	profile.save()
+	
+	return HttpResponse(json.dumps('Статус изменен.'))
 
 '''
 
