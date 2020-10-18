@@ -11,7 +11,7 @@ body{
 	padding-inline-start: 0px;
 }
 
-.checking{
+.checking-admin, .checking-moderate{
 	width: 20px;
 	margin: auto;
 }

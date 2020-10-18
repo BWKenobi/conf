@@ -14,3 +14,15 @@ class ProfileUdpateForm(forms.ModelForm):
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
 			self.fields[field].required=True
+
+
+class ProfileAddReprotForm(forms.ModelForm):
+	class Meta:
+		model = Profile
+		fields = ('report_name', 'report_file')
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		for field in self.fields:
+			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
+			self.fields[field].required=True

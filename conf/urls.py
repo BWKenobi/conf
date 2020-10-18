@@ -10,7 +10,7 @@ from django.contrib.auth import views as auth_views
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 
 from .views import home_view, policy_view, login_view, logout_view, register_view, change_password, activate
-from .views import change_access
+from .views import change_admin_access, change_moderate_access
 
 
 
@@ -44,5 +44,6 @@ urlpatterns += [
 
 
 urlpatterns += [
-    path('ajax/change-access/', change_access, name = 'change_access'),
+    path('ajax/change-admin-access/', change_admin_access, name = 'change_admin_access'),
+    path('ajax/change-moderate-access/', change_moderate_access, name = 'change_moderate_access'),
 ]

@@ -13,7 +13,7 @@
 			<h4><a href="{% url 'register' %}" class="text-danger">Зарегистрироваться</a></h4>
 		</div>
 	{% else %}
-		{% if not user.profile.admin_access %}
+		{% if not user.profile.admin_access and not user.profile.moderator_access %}
 			<div class="text-center mt-3 pt-5">
 				<h4>Всероссийская научно-практическая конференция</h4>
 				<h1>"КУЛЬТУРА, ИСКУССТВО, ОБРАЗОВАНИЕ:</h1>
@@ -30,37 +30,77 @@
 				<h1>ПОИСКИ И ОТКРЫТИЯ",</h1>
 				<h4><em>посвященная Году Памяти и Славы</em></h4>
 			</div>
-			<div class="text-left mt-3 px-5">
-				<b>СПИСОК УЧАСТНИКОВ</b>
-				<table class="table">
-					<thead>
-						<tr>
-							<th scope="col" class="table-cel-width-5 align-middle">№</th>
-							<th scope="col" class="table-cel-width-25 align-middle">Фамилия Имя Отчетво</th>
-							<th scope="col" class="{% if user.profile.admin_access %}table-cel-width-45{% else %}table-cel-width-50{% endif %} align-middle">Место работы</th>
-							<th scope="col" class="table-cel-width-20 align-middle">e-mail</th>
-							{% if user.profile.admin_access %}
-								<th scope="col" class="table-cel-width-5 align-middle">Админ.</th>
-							{% endif %}
-						</tr>
-					</thead>
-					<tbody>
-						{% for usr in users %}
+
+			{% if user.profile.moderator_access %}
+				<div class="text-left mt-3 px-5">
+					<b>СПИСОК ДОКЛАДЧИКОВ</b>
+					<table class="table">
+						<thead>
 							<tr>
-								<th scope="row" class="align-middle">{{ forloop.counter}}</th>
-								<td class="align-middle">{{ usr.get_full_name }}</td>
-								<td class="align-middle">{{ usr.work_place }}</td>
-								<td class="align-middle">{{ usr.user.email }}</td>
-								{% if user.profile.admin_access %}
-									<td class="align-middle text-center">
-										<input type="checkbox" id="{{usr.id }}" class="checking form-control" {% if usr.admin_access %} checked{% endif %} >
-									</td>
-								{% endif %}
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Фамилия Имя Отчетво</th>
+								<th scope="col" class="table-cel-width-35 align-middle">Место работы</th>
+								<th scope="col" class="table-cel-width-15 align-middle">e-mail</th>
+								<th scope="col" class="table-cel-width-15 align-middle">Тема доклада</th>
+								<th scope="col" class="table-cel-width-5 align-middle">Файл</th>
 							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
+						</thead>
+						<tbody>
+							{% for usr in speakers %}
+								<tr class="{%if usr == user.profile %}table-info{% endif %}">
+									<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+									<td class="align-middle">{{ usr.get_full_name }}</td>
+									<td class="align-middle">{{ usr.work_place }}</td>
+									<td class="align-middle">{{ usr.user.email }}</td>
+									<td class="align-middle">{{ usr.report_name }}</td>
+									<td class="align-middle">
+										{% if usr.report_file %}
+											<a href="{{ usr.report_file.url }}" target="_blank">скачать</a>
+										{% endif %}
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				{% if user.profile.admin_access %}
+					<div class="text-left mt-5 px-5"></div>
+				{% endif %}
+			{% endif %}
+
+			{% if user.profile.admin_access %}
+				<div class="text-left mt-3 px-5">
+					<b>СПИСОК УЧАСТНИКОВ</b>
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" class="table-cel-width-5 align-middle">№</th>
+								<th scope="col" class="table-cel-width-25 align-middle">Фамилия Имя Отчетво</th>
+								<th scope="col" class="table-cel-width-45 align-middle">Место работы</th>
+								<th scope="col" class="table-cel-width-20 align-middle">e-mail</th>
+								<th scope="col" class="table-cel-width-5 align-middle">Администратор</th>
+								<th scope="col" class="table-cel-width-5 align-middle">Модератор</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for usr in users %}
+								<tr class="{%if usr == user.profile %}table-info{% endif %}">
+									<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+									<td class="align-middle">{{ usr.get_full_name }}</td>
+									<td class="align-middle">{{ usr.work_place }}</td>
+									<td class="align-middle">{{ usr.user.email }}</td>
+									<td class="align-middle text-center">
+										<input type="checkbox" id="{{usr.id }}" class="checking-admin form-control" {% if usr.admin_access %} checked{% endif %} {%if usr == user.profile %}disabled{% endif %}>
+									</td>
+									<td class="align-middle text-center">
+										<input type="checkbox" id="{{usr.id }}" class="checking-moderate form-control" {% if usr.moderator_access %} checked{% endif %} >
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% endif %}
 		{% endif %}
 	{% endif %}
 {% endblock %}
@@ -69,12 +109,12 @@
 	{{ block.super }}
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.checking').change(function (){
+			$('.checking-admin').change(function (){
 				var user_id = $(this).attr('id');
 				var access = $(this).prop('checked');
 
 				$.ajax({
-					url: "{% url 'change_access' %}",
+					url: "{% url 'change_admin_access' %}",
 					dataType: 'json',
 					data: {
 						'user_id': user_id,
@@ -82,6 +122,26 @@
 					},
 					success: function(data){
 						alert ('Статус изменен.');
+					}
+				});
+			});
+		});
+
+		$(document).ready(function() {
+			$('.checking-moderate').change(function (){
+				var user_id = $(this).attr('id');
+				var access = $(this).prop('checked');
+
+				$.ajax({
+					url: "{% url 'change_moderate_access' %}",
+					dataType: 'json',
+					data: {
+						'user_id': user_id,
+						'access': access
+					},
+					success: function(data){
+						alert('Статус изменен.');
+						document.location.reload();
 					}
 				});
 			});

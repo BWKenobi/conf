@@ -12,10 +12,21 @@
 		<div class="col-md-6 mx-auto mb-5">
 			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
 				{{form.as_p}}
-
+				{% if user.profile.speaker %}
+					<div class="row align-middle mb-5 mt-5">
+						<div class="col-md-10 mx-auto ">
+							Тема доклада: <b> {{ user.profile.report_name }}</b> 
+						</div>
+						<div class="col-md-2 mx-auto ">
+							{% if user.profile.report_file %}
+											<a href="{{ user.profile.report_file.url }}" target="_blank">скачать</a>
+										{% endif %}
+									</div>
+					</div>
+				{% endif %}
 				<div class="row align-middle">
 					<div class="col-md-4 text-left">
-						<a href="{% url 'home' %}">Вернуться на главную</a>
+						<input type="submit" value="Добавить доклад" {% if user.profile.speaker %}disabled{% endif %} name="addfile">
 					</div>
 					<div class="col-md-4 text-center">
 						<input type="submit" value="Сохранить">
@@ -24,6 +35,10 @@
 						<input type="submit" value="Сменить пароль" name="passchange">
 					</div>
 				</div>
+				<div class="row align-middle">
+					<div class="col-md-12 text-center mt-5">
+						<a href="{% url 'home' %}">Вернуться на главную</a>
+					</div>
 				</div>
 			</form>
 		</div>

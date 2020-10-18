@@ -22,15 +22,23 @@ from profileuser.models import Profile
 from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm
 
 def home_view(request):
-	users = Profile.objects.all().exclude(username='admin').exclude(username=request.user.username).order_by('surname', 'name', 'name2')
+
+	users = Profile.objects.all().exclude(username='admin'). \
+		order_by('-moderator_access', '-admin_access', 'surname', 'name', 'name2')
+
+	speakers = Profile.objects.filter(speaker=True).exclude(username='admin'). \
+		order_by('surname', 'name', 'name2')
+
 	args = {
-		'users': users
+		'users': users,
+		'speakers': speakers
 	}
 	return render(request, 'index.html', args)
 
 
 def policy_view(request):
 	return render(request, 'policy.html')
+
 
 def login_view(request):
 	form = UserLoginForm(request.POST or None)
@@ -160,7 +168,7 @@ def change_password(request):
 # --------------------------------
 #           Для ajax'а
 # --------------------------------
-def change_access(request):
+def change_admin_access(request):
 	user_id = request.GET.get('user_id')
 	access = request.GET.get('access')
 	if access=='true':
@@ -174,3 +182,17 @@ def change_access(request):
 	
 	return HttpResponse(json.dumps('Статус изменен.'))
 
+
+def change_moderate_access(request):
+	user_id = request.GET.get('user_id')
+	access = request.GET.get('access')
+	if access=='true':
+		access = True
+	else:
+		access = False
+	
+	profile = Profile.objects.get(id = user_id)
+	profile.moderator_access = access
+	profile.save()
+	
+	return HttpResponse(json.dumps('Статус изменен.'))
