@@ -8,6 +8,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['conf.tdpi.ru', '127.0.0.1']
 
+DEFAULT_CHARSET = 'utf-8'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

@@ -78,6 +78,7 @@ def add_report_file(request):
 				email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, e_mails)
 
 				docfile = default_storage.open(speaker.report_file.name, 'r')
+
 				email.attach_file(docfile.name)
 
 				email.send()

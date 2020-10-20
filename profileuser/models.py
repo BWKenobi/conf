@@ -7,11 +7,11 @@ from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 
 def make_upload_path(instance, filename):
-	path = u'reports/%s' % filename
+	path = u'reports/%s' % filename.encode('utf-8')	
 
 	p = filename.encode('utf-8')
-	print (p, p.decode('utf-8'))
-	return path
+	print (type(p), type(p.decode('utf-8')))
+	return 'reports/%s' % filename
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
