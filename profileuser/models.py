@@ -1,5 +1,4 @@
 import os
-from pytils import translit
 
 from django.utils import timezone
 from django.db import models
