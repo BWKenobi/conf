@@ -1,4 +1,5 @@
 import os
+from pytils import translit
 
 from django.utils import timezone
 from django.db import models
@@ -7,11 +8,16 @@ from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 
 def make_upload_path(instance, filename):
-	path = u'reports/%s' % filename.encode('utf-8')	
+	names = filename.split('.')
+	new_filename = ''
+	for name in names:
+		if name != names[0]:
+			new_filename += '.'
+		new_filename += translit.slugify(name)
 
-	p = filename.encode('utf-8')
-	print (type(p), type(p.decode('utf-8')))
-	return 'reports/%s' % filename
+	path = 'reports/%s' % new_filename
+
+	return path
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
