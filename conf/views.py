@@ -23,7 +23,7 @@ from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, Cust
 
 def home_view(request):
 
-	users = Profile.objects.all().exclude(username='admin'). \
+	users = Profile.objects.all().exclude(username='admin', user__is_active=True). \
 		order_by('-moderator_access', '-admin_access', 'surname', 'name', 'name2')
 
 	speakers = Profile.objects.filter(speaker=True).exclude(username='admin'). \
