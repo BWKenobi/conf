@@ -1,6 +1,8 @@
 from django.db.models import Q
 from datetime import date
 import json
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 from django.conf import settings
 
@@ -24,10 +26,47 @@ from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, Cust
 def home_view(request):
 
 	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False). \
-		order_by('-moderator_access', '-admin_access', 'surname', 'name', 'name2')
+		order_by('-moderator_access', '-admin_access', '-speaker', 'surname', 'name', 'name2')
 
 	speakers = Profile.objects.filter(speaker=True).exclude(username='admin'). \
 		order_by('surname', 'name', 'name2')
+
+	if request.POST:
+		dte = date.today()
+		document = Document()
+		document.add_paragraph('Список участников конференции').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		p = document.add_paragraph()
+		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
+		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+
+		table = document.add_table(rows=1, cols=5)
+
+		hdr_cells = table.rows[0].cells
+		hdr_cells[0].text = '№'
+		hdr_cells[1].text = 'ФИО'
+		hdr_cells[2].text = 'Место работы'
+		hdr_cells[3].text = 'E-mail'
+		hdr_cells[4].text = 'Статус'
+
+		count = 1
+		for usr in users:
+			row_cells = table.add_row().cells
+			row_cells[0].text = str(count)
+			row_cells[1].text = usr.get_full_name()
+			row_cells[2].text = usr.work_place
+			row_cells[3].text = usr.user.email
+			if usr.speaker:
+				row_cells[4].text = 'Докладчик'
+			else:
+				row_cells[4].text = 'Участник'
+			count += 1
+
+
+		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+		response['Content-Disposition'] = 'attachment; filename=download.docx'
+		document.save(response)
+
+		return response
 
 	args = {
 		'users': users,

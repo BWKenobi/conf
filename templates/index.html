@@ -77,8 +77,9 @@
 							<tr>
 								<th scope="col" class="table-cel-width-5 align-middle">№</th>
 								<th scope="col" class="table-cel-width-25 align-middle">Фамилия Имя Отчетво</th>
-								<th scope="col" class="table-cel-width-45 align-middle">Место работы</th>
+								<th scope="col" class="table-cel-width-35 align-middle">Место работы</th>
 								<th scope="col" class="table-cel-width-20 align-middle">e-mail</th>
+								<th scope="col" class="table-cel-width-10 align-middle">Статус</th>
 								<th scope="col" class="table-cel-width-5 align-middle">Администратор</th>
 								<th scope="col" class="table-cel-width-5 align-middle">Модератор</th>
 							</tr>
@@ -90,6 +91,7 @@
 									<td class="align-middle">{{ usr.get_full_name }}</td>
 									<td class="align-middle">{{ usr.work_place }}</td>
 									<td class="align-middle">{{ usr.user.email }}</td>
+									<td class="align-middle">{% if usr.speaker %}Докладчик{% else %}Участник{% endif %}</td>
 									<td class="align-middle text-center">
 										<input type="checkbox" id="{{usr.id }}" class="checking-admin form-control" {% if usr.admin_access %} checked{% endif %} {%if usr == user.profile %}disabled{% endif %}>
 									</td>
@@ -100,6 +102,15 @@
 							{% endfor %}
 						</tbody>
 					</table>
+					{% if users %}
+						<div class="row">
+							<div class="col-md-12 text-right pb-3">
+								<form action="" method="post"> {% csrf_token %}
+									<input type="submit" value="Выгрузить список">
+								</form>
+							</div>
+						</div>
+					{% endif %}
 				</div>
 			{% endif %}
 		{% endif %}
