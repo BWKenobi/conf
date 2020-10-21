@@ -40,6 +40,7 @@ def home_view(request):
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
 		table = document.add_table(rows=1, cols=5)
+		table.style = 'TableGrid'
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
