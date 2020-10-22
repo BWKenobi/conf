@@ -5,6 +5,7 @@ import json
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
+from docx.shared import Mm
 
 from django.conf import settings
 
@@ -39,8 +40,14 @@ def home_view(request):
 		section = document.sections[-1]
 		new_width, new_height = section.page_height, section.page_width
 		section.orientation = WD_ORIENT.PORTRAIT
-		section.page_width = new_width
-		section.page_height = new_height
+		section.page_width = Mm(297)
+		section.page_height = Mm(210)
+		section.left_margin = Mm(30)
+		section.rigth_margin = Mm(10)
+		section.top_margin = Mm(10)
+		section.bottom_margin = Mm(10)
+		section.header_distance = Mm(10)
+		section.footer_distance = Mm(10)
 
 		document.add_paragraph('Список участников конференции').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		p = document.add_paragraph()
