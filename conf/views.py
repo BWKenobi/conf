@@ -5,7 +5,7 @@ import json
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
-from docx.shared import Mm
+from docx.shared import Mm, Pt
 
 from django.conf import settings
 
@@ -43,11 +43,17 @@ def home_view(request):
 		section.page_width = Mm(297)
 		section.page_height = Mm(210)
 		section.left_margin = Mm(30)
-		section.rigth_margin = Mm(10)
+		section.right_margin = Mm(10)
 		section.top_margin = Mm(10)
 		section.bottom_margin = Mm(10)
 		section.header_distance = Mm(10)
 		section.footer_distance = Mm(10)
+
+		style = document.styles['Normal']
+		font = style.font
+		font.name = 'Times New Roman'
+		font.size = Pt(12)
+
 
 		document.add_paragraph('Список участников конференции').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		p = document.add_paragraph()
@@ -56,6 +62,12 @@ def home_view(request):
 
 		table = document.add_table(rows=1, cols=5)
 		table.style = 'TableGrid'
+		table.autofit = False
+		table.columns[0].width = Mm(10)
+		table.columns[1].width = Mm(70)
+		table.columns[2].width = Mm(87)
+		table.columns[3].width = Mm(60)
+		table.columns[4].width = Mm(30)
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
@@ -65,7 +77,9 @@ def home_view(request):
 		hdr_cells[4].text = 'Статус'
 
 		count = 1
-		for usr in users:
+
+		users_sorted = users.order_by('surname', 'name', 'name2')
+		for usr in users_sorted:
 			row_cells = table.add_row().cells
 			row_cells[0].text = str(count)
 			row_cells[1].text = usr.get_full_name()
