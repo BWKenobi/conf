@@ -1,8 +1,10 @@
 from django.db.models import Q
 from datetime import date
 import json
+
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.section import WD_ORIENT
 
 from django.conf import settings
 
@@ -34,6 +36,12 @@ def home_view(request):
 	if request.POST:
 		dte = date.today()
 		document = Document()
+		section = document.sections[-1]
+		new_width, new_height = section.page_height, section.page_width
+		section.orientation = WD_ORIENT.PORTRAIT
+		section.page_width = new_width
+		section.page_height = new_height
+
 		document.add_paragraph('Список участников конференции').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		p = document.add_paragraph()
 		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
