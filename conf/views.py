@@ -61,6 +61,7 @@ def home_view(request):
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
 		table = document.add_table(rows=1, cols=5)
+		table.allow_autifit = False
 		table.style = 'TableGrid'
 		table.columns[0].width = Mm(10)
 		table.columns[1].width = Mm(70)
