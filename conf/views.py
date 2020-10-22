@@ -62,7 +62,6 @@ def home_view(request):
 
 		table = document.add_table(rows=1, cols=5)
 		table.style = 'TableGrid'
-		table.autofit = False
 		table.columns[0].width = Mm(10)
 		table.columns[1].width = Mm(70)
 		table.columns[2].width = Mm(87)
