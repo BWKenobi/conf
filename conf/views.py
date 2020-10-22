@@ -71,10 +71,15 @@ def home_view(request):
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
+		hdr_cells[0].width = Mm(10)
 		hdr_cells[1].text = 'ФИО'
+		hdr_cells[1].width = Mm(70)
 		hdr_cells[2].text = 'Место работы'
+		hdr_cells[2].width = Mm(87)
 		hdr_cells[3].text = 'E-mail'
+		hdr_cells[3].width = Mm(60)
 		hdr_cells[4].text = 'Статус'
+		hdr_cells[4].width = Mm(30)
 
 		count = 1
 
@@ -82,14 +87,20 @@ def home_view(request):
 		for usr in users_sorted:
 			row_cells = table.add_row().cells
 			row_cells[0].text = str(count)
+			row_cells[0].width = Mm(10)
 			row_cells[1].text = usr.get_full_name()
+			row_cells[1].width = Mm(70)
 			row_cells[2].text = usr.work_place
+			row_cells[2].width = Mm(87)
 			row_cells[3].text = usr.user.email
+			row_cells[3].width = Mm(60)
 			if usr.speaker:
 				row_cells[4].text = 'Докладчик'
 			else:
 				row_cells[4].text = 'Участник'
+			row_cells[4].width = Mm(30)
 			count += 1
+
 
 
 		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
