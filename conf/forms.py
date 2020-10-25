@@ -15,7 +15,7 @@ class UserLoginForm(forms.Form):
 
 
 	def clean(self, *args, **kwargs):
-		email = self.cleaned_data.get('email')
+		email = self.cleaned_data.get('email').lower()
 		password = self.cleaned_data.get('password')
 		
 		if email and password:
@@ -54,16 +54,20 @@ class UserRegistrationForm(forms.ModelForm):
 
 	def clean(self):
 		data = self.cleaned_data
-		email = data.get('email')
+		email = data.get('email').lower()
 
 		try:
 			vaild_user = UserModel.objects.get(username=email)
 		except UserModel.DoesNotExist:
 			if email and UserModel.objects.filter(email=email).count()>0:
 				raise forms.ValidationError('Используйте другой адрес электронной почты!')
+
+			data['email'] = data['email'].lower()
 			return data
 
 		raise forms.ValidationError('Пользователь с таким email существует!')
+
+
 
 
 class ChangePasswordForm(forms.Form):

@@ -19,11 +19,13 @@
 						</div>
 						<div class="col-md-2 mx-auto ">
 							{% if user.profile.report_file %}
-											<a href="{{ user.profile.report_file.url }}" target="_blank">скачать</a>
-										{% endif %}
-									</div>
+								<a href="{{ user.profile.report_file.url }}" target="_blank">скачать</a>
+							{% endif %}
+						</div>
 					</div>
 				{% endif %}
+
+				
 				<div class="row align-middle">
 					<div class="col-md-4 text-left">
 						<input type="submit" value="Добавить доклад" {% if user.profile.speaker %}disabled{% endif %} name="addfile">

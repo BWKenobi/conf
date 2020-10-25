@@ -126,7 +126,7 @@ def login_view(request):
 	modal = False
 
 	if form.is_valid():
-		username = request.POST.get('email')
+		username = request.POST.get('email').lower()
 		password = request.POST.get('password')
 		user = authenticate(username = username.strip(), password = password.strip())
 		
