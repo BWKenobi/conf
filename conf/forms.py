@@ -104,6 +104,10 @@ class CustomPasswordResetForm(PasswordResetForm):
 		self.fields['email'].widget.attrs.update({'class': 'form-control'})
 		self.fields['email'].label = ''
 
+	def clean(self):
+		self.cleaned_data['email'] = self.cleaned_data['email'].lower()
+		return self.cleaned_data
+
 
 class CustomSetPasswordForm(SetPasswordForm):
 	new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
