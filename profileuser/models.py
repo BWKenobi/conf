@@ -42,7 +42,7 @@ class Profile(models.Model):
 	name2 = models.CharField(verbose_name="Отчество*", max_length=30, blank=True)
 	work_place = models.TextField(verbose_name="Место работы (полностью)*", blank=True)
 
-	certificate_number = models.CharField(verbose_name="Номер сертификата", max_length=30, blank=True)
+	certificate_num = models.CharField(verbose_name="Номер сертификата", max_length=30, blank=True)
 	certificate_file = models.FileField(verbose_name='Сертификат', blank=True, null=True, upload_to = make_certificate_path)
 
 	speaker= models.BooleanField("Докладчик", default=False)
