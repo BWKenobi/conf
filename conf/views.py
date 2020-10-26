@@ -142,7 +142,7 @@ def home_view(request):
 
 
 	dte = date.today()
-	dte_deadline = date(2020,10,28)
+	dte_deadline = date(2020,10,29)
 	register_flag = False
 	if dte<dte_deadline:
 		register_flag = True

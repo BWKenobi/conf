@@ -23,7 +23,7 @@ def view_edit_profile(request):
 	username = request.user.username
 
 	dte = date.today()
-	dte_deadline = date(2020,10,28)
+	dte_deadline = date(2020,10,29)
 	report_flag = False
 	if dte<dte_deadline:
 		report_flag = True
