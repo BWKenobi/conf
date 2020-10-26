@@ -1,6 +1,8 @@
 import os
 import datetime
 
+from datetime import date
+
 from django.conf import settings
 from django.core.files.storage import default_storage
 
@@ -20,6 +22,13 @@ from .models import Profile
 def view_edit_profile(request):
 	username = request.user.username
 
+	dte = date.today()
+	dte_deadline = date(2020,10,28)
+	report_flag = False
+	if dte<dte_deadline:
+		report_flag = True
+
+
 	if request.method=='POST':
 		form_profile = ProfileUdpateForm(request.POST, instance=request.user.profile, label_suffix='')
 
@@ -38,6 +47,7 @@ def view_edit_profile(request):
 			return redirect('home')
 
 		args ={
+			'report_flag': report_flag,
 			'form': form_profile, 
 		}
 		return render(request, 'profileuser/view_edit_profile.html', args)
@@ -45,6 +55,7 @@ def view_edit_profile(request):
 	form_profile = ProfileUdpateForm(instance=request.user.profile, label_suffix='')
 
 	args = {
+		'report_flag': report_flag,
 		'form': form_profile, 
 	}
 	return render(request, 'profileuser/view_edit_profile.html', args)

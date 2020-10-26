@@ -9,9 +9,18 @@
 			<h1>ПОИСКИ И ОТКРЫТИЯ",</h1>
 			<h4><em>посвященная Году Памяти и Славы</em></h4>
 		</div>
-		<div class="text-center mt-5 pb-5">
-			<h4><a href="{% url 'register' %}" class="text-danger">Зарегистрироваться</a></h4>
-		</div>
+		{% if register_flag %}
+			<div class="text-center mt-5 pb-5">
+				<h4><a href="{% url 'register' %}" class="text-danger">Зарегистрироваться</a></h4>
+			</div>
+			<div class="text-center mt-5 pb-5">
+				<h4>Регистрация закончится 28 октября 2020 года в 23:59 (по московскому времени).</h4>
+			</div>
+		{% else %}
+			<div class="text-center mt-5 pb-5 text-danger">
+				<h4>Регистрация завершена.</h4>
+			</div>
+		{% endif %}
 	{% else %}
 		{% if not user.profile.admin_access and not user.profile.moderator_access %}
 			<div class="text-center mt-3 pt-5">

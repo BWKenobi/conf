@@ -1,13 +1,21 @@
+import os
 from django.db.models import Q
 from datetime import date
 import json
+from io import BytesIO
+from django.core.files import File
+from django.core.files.base import ContentFile
 
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
 from docx.shared import Mm, Pt
 
+from fpdf import FPDF
+
 from django.conf import settings
+from django.templatetags.static import static
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -25,6 +33,9 @@ from .tokens import accaunt_activation_token
 
 from profileuser.models import Profile
 from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm
+
+class PDF(FPDF):
+	pass
 
 def home_view(request):
 
@@ -109,9 +120,37 @@ def home_view(request):
 
 		return response
 
+#	font_url = os.path.join(settings.BASE_DIR, 'static/fonts/chekhovskoy.ttf')
+#	img_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate.jpg')
+
+#	pdf = PDF(orientation='L', unit='mm', format='A4')
+#	pdf.add_page()
+#	pdf.add_font('Chehkovskoy', '', font_url , uni=True)
+	
+#	pdf.image(img_url, 0, 0, pdf.w, pdf.h)
+#	pdf.set_xy(0.0, 130.0)
+#	pdf.set_font('Chehkovskoy', '', 18)
+#	pdf.set_text_color(0, 0, 0)
+#	pdf.cell(w=297.0, h=5.0, align='C', txt = request.user.profile.get_full_name())
+#	pdf.output('test.pdf', 'F')
+#	file  = open('test.pdf', 'rb')
+#	djangofile = File(file)
+
+#	request.user.profile.certificate_file.save('testss.pdf', djangofile)
+#	file.close()
+
+
+
+	dte = date.today()
+	dte_deadline = date(2020,10,28)
+	register_flag = False
+	if dte<dte_deadline:
+		register_flag = True
+
 	args = {
 		'users': users,
-		'speakers': speakers
+		'speakers': speakers,
+		'register_flag': register_flag
 	}
 	return render(request, 'index.html', args)
 

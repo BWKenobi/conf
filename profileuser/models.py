@@ -19,6 +19,20 @@ def make_upload_path(instance, filename):
 
 	return path
 
+
+def make_certificate_path(instance, filename):
+	names = filename.split('.')
+	new_filename = ''
+	for name in names:
+		if name != names[0]:
+			new_filename += '.'
+		new_filename += translit.slugify(name)
+
+	path = 'reports/sertificate/%s' % new_filename
+
+	return path
+
+
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
 	username = models.CharField("Username:", max_length=30, blank=True)
@@ -27,6 +41,9 @@ class Profile(models.Model):
 	name = models.CharField(verbose_name="Имя*", max_length=30, blank=True)
 	name2 = models.CharField(verbose_name="Отчество*", max_length=30, blank=True)
 	work_place = models.TextField(verbose_name="Место работы (полностью)*", blank=True)
+
+	certificate_number = models.CharField(verbose_name="Номер сертификата", max_length=30, blank=True)
+	certificate_file = models.FileField(verbose_name='Сертификат', blank=True, null=True, upload_to = make_certificate_path)
 
 	speaker= models.BooleanField("Докладчик", default=False)
 	report_name = models.CharField(verbose_name="Тема доклада*", max_length=250, blank=True)
@@ -90,6 +107,10 @@ def profile_post_delete_handler(sender, **kwargs):
 		if os.path.isfile(profile.report_file.path):
 			os.remove(profile.report_file.path)
 
+	if profile.certificate_file:
+		if os.path.isfile(profile.certificate_file.path):
+			os.remove(profile.certificate_file.path)
+
 
 @receiver(pre_save, sender = Profile)
 def profile_pre_save_handler(sender, **kwargs):
@@ -100,13 +121,24 @@ def profile_pre_save_handler(sender, **kwargs):
 
 	try:
 		old_file = Profile.objects.get(pk=profile.pk).report_file
+
+		if old_file:
+			new_file = profile.report_file
+			if not old_file==new_file:
+				if os.path.isfile(old_file.path):
+					os.remove(old_file.path)
 	except Profile.DoesNotExist:
-		return False
+		pass
 
-	if not old_file:
-		return False
 
-	new_file = profile.report_file
-	if not old_file==new_file:
-		if os.path.isfile(old_file.path):
-			os.remove(old_file.path)
+	try:
+		old_file = Profile.objects.get(pk=profile.pk).certificate_file
+
+		if old_file:
+			new_file = profile.certificate_file
+			if not old_file==new_file:
+				if os.path.isfile(old_file.path):
+					os.remove(old_file.path)
+	except Profile.DoesNotExist:
+		pass
+	
