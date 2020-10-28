@@ -55,6 +55,11 @@
 				<h4 class="mt-5">Прямая трансляция конференции на <b class="text-danger">YouTube</b>: <a href="https://youtu.be/gy4TyECAV54" target="_blank">Перейти</a></h4>
 				
 			</div>
+			{% if user.profile.message_accecc %}
+				<div class="col-md-4 text-left mb-5">
+					<input type="submit" value="Разослать обовещения" name="addfile" id="send_message">
+				</div>
+			{% endif %}
 			{% if user.profile.moderator_access %}
 				<div class="text-left mt-3 px-5">
 					<b>СПИСОК ДОКЛАДЧИКОВ</b>
@@ -87,13 +92,9 @@
 						</tbody>
 					</table>
 				</div>
-				{% if user.profile.admin_access %}
-					<div class="text-left mt-5 px-5"></div>
-				{% endif %}
 			{% endif %}
 
-			{% if user.profile.message_accecc %}
-			{% endif %}
+
 
 			{% if user.profile.admin_access %}
 				<div class="text-left mt-3 px-5">
@@ -181,6 +182,19 @@
 						document.location.reload();
 					}
 				});
+			});
+		});
+
+		$(document).ready(function() {
+			$('#send_message').click(function (){
+				$.ajax({
+					url: "{% url 'send_info_message' %}",
+					dataType: 'json',
+					success: function(data){
+						alert("Сообщения разосланы")
+					}
+				});
+				return false;
 			});
 		});
 	</script>

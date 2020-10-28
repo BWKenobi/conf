@@ -1,4 +1,5 @@
 import os
+import time
 from django.db.models import Q
 from datetime import date
 import json
@@ -315,3 +316,29 @@ def change_moderate_access(request):
 	profile.save()
 	
 	return HttpResponse(json.dumps('Статус изменен.'))
+
+
+def send_info_message(request):
+	users = User.objects.all().exclude(username='admin').exclude(is_active=False)
+	count = 0
+
+	for user in users:
+		mail_subject = 'Информационное письмо'
+		to_email = user.email
+		sex = False
+		if user.profile.name2[-1] =='ч' or user.profile.name2[-1] == 'Ч':
+			sex = True
+		
+		message = render_to_string('info_email.html', {'sex': sex, 'name': user.profile.get_full_name()})
+
+		message_html = render_to_string('info_email_html.html', {'sex': sex, 'name': user.profile.get_full_name()})
+
+		send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
+
+		count += 1
+
+		if count==5:
+			count = 0
+			time.sleep(1.5)
+
+	return HttpResponse(json.dumps('Сообщения разосланы.'))
