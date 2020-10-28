@@ -52,6 +52,7 @@ class Profile(models.Model):
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 	admin_access= models.BooleanField("Права администратора", default=False)
 	moderator_access= models.BooleanField("Права модератора", default=False)
+	message_accecc = models.BooleanField("Права рассылки оповещений", default=False)
 
 
 	def __str__(self):

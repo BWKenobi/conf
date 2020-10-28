@@ -1,0 +1,4 @@
+{% autoescape off %}
+Кто-то, возможно Вы, использовал Ваш адрес {{ email }} для регистрации на сайте <b>conf.tdpi.ru<b>.
+Для подтверждения перейдите по ссылке: {{ protocol }}://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+{% endautoescape %}
