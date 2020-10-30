@@ -325,13 +325,11 @@ def send_info_message(request):
 	for user in users:
 		mail_subject = 'Информационное письмо'
 		to_email = user.email
-		sex = False
-		if user.profile.name2[-1] =='ч' or user.profile.name2[-1] == 'Ч':
-			sex = True
+		sex = user.profile.sex()
 		
-		message = render_to_string('info_email.html', {'sex': sex, 'name': user.profile.get_full_name()})
+		message = render_to_string('info_email.html', {'sex': sex, 'name': user.profile.get_io_name()})
 
-		message_html = render_to_string('info_email_html.html', {'sex': sex, 'name': user.profile.get_full_name()})
+		message_html = render_to_string('info_email_html.html', {'sex': sex, 'name': user.profile.get_io_name()})
 
 		send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
 

@@ -61,6 +61,13 @@ class Profile(models.Model):
 		return self.username + ' (not active)'
 
 
+	def sex(self):
+		sex = False
+		if self.name2[-1] =='ч' or self.name2[-1] == 'Ч':
+			sex = True
+		return sex
+
+
 	def get_name(self):
 		admin = ''
 		if self.admin_access:
@@ -71,6 +78,12 @@ class Profile(models.Model):
 			return self.surname + ' ' + self.name[0]+ '.'  + admin
 
 		return self.name + admin
+
+
+	def get_io_name(self):
+		if self.name2:
+			return self.name + ' ' + self.name2 
+		return self.name 
 
 
 	def get_full_name(self):
