@@ -28,11 +28,11 @@ def generate_sertificates(request):
 	img_member_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate_member.jpg')
 	sertificate_num = 33
 
-#	for user in users:
-#		sertificate_str_num = str(sertificate_num)+'-20'
-#		pdf = PDF(orientation='L', unit='mm', format='A4')
-#		pdf.add_page()
-#		pdf.add_font('Chehkovskoy', '', font_url , uni=True)
+	for user in users:
+		sertificate_str_num = str(sertificate_num)+'-20'
+		pdf = PDF(orientation='L', unit='mm', format='A4')
+		pdf.add_page()
+		pdf.add_font('Chehkovskoy', '', font_url , uni=True)
 		
 #		if user.speaker:
 #			pdf.image(img_speaker_url, 0, 0, pdf.w, pdf.h)
