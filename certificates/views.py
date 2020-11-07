@@ -48,23 +48,18 @@ def generate_sertificates(request):
 		pdf.set_xy(0.0, 130.0)
 		pdf.cell(w=297.0, h=5.0, align='C', txt = user.get_full_name())
 
-		#byte_string = pdf.output(dest='S')
-		#primary_key=Truent(type(byte_string))
-
-		#file_data = ContentFile(base64.b64decode(BytesIO(byte_string)))
 		pdf.output(os.path.join(settings.MEDIA_ROOT, 'test.pdf'), 'F')
-#		file  = open('test.pdf', 'rb')
-#		djangofile = File(file)
+		file  = open(os.path.join(settings.MEDIA_ROOT, 'test.pdf'), 'rb')
+		djangofile = File(file)
 
-#		user.certificate_file.save((user.get_file_name())+'.pdf', byte_string)
-#		user.certificate_num = sertificate_str_num
-#		user.save()
+		user.certificate_file.save((user.get_file_name())+'.pdf', djangofile)
+		user.certificate_num = sertificate_str_num
+		user.save()
 
-#		file.close()
+		file.close()
 
-#		sertificate_num += 1
-#	sertificate_num -= 1
+		sertificate_num += 1
+	sertificate_num -= 1
 
-#	return HttpResponse(json.dumps({'last_num': str(sertificate_num) + '-20'}))
+	return HttpResponse(json.dumps({'last_num': str(sertificate_num) + '-20'}))
 
-	return HttpResponse(json.dumps("1111"))
