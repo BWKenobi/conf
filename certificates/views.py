@@ -45,7 +45,7 @@ def generate_sertificates(request):
 		pdf.cell(w=297.0, h=5.0, align='C', txt = '№' + sertificate_str_num)
 		pdf.set_xy(0.0, 130.0)
 		pdf.cell(w=297.0, h=5.0, align='C', txt = user.get_full_name())
-		pdf.output('test.pdf', 'F')
+		pdf.output(os.path.join(settings.BASE_DIR, 'static/test.pdf'), 'F')
 #		file  = open('test.pdf', 'rb')
 #		djangofile = File(file)
 
