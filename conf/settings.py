@@ -4,7 +4,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '*j+5^3v7hq7aa-hu9ufguz-#y*kd3uitwsi(b=9oy6uwcf%ohq'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['conf.tdpi.ru', '127.0.0.1']
 
