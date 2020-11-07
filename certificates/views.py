@@ -34,22 +34,25 @@ def generate_sertificates(request):
 		pdf.add_page()
 		pdf.add_font('Chehkovskoy', '', font_url , uni=True)
 		
-		if user.speaker:
-			pdf.image(img_speaker_url, 0, 0, pdf.w, pdf.h)
-		else:
-			pdf.image(img_member_url, 0, 0, pdf.w, pdf.h)
+#		if user.speaker:
+#			pdf.image(img_speaker_url, 0, 0, pdf.w, pdf.h)
+#		else:
+#			pdf.image(img_member_url, 0, 0, pdf.w, pdf.h)
 		
-		pdf.set_font('Chehkovskoy', '', 18)
-		pdf.set_text_color(0, 0, 0)
-		pdf.set_xy(0.0, 110.0)
-		pdf.cell(w=297.0, h=5.0, align='C', txt = '№' + sertificate_str_num)
-		pdf.set_xy(0.0, 130.0)
-		pdf.cell(w=297.0, h=5.0, align='C', txt = user.get_full_name())
+#		pdf.set_font('Chehkovskoy', '', 18)
+#		pdf.set_text_color(0, 0, 0)
+#		pdf.set_xy(0.0, 110.0)
+#		pdf.cell(w=297.0, h=5.0, align='C', txt = '№' + sertificate_str_num)
+#		pdf.set_xy(0.0, 130.0)
+#		pdf.cell(w=297.0, h=5.0, align='C', txt = user.get_full_name())
+
+#		byte_string = pdf.output(dest='S')
+#		print(byte_string)
 		pdf.output(os.path.join(settings.MEDIA_ROOT, 'test.pdf'), 'F')
 #		file  = open('test.pdf', 'rb')
 #		djangofile = File(file)
 
-#		user.certificate_file.save((user.get_file_name())+'.pdf', djangofile)
+#		user.certificate_file.save((user.get_file_name())+'.pdf', (pdf.output()))
 #		user.certificate_num = sertificate_str_num
 #		user.save()
 
