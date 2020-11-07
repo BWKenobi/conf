@@ -19,6 +19,8 @@ class PDF(FPDF):
 
 
 def generate_sertificates(request):
+	return HttpResponse(json.dumps("1111"))
+	'''
 	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False). \
 		order_by('surname', 'name', 'name2')
 
