@@ -52,7 +52,7 @@ def generate_sertificates(request):
 		#primary_key=Truent(type(byte_string))
 
 		file = open(os.path.join(settings.MEDIA_ROOT, 'test.txt'),'w')
-		file.write("1223344sddff")
+		file.write("1223344sddffвапавпрвапр")
 		file.close()
 		#file_data = ContentFile(base64.b64decode(BytesIO(byte_string)))
 #		pdf.output(os.path.join(settings.MEDIA_ROOT, 'test.pdf'), 'F')
