@@ -17,6 +17,7 @@ from fpdf import FPDF
 from django.conf import settings
 from django.templatetags.static import static
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.core.files.storage import default_storage
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -72,14 +73,15 @@ def home_view(request):
 		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
-		table = document.add_table(rows=1, cols=5)
+		table = document.add_table(rows=1, cols=6)
 		table.allow_autifit = False
 		table.style = 'TableGrid'
 		table.columns[0].width = Mm(10)
 		table.columns[1].width = Mm(70)
-		table.columns[2].width = Mm(87)
+		table.columns[2].width = Mm(70)
 		table.columns[3].width = Mm(60)
-		table.columns[4].width = Mm(30)
+		table.columns[4].width = Mm(25)
+		table.columns[5].width = Mm(22)
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
@@ -87,11 +89,13 @@ def home_view(request):
 		hdr_cells[1].text = 'ФИО'
 		hdr_cells[1].width = Mm(70)
 		hdr_cells[2].text = 'Место работы'
-		hdr_cells[2].width = Mm(87)
+		hdr_cells[2].width = Mm(70)
 		hdr_cells[3].text = 'E-mail'
 		hdr_cells[3].width = Mm(60)
 		hdr_cells[4].text = 'Статус'
-		hdr_cells[4].width = Mm(30)
+		hdr_cells[4].width = Mm(25)
+		hdr_cells[5].text = 'Серт. №'
+		hdr_cells[5].width = Mm(22)
 
 		count = 1
 
@@ -103,14 +107,16 @@ def home_view(request):
 			row_cells[1].text = usr.get_full_name()
 			row_cells[1].width = Mm(70)
 			row_cells[2].text = usr.work_place
-			row_cells[2].width = Mm(87)
+			row_cells[2].width = Mm(70)
 			row_cells[3].text = usr.user.email
 			row_cells[3].width = Mm(60)
 			if usr.speaker:
 				row_cells[4].text = 'Докладчик'
 			else:
 				row_cells[4].text = 'Участник'
-			row_cells[4].width = Mm(30)
+			row_cells[4].width = Mm(25)
+			row_cells[5].text = usr.certificate_num
+			row_cells[5].width = Mm(22)
 			count += 1
 
 
@@ -120,27 +126,6 @@ def home_view(request):
 		document.save(response)
 
 		return response
-
-#	font_url = os.path.join(settings.BASE_DIR, 'static/fonts/chekhovskoy.ttf')
-#	img_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate.jpg')
-
-#	pdf = PDF(orientation='L', unit='mm', format='A4')
-#	pdf.add_page()
-#	pdf.add_font('Chehkovskoy', '', font_url , uni=True)
-	
-#	pdf.image(img_url, 0, 0, pdf.w, pdf.h)
-#	pdf.set_xy(0.0, 130.0)
-#	pdf.set_font('Chehkovskoy', '', 18)
-#	pdf.set_text_color(0, 0, 0)
-#	pdf.cell(w=297.0, h=5.0, align='C', txt = request.user.profile.get_full_name())
-#	pdf.output('test.pdf', 'F')
-#	file  = open('test.pdf', 'rb')
-#	djangofile = File(file)
-
-#	request.user.profile.certificate_file.save('testss.pdf', djangofile)
-#	file.close()
-
-
 
 	dte = date.today()
 	dte_deadline = date(2020,10,29)
@@ -331,7 +316,15 @@ def send_info_message(request):
 
 		message_html = render_to_string('info_email_html.html', {'sex': sex, 'name': user.profile.get_io_name()})
 
-		send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
+		email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
+
+		docfile = default_storage.open(user.profile.certificate_file.name, 'r')
+
+		email.attach_file(docfile.name)
+
+		email.send()
+
+		#send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
 
 		count += 1
 

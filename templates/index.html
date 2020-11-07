@@ -34,16 +34,21 @@
 				<h5 class="">Видеозапись на <b class="text-danger">YouTube</b>: <a href="https://youtu.be/gy4TyECAV54" target="_blank">Перейти</a></h5>
 				
 			</div>
-			<div class="text-center mt-5 pb-5"> 
+			<div class="text-center mt-5 pb-5 px-5"> 
 				<h4>Уважаем{% if user.profile.sex %}ый{% else %}ая{% endif %} {{ user.profile.get_io_name }}!</h4>
 				<h5>
-					Проверьте свои личные данные. Это можно сделать, нажав на своё имя в верхнем левом углу экрана. Именно эти данные будут указаны в сертификате.
+					Ваш именной сертификат № {{ user.profile.certificate_num }}: <a href="{% if user.profile.certificate_file %}{{ user.profile.certificate_file.url }}{% endif %}" target="_blank">скачать</a>
 				</h5>
 				
 			</div>
 			{% if user.profile.message_accecc %}
-				<div class="col-md-4 text-left mb-5">
-					<input type="submit" value="Разослать обовещения" name="addfile" id="send_message">
+				<div class="row align-middle px-5">
+					<div class="col-md-6 text-left mb-5">
+						<input type="submit" value="Разослать оповещения" name="addfile" id="send_message">
+					</div>
+					<div class="col-md-6 text-right mb-5">
+						<input type="submit" value="Сформировать сертификаты" name="create_sert" id="create_sert">
+					</div>
 				</div>
 			{% endif %}
 			{% if user.profile.moderator_access %}
@@ -178,6 +183,20 @@
 					dataType: 'json',
 					success: function(data){
 						alert("Сообщения разосланы")
+					}
+				});
+				return false;
+			});
+		});
+
+
+		$(document).ready(function() {
+			$('#create_sert').click(function (){
+				$.ajax({
+					url: "{% url 'certificates:generate_sertificates' %}",
+					dataType: 'json',
+					success: function(data){
+						alert("Сертификаты сформированы. Последний номер:"+data['last_num'])
 					}
 				});
 				return false;

@@ -80,6 +80,15 @@ class Profile(models.Model):
 		return self.name + admin
 
 
+	def get_file_name(self):
+		if self.surname:
+			if self.name2:
+				return self.surname + ' ' + self.name[0] + '.' + self.name2[0]+ '.'
+			return self.surname + ' ' + self.name[0]+ '.'
+
+		return self.name
+
+
 	def get_io_name(self):
 		if self.name2:
 			return self.name + ' ' + self.name2 

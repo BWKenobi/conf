@@ -31,6 +31,7 @@ urlpatterns += [
 
 urlpatterns += [
     path('profile/', include(('profileuser.urls', 'profiles'))),
+    path('certificates/', include(('certificates.urls', 'certificates'))),
 ]
 
 
