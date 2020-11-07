@@ -19,16 +19,14 @@ class PDF(FPDF):
 
 
 def generate_sertificates(request):
-	return HttpResponse(json.dumps("1111"))
-
-#	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False). \
-#		order_by('surname', 'name', 'name2')
+	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False). \
+		order_by('surname', 'name', 'name2')
 
 	
-#	font_url = os.path.join(settings.BASE_DIR, 'static/fonts/chekhovskoy.ttf')
-#	img_speaker_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate_speaker.jpg')
-#	img_member_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate_member.jpg')
-#	sertificate_num = 33
+	font_url = os.path.join(settings.BASE_DIR, 'static/fonts/chekhovskoy.ttf')
+	img_speaker_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate_speaker.jpg')
+	img_member_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate_member.jpg')
+	sertificate_num = 33
 
 #	for user in users:
 #		sertificate_str_num = str(sertificate_num)+'-20'
@@ -61,3 +59,5 @@ def generate_sertificates(request):
 #	sertificate_num -= 1
 
 #	return HttpResponse(json.dumps({'last_num': str(sertificate_num) + '-20'}))
+
+	return HttpResponse(json.dumps("1111"))
