@@ -123,8 +123,7 @@ def home_view(request):
 
 		response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
 		response['Content-Disposition'] = 'attachment; filename=List (' + dte.strftime('%d-%b-%Y') + ').docx'
-		#document.save(response)
-		document.save(os.path.join(settings.MEDIA_ROOT, '111.docx'))
+		document.save(response)
 
 		return response
 

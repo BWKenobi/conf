@@ -192,14 +192,16 @@
 
 		$(document).ready(function() {
 			$('#create_sert').click(function (){
-				$.ajax({
+				/*$.ajax({
 					url: "{% url 'certificates:generate_sertificates' %}",
 					dataType: 'json',
 					success: function(data){
 						alert("Сертификаты сформированы. Последний номер:"+data['last_num'])
 					}
 				});
-				return false;
+				return false;*/
+
+				document.location.href = "{% url 'certificates:generate_sertificates' %}"
 			});
 		});
 	</script>
