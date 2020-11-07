@@ -51,11 +51,8 @@ def generate_sertificates(request):
 		#byte_string = pdf.output(dest='S')
 		#primary_key=Truent(type(byte_string))
 
-		file = open(os.path.join(settings.MEDIA_ROOT, 'test.txt'),'w', encoding='utf-8')
-		file.write("1223344sddffвапавпрвапр")
-		file.close()
 		#file_data = ContentFile(base64.b64decode(BytesIO(byte_string)))
-#		pdf.output(os.path.join(settings.MEDIA_ROOT, 'test.pdf'), 'F')
+		pdf.output(os.path.join(settings.MEDIA_ROOT, 'test.pdf'), 'F')
 #		file  = open('test.pdf', 'rb')
 #		djangofile = File(file)
 
