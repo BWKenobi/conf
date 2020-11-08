@@ -14,6 +14,7 @@ class ProfileUdpateForm(forms.ModelForm):
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
 			self.fields[field].required=True
+			self.fields[field].widget.attrs['disabled'] = 'disabled'
 
 
 class ProfileAddReprotForm(forms.ModelForm):
