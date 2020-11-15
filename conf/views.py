@@ -316,15 +316,15 @@ def send_info_message(request):
 
 		message_html = render_to_string('info_email_html.html', {'sex': sex, 'name': user.profile.get_io_name()})
 
-		email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
+		#email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
 
-		docfile = default_storage.open(user.profile.certificate_file.name, 'r')
+		#docfile = default_storage.open(user.profile.certificate_file.name, 'r')
 
-		email.attach_file(docfile.name)
+		#email.attach_file(docfile.name)
 
-		email.send()
+		#email.send()
 
-		#send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
+		send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
 
 		count += 1
 
