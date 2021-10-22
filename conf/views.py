@@ -34,18 +34,43 @@ from django.core.mail import EmailMessage, send_mail
 from .tokens import accaunt_activation_token
 
 from profileuser.models import Profile
+from coprofile.models import CoProfile
 from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm
+from certificates.forms import MakeCertificateForm
 
 class PDF(FPDF):
 	pass
 
 def home_view(request):
+	members = []
+	form = MakeCertificateForm(label_suffix='')
 
 	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False). \
 		order_by('-moderator_access', '-admin_access', '-speaker', 'surname', 'name', 'name2')
 
-	speakers = Profile.objects.filter(speaker=True).exclude(username='admin'). \
-		order_by('surname', 'name', 'name2')
+	for user in users:
+		member = {
+			'name': user.get_full_name(),
+			'email': user.user.email,
+			'status': user.status(),
+			'cert': user.certificate_file,
+			'cert_num': user.certificate_num
+		}
+		members.append(member)
+		comembers = CoProfile.objects.filter(lead=user.user)
+		if comembers:
+			for comember in comembers:
+				member = {
+					'name': comember.get_full_name(),
+					'email': user.user.email,
+					'status': comember.status(),
+					'cert': comember.certificate_file,
+					'cert_num': comember.certificate_num
+				}
+				members.append(member)
+	
+	members =  sorted(members, key=lambda i: (i['name']))
+
 
 	if request.POST:
 		dte = date.today()
@@ -68,55 +93,46 @@ def home_view(request):
 		font.size = Pt(12)
 
 
-		document.add_paragraph('Список участников конференции').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		document.add_paragraph('Список участников/докладчиков конференции').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		p = document.add_paragraph()
 		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
-		table = document.add_table(rows=1, cols=6)
+		table = document.add_table(rows=1, cols=5)
 		table.allow_autifit = False
 		table.style = 'TableGrid'
 		table.columns[0].width = Mm(10)
-		table.columns[1].width = Mm(70)
+		table.columns[1].width = Mm(120)
 		table.columns[2].width = Mm(70)
-		table.columns[3].width = Mm(60)
-		table.columns[4].width = Mm(25)
-		table.columns[5].width = Mm(22)
+		table.columns[3].width = Mm(30)
+		table.columns[4].width = Mm(27)
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
 		hdr_cells[0].width = Mm(10)
 		hdr_cells[1].text = 'ФИО'
-		hdr_cells[1].width = Mm(70)
-		hdr_cells[2].text = 'Место работы'
+		hdr_cells[1].width = Mm(120)
+		hdr_cells[2].text = 'E-mail'
 		hdr_cells[2].width = Mm(70)
-		hdr_cells[3].text = 'E-mail'
-		hdr_cells[3].width = Mm(60)
-		hdr_cells[4].text = 'Статус'
-		hdr_cells[4].width = Mm(25)
-		hdr_cells[5].text = 'Серт. №'
-		hdr_cells[5].width = Mm(22)
+		hdr_cells[3].text = 'Статус'
+		hdr_cells[3].width = Mm(30)
+		hdr_cells[4].text = 'Серт. №'
+		hdr_cells[4].width = Mm(27)
 
 		count = 1
 
-		users_sorted = users.order_by('surname', 'name', 'name2')
-		for usr in users_sorted:
+		for member in members:
 			row_cells = table.add_row().cells
 			row_cells[0].text = str(count)
 			row_cells[0].width = Mm(10)
-			row_cells[1].text = usr.get_full_name()
-			row_cells[1].width = Mm(70)
-			row_cells[2].text = usr.work_place
+			row_cells[1].text = member['name']
+			row_cells[1].width = Mm(120)
+			row_cells[2].text = member['email']
 			row_cells[2].width = Mm(70)
-			row_cells[3].text = usr.user.email
-			row_cells[3].width = Mm(60)
-			if usr.speaker:
-				row_cells[4].text = 'Докладчик'
-			else:
-				row_cells[4].text = 'Участник'
-			row_cells[4].width = Mm(25)
-			row_cells[5].text = usr.certificate_num
-			row_cells[5].width = Mm(22)
+			row_cells[3].text = member['status']
+			row_cells[3].width = Mm(30)
+			row_cells[4].text = member['cert_num']
+			row_cells[4].width = Mm(27)
 			count += 1
 
 
@@ -135,8 +151,9 @@ def home_view(request):
 
 	args = {
 		'users': users,
-		'speakers': speakers,
-		'register_flag': register_flag
+		'members': members,
+		'register_flag': register_flag,
+		'form': form
 	}
 	return render(request, 'index.html', args)
 
@@ -311,25 +328,54 @@ def send_info_message(request):
 		mail_subject = 'Информационное письмо'
 		to_email = user.email
 		sex = user.profile.sex()
+		sex_valid = user.profile.sex_valid()
 		
-		message = render_to_string('info_email.html', {'sex': sex, 'name': user.profile.get_io_name()})
+		message = render_to_string('info_email.html', {'sex_valid': sex_valid, 'sex': sex, 'name': user.profile.get_io_name()})
 
-		message_html = render_to_string('info_email_html.html', {'sex': sex, 'name': user.profile.get_io_name()})
+		message_html = render_to_string('info_email_html.html', {'sex_valid': sex_valid, 'sex': sex, 'name': user.profile.get_io_name()})
 
-		#email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
+		email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
 
-		#docfile = default_storage.open(user.profile.certificate_file.name, 'r')
+		docfile = default_storage.open(user.profile.certificate_file.name, 'r')
 
-		#email.attach_file(docfile.name)
+		email.attach_file(docfile.name)
 
-		#email.send()
+		email.send()
 
-		send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
+		#send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
 
 		count += 1
 
 		if count==5:
 			count = 0
 			time.sleep(1.5)
+
+		cousers = CoProfile.objects.filter(lead=user)
+		if cousers:
+			for couser in cousers:
+				mail_subject = 'Информационное письмо'
+				to_email = user.email
+				sex = couser.sex()
+				sex_valid = user.profile.sex_valid()
+				
+				message = render_to_string('info_email.html', {'sex_valid': sex_valid, 'sex': sex, 'name': couser.get_io_name()})
+
+				message_html = render_to_string('info_email_html.html', {'sex_valid': sex_valid, 'sex': sex, 'name': couser.get_io_name()})
+
+				email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
+
+				docfile = default_storage.open(couser.certificate_file.name, 'r')
+
+				email.attach_file(docfile.name)
+
+				email.send()
+
+				#send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
+
+				count += 1
+
+				if count==5:
+					count = 0
+					time.sleep(1.5)
 
 	return HttpResponse(json.dumps('Сообщения разосланы.'))

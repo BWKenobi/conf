@@ -1,0 +1,282 @@
+{% load static %}
+{% load objects_extras %}
+{% url 'home' as home_url %}
+
+{% with '1.1' as version %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Гавриловские гуляния</title>
+
+        <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/dashboard/">
+        <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}" sizes="180x180">
+        <link rel="icon" href="{% static 'img/favicon.ico' %}">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+        <!-- Bootstrap core CSS -->
+        <link href="{% static 'css/bootstrap.css' %}?ver={{version}}" rel="stylesheet">
+        <link href="{% static 'css/style.css' %}?ver={{version}}" rel="stylesheet">
+
+        <style>
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                fillont-size: 3.5rem;
+                }
+            }
+        </style>
+        <!-- Custom styles for this template -->
+        <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="content-blocker">
+            <div>
+                <img src="{% static 'img/ajax-loader.svg' %}">
+            </div>
+        </div>
+        <nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow" style="background-color: #1673aa">
+            <a class="navbar-brand col-md-5 col-lg-3 mr-0 text-uppercase text-center" href="/"><b>Гавриловские гуляния</b></a>
+
+            <div class="text-white">
+                Администрация конкурса: <b><a href="mailto:mk_tdpi@mosreg.ru" class="text-white" target="_blank">mk_tdpi@mosreg.ru</a></b>
+            </div>
+
+            <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <ul class="navbar-nav px-3">
+                <li class="nav-item text-nowrap">
+                    {% if start %}
+                        <a class="nav-link text-white" href="{% url 'login' %}">Войти</a>
+                    {% else %}
+                        <a class="nav-link text-white" href="{% url 'logout' %}">Выйти</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+
+        <div role='main' class="container-fluid mb-5">
+            <div class="row">
+                <nav id="sidebarMenu" class="col-md-5 col-lg-3 d-md-block bg-light sidebar collapse">
+                    <div class="sidebar-sticky pt-3">
+                        <ul class="nav flex-column mb-5">
+                            <li class="nav-item">
+                                <a class="nav-link {% if request.path == home_url %}active{% endif %}" href="/">
+                                    <span data-feather="home"></span>
+                                    Главная страница
+                                </a>
+                            </li>
+                            <div class="border-top my-3"></div>
+                            {% if not start %}
+                                <li class="nav-item">
+                                    <a class="nav-link {% if 'profile' in request.path or 'passchange' in request.path %}active{% endif %}" href="{% url 'profiles:view_edit_profile' %}">
+                                        <span data-feather="user"></span>
+                                        {{ user.profile.get_file_name }}<span class="sr-only"></span>
+                                    </a>
+                                </li>
+                                <div class="border-top my-3"></div>
+                                {% if request.user.profile.admin_access or request.user.profile.message_accecc %}
+                                    <li class="nav-item">
+                                        <div class="nav-link {% if 'mailing' in request.path or 'statistic' in request.path or 'juri' in request.path %}active{% endif %}">
+                                            <span data-feather="command"></span>
+                                            Администрирование 
+                                        </div>
+                                    </li>
+                                    <ul>
+                                        {% if request.user.profile.message_accecc %}
+                                            <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'mailing:send_info_message' %}">
+                                                    <span data-feather="minus"></span>
+                                                    Cообщения
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if request.user.profile.admin_access %}
+                                            <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'juri_view' %}">
+                                                    <span data-feather="minus"></span>
+                                                    Члены жюри
+                                                </a>
+                                            </li>
+                                            <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'statistic_contestant' %}">
+                                                    <span data-feather="minus"></span>
+                                                    Статистика конкурсантов
+                                                </a>
+                                            </li>
+                                            <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'statistic_invoices' %}">
+                                                    <span data-feather="minus"></span>
+                                                    Статистика по оплате
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                    <li class="nav-item">
+                                        <div class="nav-link {% if 'ratings' in request.path %}active{% endif %}">
+                                            <span data-feather="bar-chart"></span>
+                                            Рейтинги (ДПИ)
+                                        </div>
+                                    </li>
+                                    <ul>
+                                        {% for art in arts %}
+                                             <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'ratings:view_art_nomination' pk=art.pk %}">
+                                                    <span data-feather="image"></span>
+                                                    <em><u>{{ art }}</u></em>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <li class="nav-item">
+                                        <div class="nav-link {% if 'ratings' in request.path %}active{% endif %}">
+                                            <span data-feather="bar-chart"></span>
+                                            Рейтинги (Вокал)
+                                        </div>
+                                    </li>
+                                    <ul>
+                                        {% for vocal in vocals %}
+                                             <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'ratings:view_mov_nomination' pk=vocal.pk %}">
+                                                    <span data-feather="film"></span>
+                                                    <em><u>{{ vocal }}</u></em>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="border-top my-3"></div>
+                                {% endif %}
+
+                                {% if request.user.profile.juri_accecc or request.user.profile.chef_juri_accecc %}
+                                    <li class="nav-item">
+                                        <div class="nav-link">
+                                            <span data-feather="award"></span>
+                                            Оценивание работ (ДПИ)
+                                        </div>
+                                    </li>
+                                    <ul>
+                                        {% for art in arts %}
+                                             <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'nominations:view_art_nomination' pk=art.pk %}">
+                                                    <span data-feather="image"></span>
+                                                    <em><u>{{ art }}</u></em>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+
+                                    <li class="nav-item">
+                                        <div class="nav-link">
+                                            <span data-feather="award"></span>
+                                            Оценивание работ (Вокал)
+                                        </div>
+                                    </li>
+                                    <ul>
+                                        {% for vocal in vocals %}
+                                             <li class="nav-item list-unstyled ">
+                                                <a class="nav-link" href="{% url 'nominations:view_movie_nomination' pk=vocal.pk %}">
+                                                    <span data-feather="image"></span>
+                                                    <em><u>{{ vocal }}</u></em>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="border-top my-3"></div>
+                                {% endif %}
+
+
+
+                                {% if request.user.profile.member_access %}
+                                    <li class="nav-item">
+                                        <div class="nav-link {% if '/teachers/' in request.path %}active{% endif %}">
+                                            <span data-feather="award"></span>
+                                            Мои работы 
+                                        </div>
+                                    </li>
+                                    <ul>
+                                        <li class="nav-item list-unstyled ">
+                                            <a class="nav-link {% if 'pictures' in request.path %}active{% endif %}" href="{% url 'pictures:view_arts' %}">
+                                                <span data-feather="image"></span>
+                                                <em><u>ДПИ</u></em>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item list-unstyled ">
+                                            <a class="nav-link {% if 'movies' in request.path %}active{% endif %}" href="{% url 'movies:view_movies' %}">
+                                                <span data-feather="film"></span>
+                                                <em><u>Вокал</u></em>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    
+                                    <li class="nav-item list-unstyled">
+                                        <a class="nav-link {% if '/invoices/' in request.path %}active{% endif %}" href="{% url 'invoices:view_invoice' %}">
+                                            <span data-feather="layers"></span>
+                                            Квитанции
+                                        </a>
+                                    </li>
+                                    <div class="border-top my-3"></div>
+                                {% endif %}
+                            {% endif %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% static 'files/polozhenie-2021.pdf' %}" target="_blank">
+                                    <span data-feather="book"></span>
+                                    Положение
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if 'policy' in request.path %}active{% endif %}" href="{% url 'policy' %}">
+                                    <span data-feather="check-circle"></span>
+                                    Политика обработки данных
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <main role="main" class="{% if full_width %}col-md-12 col-lg-12{% else %}col-md-7 col-lg-9{% endif %} ml-sm-auto px-md-4 inner cover">
+                    <div class="d-flex w-100 justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                </main>
+            </div>
+        </div>
+
+
+
+        <footer class="footer font-small fixed-bottom bg-secondary text-light">
+            <div class="float-left text-left py-3 px-5">
+                Создано при поддержке <b><a href="http://av-science.ru" class="text-white" target="_blank">ArtVisionScience</a></b>
+            </div>
+            <div class="float-right text-rigth py-3 px-5">
+                Тех.поддержка: <b><a href="tel:+79032201992" class="text-white" target="_blank">+7(903)220-19-92</a></b>
+            </div>
+        </footer>
+
+        
+
+
+        {% block scripts %}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+            <script src="{% static 'js/dashboard.js' %}"></script>
+            <script src="{% static 'js/scripts.js' %}?ver={{version}}"></script>
+        {% endblock %}
+    </body>
+
+
+</html>
+{% endwith %}

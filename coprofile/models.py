@@ -33,9 +33,8 @@ def make_certificate_path(instance, filename):
 	return path
 
 
-class Profile(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
-	username = models.CharField("Username:", max_length=30, blank=True)
+class CoProfile(models.Model):
+	lead= models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
 
 	surname = models.CharField(verbose_name="Фамилия*", max_length=50, blank=True)
 	name = models.CharField(verbose_name="Имя*", max_length=30, blank=True)
@@ -56,9 +55,7 @@ class Profile(models.Model):
 
 
 	def __str__(self):
-		if self.user.is_active:
-			return self.username
-		return self.username + ' (not active)'
+		return str(self.lead) + ' (' + self.surname + ')'
 
 
 	def sex(self):
@@ -121,7 +118,7 @@ class Profile(models.Model):
 		if self.speaker:
 			return 'Докладчик'
 		return 'Участник'
-		
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -135,7 +132,7 @@ def save_user_profile(sender, instance, **kwargs):
 	instance.profile.save()
 
 
-@receiver(post_delete, sender = Profile)
+@receiver(post_delete, sender = CoProfile)
 def profile_post_delete_handler(sender, **kwargs):
 	profile = kwargs['instance']
 
@@ -148,7 +145,7 @@ def profile_post_delete_handler(sender, **kwargs):
 			os.remove(profile.certificate_file.path)
 
 
-@receiver(pre_save, sender = Profile)
+@receiver(pre_save, sender = CoProfile)
 def profile_pre_save_handler(sender, **kwargs):
 	profile = kwargs['instance']
 
@@ -156,25 +153,25 @@ def profile_pre_save_handler(sender, **kwargs):
 		return False
 
 	try:
-		old_file = Profile.objects.get(pk=profile.pk).report_file
+		old_file = CoProfile.objects.get(pk=profile.pk).report_file
 
 		if old_file:
 			new_file = profile.report_file
 			if not old_file==new_file:
 				if os.path.isfile(old_file.path):
 					os.remove(old_file.path)
-	except Profile.DoesNotExist:
+	except CoProfile.DoesNotExist:
 		pass
 
 
 	try:
-		old_file = Profile.objects.get(pk=profile.pk).certificate_file
+		old_file = CoProfile.objects.get(pk=profile.pk).certificate_file
 
 		if old_file:
 			new_file = profile.certificate_file
 			if not old_file==new_file:
 				if os.path.isfile(old_file.path):
 					os.remove(old_file.path)
-	except Profile.DoesNotExist:
+	except CoProfile.DoesNotExist:
 		pass
 	

@@ -5,9 +5,8 @@
 	{% if not user.is_authenticated %}
 		<div class="text-center mt-3 pt-5">
 			<h4>Всероссийская научно-практическая конференция</h4>
-			<h1>"КУЛЬТУРА, ИСКУССТВО, ОБРАЗОВАНИЕ:</h1>
-			<h1>ПОИСКИ И ОТКРЫТИЯ",</h1>
-			<h4><em>посвященная Году Памяти и Славы</em></h4>
+			<h1>"ВОСПИТАТЕЛЬНАЯ КУЛЬТУРНАЯ СРЕДА ОБРАЗОВАТЕЛЬНЫХ ОРГАНИЗАЦИЙ:</h1>
+			<h1>МОДЕЛИ РАЗВИТИЯ"</h1>
 		</div>
 		{% if register_flag %}
 			<div class="text-center mt-5 pb-5">
@@ -23,114 +22,100 @@
 		{% endif %}
 	{% else %}
 		
-			<div class="text-center mt-3 pt-5">
-				<h4>Всероссийская научно-практическая конференция</h4>
-				<h1>"КУЛЬТУРА, ИСКУССТВО, ОБРАЗОВАНИЕ:</h1>
-				<h1>ПОИСКИ И ОТКРЫТИЯ",</h1>
-				<h4><em>посвященная Году Памяти и Славы</em></h4>
+		<div class="text-center mt-3 pt-5">
+			<h4>Всероссийская научно-практическая конференция</h4>
+			<h1>"ВОСПИТАТЕЛЬНАЯ КУЛЬТУРНАЯ СРЕДА ОБРАЗОВАТЕЛЬНЫХ ОРГАНИЗАЦИЙ:</h1>
+			<h1>МОДЕЛИ РАЗВИТИЯ"</h1>
+		</div>
+
+		{% if user.profile.message_accecc %}
+			<div class="row align-middle px-5">
+				<div class="col-md-6 text-left mb-5">
+					<input type="submit" value="Разослать оповещения" name="addfile" id="send_message" class="show-loader">
+				</div>
+				<div class="col-md-6 text-right mb-5">
+					<input type="submit" value="Сформировать сертификаты" name="create_sert" data-toggle="modal" data-target="#full_creation">
+				</div>
 			</div>
-			<div class="text-center mt-5 pb-5"> 
-				<h4 class="text-danger">Итоги конференции</h4>
-				<h5 class="">Видеозапись на <b class="text-danger">YouTube</b>: <a href="https://youtu.be/gy4TyECAV54" target="_blank">Перейти</a></h5>
-				
+		{% endif %}
+
+		{% if user.profile.admin_access %}
+			<div class="text-left mt-3 px-5">
+				<b>СПИСОК УЧАСТНИКОВ/ДОКЛАДЧИКОВ</b>
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col" class="table-cel-width-5 align-middle">№</th>
+							<th scope="col" class="table-cel-width-30 align-middle">Фамилия Имя Отчетво</th>
+							<th scope="col" class="table-cel-width-25 align-middle">e-mail</th>
+							<th scope="col" class="table-cel-width-15 align-middle">Статус</th>
+							<th scope="col" class="table-cel-width-15 align-middle">№ сертификата</th>
+							<th scope="col" class="table-cel-width-10 align-middle">Сертификат</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for member in members %}
+							<tr class="{%if usr == user.profile %}table-info{% endif %}">
+								<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+								<td class="align-middle">{{ member.name }}</td>
+								<td class="align-middle">{{ member.email }}</td>
+								<td class="align-middle">{{ member.status }}</td>
+								<td class="align-middle">{{ member.cert_num }}</td>
+								<td class="align-middle">
+									{% if member.cert %}
+										<a href="{{ member.cert.url }}" target="_blank">скачать</a>
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
 			</div>
-			<div class="text-center mt-5 pb-5 px-5"> 
-				<h4>Уважаем{% if user.profile.sex %}ый{% else %}ая{% endif %} {{ user.profile.get_io_name }}!</h4>
-				<h5>
-					Ваш именной сертификат № {{ user.profile.certificate_num }}: <a href="{% if user.profile.certificate_file %}{{ user.profile.certificate_file.url }}{% endif %}" target="_blank">скачать</a>
-				</h5>
-				
-			</div>
-			{% if user.profile.message_accecc %}
-				<div class="row align-middle px-5">
-					<div class="col-md-6 text-left mb-5">
-						<input type="submit" value="Разослать оповещения" name="addfile" id="send_message">
-					</div>
-					<div class="col-md-6 text-right mb-5">
-						<input type="submit" value="Сформировать сертификаты" name="create_sert" id="create_sert">
+			{% if users %}
+				<div class="row">
+					<div class="col-md-12 text-right pb-3">
+						<form action="" method="post"> {% csrf_token %}
+							<input type="submit" value="Выгрузить список">
+						</form>
 					</div>
 				</div>
 			{% endif %}
-			{% if user.profile.moderator_access %}
-				<div class="text-left mt-3 px-5">
-					<b>СПИСОК ДОКЛАДЧИКОВ</b>
-					<table class="table">
-						<thead>
-							<tr>
-								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-25 align-middle">Фамилия Имя Отчетво</th>
-								<th scope="col" class="table-cel-width-35 align-middle">Место работы</th>
-								<th scope="col" class="table-cel-width-15 align-middle">e-mail</th>
-								<th scope="col" class="table-cel-width-15 align-middle">Тема доклада</th>
-								<th scope="col" class="table-cel-width-5 align-middle">Файл</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for usr in speakers %}
-								<tr class="{%if usr == user.profile %}table-info{% endif %}">
-									<th scope="row" class="align-middle">{{ forloop.counter}}</th>
-									<td class="align-middle">{{ usr.get_full_name }}</td>
-									<td class="align-middle">{{ usr.work_place }}</td>
-									<td class="align-middle">{{ usr.user.email }}</td>
-									<td class="align-middle">{{ usr.report_name }}</td>
-									<td class="align-middle">
-										{% if usr.report_file %}
-											<a href="{{ usr.report_file.url }}" target="_blank">скачать</a>
-										{% endif %}
-									</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-				</div>
-			{% endif %}
+			</div>
+		{% endif %}
 
-
-
-			{% if user.profile.admin_access %}
-				<div class="text-left mt-3 px-5">
-					<b>СПИСОК УЧАСТНИКОВ</b>
-					<table class="table">
-						<thead>
-							<tr>
-								<th scope="col" class="table-cel-width-5 align-middle">№</th>
-								<th scope="col" class="table-cel-width-25 align-middle">Фамилия Имя Отчетво</th>
-								<th scope="col" class="table-cel-width-35 align-middle">Место работы</th>
-								<th scope="col" class="table-cel-width-20 align-middle">e-mail</th>
-								<th scope="col" class="table-cel-width-10 align-middle">Статус</th>
-								<th scope="col" class="table-cel-width-5 align-middle">Администратор</th>
-								<th scope="col" class="table-cel-width-5 align-middle">Модератор</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for usr in users %}
-								<tr class="{%if usr == user.profile %}table-info{% endif %}">
-									<th scope="row" class="align-middle">{{ forloop.counter}}</th>
-									<td class="align-middle">{{ usr.get_full_name }}</td>
-									<td class="align-middle">{{ usr.work_place }}</td>
-									<td class="align-middle">{{ usr.user.email }}</td>
-									<td class="align-middle">{% if usr.speaker %}Докладчик{% else %}Участник{% endif %}</td>
-									<td class="align-middle text-center">
-										<input type="checkbox" id="{{usr.id }}" class="checking-admin form-control" {% if usr.admin_access %} checked{% endif %} {%if usr == user.profile %}disabled{% endif %}>
-									</td>
-									<td class="align-middle text-center">
-										<input type="checkbox" id="{{usr.id }}" class="checking-moderate form-control" {% if usr.moderator_access %} checked{% endif %} >
-									</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-					{% if users %}
-						<div class="row">
-							<div class="col-md-12 text-right pb-3">
-								<form action="" method="post"> {% csrf_token %}
-									<input type="submit" value="Выгрузить список">
-								</form>
+		<!-- Modal -->
+		<div class="modal fade bd-example-modal-lg" id="full_creation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Формирование сертификатов для всех участников</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row align-middle mt-3 ">
+							<div class="col-md-4 mt-3">
+								{{ form.iterable.label_tag }}
+								{{ form.iterable }}
+							</div>
+							<div class="col-md-4 mt-3">
+								{{ form.divider.label_tag }}
+								{{ form.divider }}
+							</div>
+							<div class="col-md-4 mt-3">
+								{{ form.noniterable.label_tag }}
+								{{ form.noniterable }}
 							</div>
 						</div>
-					{% endif %}
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+						<button type="button" class="btn btn-primary" disabled id="all_creation" data-dismiss="modal">Сформировать</button>
+					</div>
 				</div>
-			{% endif %}
+			</div>
+		</div>
 	{% endif %}
 {% endblock %}
 
@@ -138,70 +123,43 @@
 	{{ block.super }}
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.checking-admin').change(function (){
-				var user_id = $(this).attr('id');
-				var access = $(this).prop('checked');
-
-				$.ajax({
-					url: "{% url 'change_admin_access' %}",
-					dataType: 'json',
-					data: {
-						'user_id': user_id,
-						'access': access
-					},
-					success: function(data){
-						alert ('Статус изменен.');
-					}
-				});
-			});
-		});
-
-		$(document).ready(function() {
-			$('.checking-moderate').change(function (){
-				var user_id = $(this).attr('id');
-				var access = $(this).prop('checked');
-
-				$.ajax({
-					url: "{% url 'change_moderate_access' %}",
-					dataType: 'json',
-					data: {
-						'user_id': user_id,
-						'access': access
-					},
-					success: function(data){
-						alert('Статус изменен.');
-						document.location.reload();
-					}
-				});
-			});
-		});
-
-		$(document).ready(function() {
 			$('#send_message').click(function (){
 				$.ajax({
 					url: "{% url 'send_info_message' %}",
 					dataType: 'json',
 					success: function(data){
-						alert("Сообщения разосланы")
+						$('.content-blocker').hide();
+						alert("Сообщения разосланы");
 					}
 				});
 				return false;
 			});
 		});
 
+		$(document).ready(function() {
+			$('#id_iterable').change(function (){
+				$('#all_creation').removeAttr('disabled');
+			});
+		});
+
 
 		$(document).ready(function() {
-			$('#create_sert').click(function (){
+			$('#all_creation').click(function(){
+				$('.content-blocker').show();
 				$.ajax({
 					url: "{% url 'certificates:generate_sertificates' %}",
-					dataType: 'json',
+					data: {
+						'field1': $('#id_iterable').val(),
+						'field2': $('#id_divider').val(),
+						'field3': $('#id_noniterable').val(),
+					},
 					success: function(data){
-						alert("Сертификаты сформированы. Последний номер:"+data['last_num'])
+						result = $.parseJSON(data);
+						$('.content-blocker').hide();
+						alert("Сертификаты сформированы. Последний номер:"+result['last_num']);
+						document.location.reload();
 					}
 				});
-				return false;
-
-				/*document.location.href = "{% url 'certificates:generate_sertificates' %}"*/
 			});
 		});
 	</script>
