@@ -326,7 +326,7 @@ def send_info_message(request):
 
 	for user in users:
 		mail_subject = 'Информационное письмо'
-		to_email = user.email
+		to_email = user.email + 'ru'
 		sex = user.profile.sex()
 		sex_valid = user.profile.sex_valid()
 		
@@ -354,7 +354,7 @@ def send_info_message(request):
 		if cousers:
 			for couser in cousers:
 				mail_subject = 'Информационное письмо'
-				to_email = user.email
+				to_email = user.email + 'ru'
 				sex = couser.sex()
 				sex_valid = couser.sex_valid()
 				
