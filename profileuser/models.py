@@ -63,6 +63,8 @@ class Profile(models.Model):
 
 	def sex(self):
 		sex = False
+		if not self.name2:
+			return sex
 		if self.name2[-1] =='ч' or self.name2[-1] == 'Ч':
 			sex = True
 		return sex
@@ -70,6 +72,8 @@ class Profile(models.Model):
 
 	def sex_valid(self):
 		sex_valid = False
+		if not self.name2:
+			return sex_valid
 		if self.name2[-1] =='ч' or self.name2[-1] == 'Ч' or self.name2[-1] =='а' or self.name2[-1] == 'А':
 			sex_valid = True
 		return sex_valid
