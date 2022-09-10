@@ -144,7 +144,7 @@ def home_view(request):
 		return response
 
 	dte = date.today()
-	dte_deadline = date(2020,10,29)
+	dte_deadline = date(2022,10,15)
 	register_flag = False
 	if dte<dte_deadline:
 		register_flag = True
@@ -204,6 +204,12 @@ def register_view(request):
 			new_user.profile.name2 = user_form.cleaned_data['name2']
 			new_user.profile.surname = user_form.cleaned_data['surname']
 			new_user.profile.work_place = user_form.cleaned_data['work_place']
+
+			new_user.profile.phone = user_form.cleaned_data['phone']
+			new_user.profile.work_part = user_form.cleaned_data['work_part']
+			new_user.profile.position = user_form.cleaned_data['position']
+			new_user.profile.degree = user_form.cleaned_data['degree']
+			new_user.profile.speaker = user_form.cleaned_data['speaker']
 			new_user.profile.save()
 
 
@@ -214,10 +220,10 @@ def register_view(request):
 
 			mail_subject = 'Активация аккаунта'
 			to_email = new_user.email
-			if '127.0.0.1' in current_site.domain:
-				uid = urlsafe_base64_encode(force_bytes(new_user.pk))
-			else:
-				uid = urlsafe_base64_encode(force_bytes(new_user.pk)).decode()
+			#if '127.0.0.1' in current_site.domain:
+			uid = urlsafe_base64_encode(force_bytes(new_user.pk))
+			#else:
+			#	uid = urlsafe_base64_encode(force_bytes(new_user.pk)).decode()
 
 			token = accaunt_activation_token.make_token(new_user)
 
@@ -233,7 +239,7 @@ def register_view(request):
 				'protocol': protocol,\
 				'email': to_email})
 
-			send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
+			t = send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
 
 			return render(request, 'confirm_email.html')
 

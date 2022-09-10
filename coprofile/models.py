@@ -34,17 +34,27 @@ def make_certificate_path(instance, filename):
 
 
 class CoProfile(models.Model):
+	SPEAKER_TYPE = (
+		('1', 'Выступление с докладом'),
+		('2', 'Публикация статьи'),
+		('3', 'Участие без доклада'),
+	)
+	
 	lead= models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
 
 	surname = models.CharField(verbose_name="Фамилия*", max_length=50, blank=True)
 	name = models.CharField(verbose_name="Имя*", max_length=30, blank=True)
 	name2 = models.CharField(verbose_name="Отчество*", max_length=30, blank=True)
-	work_place = models.TextField(verbose_name="Место работы (полностью)*", blank=True)
+	phone = models.CharField(verbose_name="Телефон*", max_length=30, blank=True)
+	work_place = models.CharField(verbose_name="Название организации*", max_length=250, blank=True)
+	work_part = models.CharField(verbose_name="Название отдела (факультет, кафедра)", max_length=250, blank=True)
+	position = models.CharField(verbose_name="Занимаемая должность", max_length=100, blank=True)
+	degree = models.CharField(verbose_name="Ученая степень, ученое звание", max_length=100, blank=True)
 
 	certificate_num = models.CharField(verbose_name="Номер сертификата", max_length=30, blank=True)
 	certificate_file = models.FileField(verbose_name='Сертификат', blank=True, null=True, upload_to = make_certificate_path)
 
-	speaker= models.BooleanField("Докладчик", default=False)
+	speaker= models.BooleanField("Форма участия", max_length=1, choices=SPEAKER_TYPE, default='3')
 	report_name = models.CharField(verbose_name="Тема доклада*", max_length=250, blank=True)
 	report_file = models.FileField(verbose_name='Файл научной статьи*', blank=True, null=True, upload_to = make_upload_path)
 

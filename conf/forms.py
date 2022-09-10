@@ -36,11 +36,22 @@ class UserLoginForm(forms.Form):
 
 
 class UserRegistrationForm(forms.ModelForm):
+	SPEAKER_TYPE = (
+		('1', 'Выступление с докладом'),
+		('2', 'Публикация статьи'),
+		('3', 'Участие без доклада'),
+	)
+
 	email = forms.EmailField(label = 'Ваш e-mail*', widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	name  = forms.CharField(label = 'Ваше имя*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
-	name2  = forms.CharField(label = 'Ваше отчество*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	name2  = forms.CharField(label = 'Ваше отчество', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	surname = forms.CharField(label = 'Ваша фамилия*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
-	work_place = forms.CharField(label = 'Место работы (полностью)*', widget=forms.Textarea(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	phone = forms.CharField(label = 'Телефон*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	work_place = forms.CharField(label = 'Название организации*', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	work_part = forms.CharField(label = 'Название отдела (факультет, кафедра)', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	position = forms.CharField(label = 'Занимаемая должность', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	degree = forms.CharField(label = 'Ученая степень, ученое звание', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
+	speaker = forms.ChoiceField(label = 'Форма участия', choices = SPEAKER_TYPE, widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	password = forms.CharField(label = 'Задайте пароль*', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
 	def __init__(self, *args, **kwargs):

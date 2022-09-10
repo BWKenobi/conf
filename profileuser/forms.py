@@ -7,14 +7,14 @@ from .models import Profile
 class ProfileUdpateForm(forms.ModelForm):
 	class Meta:
 		model = Profile
-		fields = ('surname', 'name', 'name2', 'work_place')
+		fields = ('surname', 'name', 'name2', 'phone', 'work_place', 'work_part', 'position', 'degree')
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
-			self.fields[field].required=True
-			self.fields[field].widget.attrs['disabled'] = 'disabled'
+			self.fields[field].required=False
+			#self.fields[field].widget.attrs['disabled'] = 'disabled'
 
 
 class ProfileAddReprotForm(forms.ModelForm):
