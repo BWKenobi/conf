@@ -52,9 +52,16 @@ def home_view(request):
 		member = {
 			'name': user.get_full_name(),
 			'email': user.user.email,
-			'status': user.status(),
+			'status': user.get_speaker_display(),
+			'phone': user.phone,
+			'work_place': user.work_place,
+			'work_part': user.work_part,
+			'position': user.position,
+			'degree': user.degree,
 			'cert': user.certificate_file,
-			'cert_num': user.certificate_num
+			'cert_num': user.certificate_num,
+			'report_name': user.report_name,
+			'report_file': user.report_file
 		}
 		members.append(member)
 		comembers = CoProfile.objects.filter(lead=user.user)
@@ -63,9 +70,16 @@ def home_view(request):
 				member = {
 					'name': comember.get_full_name(),
 					'email': user.user.email,
-					'status': comember.status(),
+					'status': comember.get_speaker_display(),
+					'phone': comember.phone,
+					'work_place': comember.work_place,
+					'work_part': comember.work_part,
+					'position': comember.position,
+					'degree': comember.degree,
 					'cert': comember.certificate_file,
-					'cert_num': comember.certificate_num
+					'cert_num': comember.certificate_num,
+					'report_name': comember.report_name,
+					'report_file': comember.report_file
 				}
 				members.append(member)
 	

@@ -50,10 +50,10 @@
 					<thead>
 						<tr>
 							<th scope="col" class="table-cel-width-5 align-middle">№</th>
-							<th scope="col" class="table-cel-width-30 align-middle">Фамилия Имя Отчетво</th>
-							<th scope="col" class="table-cel-width-25 align-middle">e-mail</th>
-							<th scope="col" class="table-cel-width-15 align-middle">Статус</th>
-							<th scope="col" class="table-cel-width-15 align-middle">№ сертификата</th>
+							<th scope="col" class="table-cel-width-30 align-middle">Фамилия Имя Отчетво<br>Телефон<br>E-mail</th>
+							<th scope="col" class="table-cel-width-25 align-middle">Организация<br>Отдел/факультет/кафедра</th>
+							<th scope="col" class="table-cel-width-15 align-middle">Должность<br>Ученая степень/ученое звание</th>
+							<th scope="col" class="table-cel-width-15 align-middle">Форма участия<br>Тема доклада</th>
 							<th scope="col" class="table-cel-width-10 align-middle">Сертификат</th>
 						</tr>
 					</thead>
@@ -61,12 +61,13 @@
 						{% for member in members %}
 							<tr class="{%if usr == user.profile %}table-info{% endif %}">
 								<th scope="row" class="align-middle">{{ forloop.counter}}</th>
-								<td class="align-middle">{{ member.name }}</td>
-								<td class="align-middle">{{ member.email }}</td>
-								<td class="align-middle">{{ member.status }}</td>
-								<td class="align-middle">{{ member.cert_num }}</td>
-								<td class="align-middle">
+								<td class="align-middle"><b>{{ member.name }}</b><br>{{ member.phone }}<br><em>{{ member.email }}</em></td>
+								<td class="align-middle"><b>{{ member.work_place }}</b><br><em>{{ member.work_part }}</em></td>
+								<td class="align-middle"><b>{{ member.position }}</b><br><em>{{ member.degree }}</em></td>
+								<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.report_file %}<br><a href="{{ member.report_file.url }}" target="_blank">{{ member.report_name }}</a>{% endif %}</td>
+								<td class="align-middle text-center">
 									{% if member.cert %}
+										№ {{ member.cert_num }}<br>
 										<a href="{{ member.cert.url }}" target="_blank">скачать</a>
 									{% endif %}
 								</td>
