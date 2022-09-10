@@ -118,3 +118,7 @@ body{
 .my-mt{
 	margin-top: 2rem !important;
 }
+
+.active{
+	color: #05f !important;
+}

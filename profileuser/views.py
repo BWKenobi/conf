@@ -47,6 +47,7 @@ def view_edit_profile(request):
 			return redirect('home')
 
 		args ={
+			'menu': 'profile',
 			'report_flag': report_flag,
 			'form': form_profile, 
 		}
@@ -55,6 +56,7 @@ def view_edit_profile(request):
 	form_profile = ProfileUdpateForm(instance=request.user.profile, label_suffix='')
 
 	args = {
+		'menu': 'profile',
 		'report_flag': report_flag,
 		'form': form_profile, 
 	}

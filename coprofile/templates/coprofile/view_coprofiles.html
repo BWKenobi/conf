@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+	<div class="row align-middle px-5">
+		<div class="col-md-6">
+			<b>СПИСОК ДОП.УЧАСТНИКОВ</b>
+		</div>
+		<div class="col-md-6 text-right">
+			<input type="button" value="Добавить" name="add-coprofile" id="add_coprofile" class="show-loader">
+		</div>
+	</div>
+
+	<div class="text-left mt-3 px-5">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col" class="table-cel-width-5 align-middle">№</th>
+					<th scope="col" class="table-cel-width-75 align-middle">Фамилия Имя Отчетво</th>
+					<th scope="col" class="table-cel-width-10 align-middle text-center"></th>
+					<th scope="col" class="table-cel-width-10 align-middle text-center"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for coprofile in coprofiles %}
+					<tr class="">
+						<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+						<td class="align-middle">{{ coprofile.get_full_name }}</td>
+						<td class="align-middle"><a href="{% url 'coprofile:edit_coprofile' pk=coprofile.pk %}">изменить</a></td>
+						<td class="align-middle"><a href="{% url 'coprofile:del_coprofile' pk=coprofile.pk %}">удалить</a></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#add_coprofile').click(function (){
+				window.location.href = "{% url 'coprofile:add_coprofile' %}";
+			});
+		});
+
+	</script>
+{% endblock %}

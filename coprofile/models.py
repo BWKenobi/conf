@@ -54,7 +54,7 @@ class CoProfile(models.Model):
 	certificate_num = models.CharField(verbose_name="Номер сертификата", max_length=30, blank=True)
 	certificate_file = models.FileField(verbose_name='Сертификат', blank=True, null=True, upload_to = make_certificate_path)
 
-	speaker= models.BooleanField("Форма участия", max_length=1, choices=SPEAKER_TYPE, default='3')
+	speaker= models.CharField("Форма участия", max_length=1, choices=SPEAKER_TYPE, default='3')
 	report_name = models.CharField(verbose_name="Тема доклада*", max_length=250, blank=True)
 	report_file = models.FileField(verbose_name='Файл научной статьи*', blank=True, null=True, upload_to = make_upload_path)
 

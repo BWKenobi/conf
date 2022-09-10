@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<h4 class="display-5 text-center">Личные данные</h4>
+	<div class="row">
+		<div class="col-md-6 mx-auto mb-5">
+			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+				{{form.as_p}}
+				{% if coprofile.speaker != '3' %}
+					<div class="row align-middle mb-5 mt-5">
+						{% if coprofile.report_file %}
+							<div class="col-md-10 mx-auto ">
+								Тема доклада: <b> {{ user.profile.report_name }}</b> 
+							</div>
+							<div class="col-md-2 mx-auto ">
+								<a href="{{ coprofile.report_file.url }}" target="_blank">скачать</a>
+							</div>
+						{% endif %}
+					</div>
+				{% endif %}
+
+				
+				<div class="row align-middle">
+					{% if coprofile.speaker != '3' %}
+					<div class="col-md-4 text-left">
+						<input type="submit" value="Добавить доклад" name="addfile">
+					</div>
+					{% endif %}
+					<div class="{% if coprofile.speaker != '3' %}col-md-4 text-center{% else %}col-md-6{% endif %}">
+					</div>
+					<div class="{% if coprofile.speaker != '3' %}col-md-4{% else %}col-md-6{% endif %} text-right">
+						<input type="submit" value="Сохранить изменения" {% if not report_flag %}disabled{% endif %}>
+					</div>
+				</div>
+				<div class="row align-middle">
+					<div class="col-md-12 text-center mt-5">
+						<a href="{% url 'coprofile:view_coprofiles' %}">Вернуться</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

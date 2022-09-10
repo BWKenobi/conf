@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<h4 class="display-5 text-center">Данные доклада</h4>
+	<h5 class="display-5 text-center mb-5"><em>{{ coprofile.get_full_name }}</em></h5>
+	<div class="row">
+		<div class="col-md-6 mx-auto mb-5">
+			<form enctype="multipart/form-data"  action="" method="post" , autocomplete="false"> {% csrf_token %}
+				{{form.as_p}}
+
+				<div class="row align-middle">
+					<div class="col-md-6 text-left">
+						<a href="{% url 'coprofile:edit_coprofile' pk=coprofile.pk %}">Вернуться</a>
+					</div>
+					<div class="col-md-6 text-right">
+						<input type="submit" value="Сохранить">
+					</div>
+
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
