@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row col-md-12 col-lg-12 ">
+		<div class="mx-auto mb-5 col-md-6 col-lg-6">
+			<h4 class="display-5 text-center">Отправка рассылки</h4>
+
+			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+				<div class="row align-middle mt-3">
+					<div class="col-md-12">
+						<b>{{form.theme.label_tag}}</b>
+						{{form.theme}}
+					</div>
+				</div>
+				<div class="row align-middle mt-3">
+					<div class="col-md-12">
+						<b>{{form.msg.label_tag}}</b>
+						{{form.msg}}
+					</div>
+				</div>
+				<div class="row align-middle mt-3">
+					<div class="col-md-12 my-3">
+						<b>Текст подписи</b>
+					</div>
+					<div class="col-md-12 mx-auto mb-2">
+						Портал конкурса: <b>conference.tdpi.ru</b>
+					</div>
+					<div class="col-md-12 mx-auto">
+						<b>Внимание!</b> Это письмо сформировано автоматически.<br>
+						Не направляйте сообщения на адрес отправки данного сообщения - любые сообщения на этот адрес будут без расмотрения автоматически удалены.<br><br>
+
+					</div>
+				</div>
+				<div class="row align-middle">
+					<div class="col-md-12">
+						{{form.signature}}
+					</div>
+				</div>
+				<div class="row align-middle mt-3">
+					<div class="col-md-12 text-center">
+						<input type="submit" value="Отправить" class="show-loader">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+{% endblock %}
+
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#id_teacher_plus').attr('disabled', 'true');
+    	});
+
+		$(document).ready(function() {
+			$('#id_teacher_plus_flag').change(function(){
+				if ($(this).prop('checked')){
+					$('#id_teacher_plus').attr('required', 'true');
+					$('#id_teacher_plus').removeAttr('disabled');
+				}else{
+					$('#id_teacher_plus').removeAttr('required');
+					$('#id_teacher_plus').attr('disabled', 'true');
+				}
+
+				
+			});
+		});
+	</script>
