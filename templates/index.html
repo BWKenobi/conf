@@ -44,11 +44,14 @@
 
 		{% if user.profile.message_accecc %}
 			<div class="row align-middle px-5">
-				<div class="col-md-6 text-left mb-5">
+				<div class="col-md-3 text-left mb-5">
 					<input type="button" value="Разослать оповещения" name="addfile" id="send_message" class="show-loader">
 				</div>
-				<div class="col-md-6 text-right mb-5">
+				<div class="col-md-9 text-right mb-5">
+
 					<input type="submit" value="Сформировать сертификаты" name="create_sert" data-toggle="modal" data-target="#full_creation">
+					<input type="submit" value="Разослать сертификаты" name="send_sert" id="send_sert">
+					<input type="submit" value="Удалить сертификаты" name="delete_sert" id="delete_sert">
 				</div>
 			</div>
 		{% endif %}
@@ -170,5 +173,18 @@
 				});
 			});
 		});
+
+		$(document).ready(function() {
+			$('#delete_sert').click(function(){
+				window.location.href = "{% url 'certificates:del_serificates' %}";
+			});
+		});
+
+		$(document).ready(function() {
+			$('#send_sert').click(function(){
+				window.location.href = "{% url 'certificates:send_serificates' %}";
+			});
+		});
+		
 	</script>
 {% endblock %}

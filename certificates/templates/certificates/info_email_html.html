@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head></head>
+	<body>
+		{% if sex_valid %}
+			<p>Уважаем{% if sex %}ый{% else %}ая{% endif %} {{ name }}!</p>
+		{% else %}
+			<p>Уважаемый(ая) {{ name }}!</p>
+		{% endif %}
+		<br>
+		{% for txt in text %}
+			{{ txt }}<br>
+		{% endfor %}
+		<br>
+		<br>
+		{% for sgn in sign %}
+			{{ sgn }}<br>
+		{% endfor %}
+		<br>
+		<br>
+		Портал конкурса: <a href="http://conference.tdpi.ru" target="_blank"><b>conference.tdpi.ru</b></a>
+		<br>
+		<p><b>Внимание!</b> Это письмо сформировано автоматически.<br>
+		Не направляйте сообщения на адрес отправки данного сообщения - любые сообщения на этот адрес будут без расмотрения автоматически удалены.</p>
+	</body>
+</html>

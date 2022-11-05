@@ -1,15 +1,23 @@
 import os
+import io
 import time
 from datetime import date
 import json
 from io import BytesIO
 import base64
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.files import File
 from django.core.files.base import ContentFile
+
+from pytils import translit
+
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage, send_mail
+
+from zipfile import ZipFile
 
 from fpdf import FPDF
 
@@ -19,6 +27,79 @@ from coprofile.models import CoProfile
 
 class PDF(FPDF):
 	pass
+
+
+def del_serificates(request):
+	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False)
+
+	for user in users:
+		user.certificate_num = ''
+		user.certificate_file = None
+		user.save()
+		comembers = CoProfile.objects.filter(lead=user.user)
+		for comember in comembers:
+			comember.certificate_num = ''
+			comember.certificate_file = None
+			comember.save()
+
+	return redirect('home')
+
+
+
+def send_serificates(request):
+	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False)
+	
+	signature = 'С уважением,\r\nавторы портала - AstVisionScience'
+	sign = signature.split('\r\n')
+	message = 'Во вложении иенные сертификаты'
+	text = message.split('\r\n')
+
+	count = 0
+	for user in users:
+		mail_subject = 'Информационное письмо'
+		to_email = user.user.email
+		sex = user.sex()
+		sex_valid = user.sex_valid()
+		name = user.get_io_name()
+
+		args = {
+			'sex_valid': sex_valid,
+			'sex': sex, 
+			'name': name,
+			'message': message,
+			'text': text,
+			'signature': signature,
+			'sign': sign
+		}
+		
+		message = render_to_string('info_email.html', args)
+
+		message_html = render_to_string('info_email_html.html', args)
+
+		email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
+
+		email.attach_file(user.certificate_file.path)
+		
+		comembers = CoProfile.objects.filter(lead=user.user)
+		for comember in comembers:
+			email.attach_file(comember.certificate_file.path)
+
+
+		
+		email.send()
+
+		#send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
+
+		count += 1
+
+		if count==5:
+			count = 0
+			time.sleep(1.5)
+
+
+
+
+	return redirect('home')
 
 
 def generate_sertificates(request):
@@ -37,7 +118,7 @@ def generate_sertificates(request):
 	for user in users:
 		member = {
 			'name': user.get_full_name(),
-			'status': user.status(),
+			'status': user.speaker,
 			'model': user
 		}
 		members.append(member)
@@ -46,7 +127,7 @@ def generate_sertificates(request):
 			for comember in comembers:
 				member = {
 					'name': comember.get_full_name(),
-					'status': comember.status(),
+					'status': comember.speaker,
 					'model': comember
 				}
 				members.append(member)
@@ -66,7 +147,7 @@ def generate_sertificates(request):
 		pdf.add_page()
 		pdf.add_font('Chehkovskoy', '', font_url , uni=True)
 		
-		if member['status']=='Докладчик':
+		if member['status']!='3':
 			pdf.image(img_speaker_url, 0, 0, pdf.w, pdf.h)
 		else:
 			pdf.image(img_member_url, 0, 0, pdf.w, pdf.h)
