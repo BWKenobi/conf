@@ -7,6 +7,19 @@
 		<p>Благодарим Вас за участие в конференции.</p>
 		<p>Ваш именной сертификат во вложении к этому письму.</p>
 		<br>
+		<br>
+		{% if addons %}
+		Ссылки на скачиваение сертификатов дополнительных учестников:
+		<br>
+		{% for addon in addons %}
+		{{ addon.get_full_name}}{% if addon.certificate_file %} - <a href="{{ protocol }}://{{ domain }}{{addon.certificate_file.url}}">скачать</a>{% endif %}
+		<br>
+		{% endfor %}
+		<br>
+		<br>
+		{% endif %}
+
+
 		<p>По всем организационным вопросам можно обратиться по адресу nadsevr@yandex.ru;</p>
 		<p>по техническим вопросам - info@av-science.ru</p>
 		<br>

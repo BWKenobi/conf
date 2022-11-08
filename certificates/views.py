@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.core.files import File
 from django.core.files.base import ContentFile
+from django.contrib.sites.shortcuts import get_current_site
 
 from pytils import translit
 
@@ -49,6 +50,12 @@ def del_serificates(request):
 def send_serificates(request):
 	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False)
 	
+	current_site = get_current_site(request)
+	protocol = 'http'
+	if request.is_secure():
+		protocol = 'https'
+	domain = current_site.domain
+
 	signature = 'С уважением,\r\nавторы портала - AstVisionScience'
 	sign = signature.split('\r\n')
 	message = 'Во вложении иенные сертификаты'
@@ -62,6 +69,8 @@ def send_serificates(request):
 		sex_valid = user.sex_valid()
 		name = user.get_io_name()
 
+		addons= CoProfile.objects.filter(lead=user.user)
+
 		args = {
 			'sex_valid': sex_valid,
 			'sex': sex, 
@@ -69,7 +78,11 @@ def send_serificates(request):
 			'message': message,
 			'text': text,
 			'signature': signature,
-			'sign': sign
+			'sign': sign,
+			'user': user,
+			'addons': addons,
+			'protocol': protocol,
+			'domain': domain
 		}
 		
 		message = render_to_string('info_email.html', args)
@@ -80,10 +93,6 @@ def send_serificates(request):
 
 		email.attach_file(user.certificate_file.path)
 		
-		comembers = CoProfile.objects.filter(lead=user.user)
-		for comember in comembers:
-			email.attach_file(comember.certificate_file.path)
-
 
 		
 		email.send()
