@@ -6,7 +6,8 @@
 
 {% if addons %}
 Ссылки на скачиваение сертификатов дополнительных учестников:
-{% for addon in addons %}{{ addon.get_full_name}}{% if addon.certificate_file %} - {{ protocol }}://{{ domain }}{{addon.certificate_file.url}}{% endif %}{% endfor %}
+{% for addon in addons %}{{ addon.get_full_name}}{% if addon.certificate_file %} - {{ protocol }}://{{ domain }}{{addon.certificate_file.url}}{% endif %}
+{% endfor %}
 {% endif %}
 
 По всем организационным вопросам можно обратиться по адресу nadsevr@yandex.ru;
