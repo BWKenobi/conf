@@ -106,8 +106,8 @@ STATICFILES_DIRS = (
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.timeweb.ru'
-EMAIL_HOST_USER = 'conference@tdpi.ru'
-EMAIL_HOST_PASSWORD = '13DfvgbhboT'
+EMAIL_HOST_USER = 'conf@ranty.ru'
+EMAIL_HOST_PASSWORD = 'qv13EgvNqv13EgvN'
 #EMAIL_PORT = 465
 #EMAIL_USE_SSL = True
 

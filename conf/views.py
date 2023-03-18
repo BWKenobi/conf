@@ -10,6 +10,7 @@ from django.core.files.base import ContentFile
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
+from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.shared import Mm, Pt
 
 from fpdf import FPDF
@@ -42,6 +43,27 @@ class PDF(FPDF):
 	pass
 
 def home_view(request):
+	dte = date.today()
+	dte_deadline = date(2023,3,23)
+	register_flag = False
+	if dte<dte_deadline:
+		register_flag = True
+
+	args = {
+		'register_flag': register_flag
+	}
+	return render(request, 'index.html', args)
+
+
+def policy_view(request):
+	return render(request, 'policy.html')
+
+
+@login_required(login_url='/login/')
+def admining_view(request):
+	if not request.user.profile.message_accecc:
+		return redirect('home')
+
 	members = []
 	form = MakeCertificateForm(label_suffix='')
 
@@ -53,15 +75,10 @@ def home_view(request):
 			'name': user.get_full_name(),
 			'email': user.user.email,
 			'status': user.get_speaker_display(),
-			'phone': user.phone,
 			'work_place': user.work_place,
-			'work_part': user.work_part,
 			'position': user.position,
-			'degree': user.degree,
 			'cert': user.certificate_file,
 			'cert_num': user.certificate_num,
-			'report_name': user.report_name,
-			'report_file': user.report_file
 		}
 		members.append(member)
 		comembers = CoProfile.objects.filter(lead=user.user)
@@ -71,15 +88,10 @@ def home_view(request):
 					'name': comember.get_full_name(),
 					'email': user.user.email,
 					'status': comember.get_speaker_display(),
-					'phone': comember.phone,
 					'work_place': comember.work_place,
-					'work_part': comember.work_part,
 					'position': comember.position,
-					'degree': comember.degree,
 					'cert': comember.certificate_file,
 					'cert_num': comember.certificate_num,
-					'report_name': comember.report_name,
-					'report_file': comember.report_file
 				}
 				members.append(member)
 	
@@ -91,7 +103,7 @@ def home_view(request):
 		document = Document()
 		section = document.sections[-1]
 		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.PORTRAIT
+		section.orientation = WD_ORIENT.LANDSCAPE
 		section.page_width = Mm(297)
 		section.page_height = Mm(210)
 		section.left_margin = Mm(30)
@@ -107,7 +119,7 @@ def home_view(request):
 		font.size = Pt(12)
 
 
-		document.add_paragraph('Список участников/докладчиков конференции').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		document.add_paragraph('Список участников/докладчиков семинара').paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		p = document.add_paragraph()
 		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
@@ -116,21 +128,40 @@ def home_view(request):
 		table.allow_autifit = False
 		table.style = 'TableGrid'
 		table.columns[0].width = Mm(10)
-		table.columns[1].width = Mm(120)
-		table.columns[2].width = Mm(70)
-		table.columns[3].width = Mm(30)
+		table.columns[1].width = Mm(70)
+		table.columns[2].width = Mm(30)
+		table.columns[3].width = Mm(120)
 		table.columns[4].width = Mm(27)
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
+		hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[0].width = Mm(10)
-		hdr_cells[1].text = 'ФИО'
-		hdr_cells[1].width = Mm(120)
-		hdr_cells[2].text = 'E-mail'
-		hdr_cells[2].width = Mm(70)
-		hdr_cells[3].text = 'Статус'
-		hdr_cells[3].width = Mm(30)
+
+		hdr_cells[1].text = 'ФИО/E-mail'
+		hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[1].width = Mm(70)
+
+		hdr_cells[2].text = 'Статус'
+		hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[2].width = Mm(30)
+
+		hdr_cells[3].text = 'Учреждение/должность'
+		hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[3].width = Mm(120)
+
 		hdr_cells[4].text = 'Серт. №'
+		hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[4].width = Mm(27)
 
 		count = 1
@@ -138,15 +169,29 @@ def home_view(request):
 		for member in members:
 			row_cells = table.add_row().cells
 			row_cells[0].text = str(count)
+			row_cells[0].paragraphs[0].runs[0].font.bold = True
+			row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[0].width = Mm(10)
-			row_cells[1].text = member['name']
-			row_cells[1].width = Mm(120)
-			row_cells[2].text = member['email']
-			row_cells[2].width = Mm(70)
-			row_cells[3].text = member['status']
-			row_cells[3].width = Mm(30)
+
+			row_cells[1].text = member['name'] + '\n' + member['email']
+			row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			row_cells[1].width = Mm(70)
+
+			row_cells[2].text = member['status']
+			row_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			row_cells[2].width = Mm(30)
+
+			row_cells[3].text = member['work_place'] + '\n' + member['position']
+			row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			row_cells[3].width = Mm(120)
+
 			row_cells[4].text = member['cert_num']
+			row_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[4].width = Mm(27)
+
 			count += 1
 
 
@@ -157,23 +202,13 @@ def home_view(request):
 
 		return response
 
-	dte = date.today()
-	dte_deadline = date(2022,10,15)
-	register_flag = False
-	if dte<dte_deadline:
-		register_flag = True
-
 	args = {
+		'menu': 'admining',
 		'users': users,
 		'members': members,
-		'register_flag': register_flag,
 		'form': form
 	}
-	return render(request, 'index.html', args)
-
-
-def policy_view(request):
-	return render(request, 'policy.html')
+	return render(request, 'admining.html', args)
 
 
 def login_view(request):
@@ -219,10 +254,7 @@ def register_view(request):
 			new_user.profile.surname = user_form.cleaned_data['surname']
 			new_user.profile.work_place = user_form.cleaned_data['work_place']
 
-			new_user.profile.phone = user_form.cleaned_data['phone']
-			new_user.profile.work_part = user_form.cleaned_data['work_part']
 			new_user.profile.position = user_form.cleaned_data['position']
-			new_user.profile.degree = user_form.cleaned_data['degree']
 			new_user.profile.speaker = user_form.cleaned_data['speaker']
 			new_user.profile.save()
 

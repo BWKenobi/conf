@@ -56,9 +56,9 @@ def send_serificates(request):
 		protocol = 'https'
 	domain = current_site.domain
 
-	signature = 'С уважением,\r\nавторы портала - AstVisionScience'
+	signature = 'С уважением,\r\nавторы портала - НА-КОНКУРС.РФ'
 	sign = signature.split('\r\n')
-	message = 'Во вложении иенные сертификаты'
+	message = 'Во вложении именные сертификаты'
 	text = message.split('\r\n')
 
 	count = 0
@@ -143,8 +143,6 @@ def generate_sertificates(request):
 	
 	members =  sorted(members, key=lambda i: (i['name']))
 
-	time.sleep(1)
-
 	
 	font_url = os.path.join(settings.BASE_DIR, 'static/fonts/chekhovskoy.ttf')
 	img_speaker_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate_speaker.jpg')
@@ -156,7 +154,7 @@ def generate_sertificates(request):
 		pdf.add_page()
 		pdf.add_font('Chehkovskoy', '', font_url , uni=True)
 		
-		if member['status']!='3':
+		if member['status']!='2':
 			pdf.image(img_speaker_url, 0, 0, pdf.w, pdf.h)
 		else:
 			pdf.image(img_member_url, 0, 0, pdf.w, pdf.h)

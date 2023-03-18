@@ -23,7 +23,7 @@ def send_info_message(request):
 	if not request.user.profile.message_accecc:
 		return redirect('home')
 		
-	signature = 'С уважением,\r\nавторы портала - AstVisionScience'
+	signature = 'С уважением,\r\nавторы портала - НА-КАНКУРС.РФ'
 
 	if request.method=='POST':
 		form_message = InfoMailForm(request.POST, label_suffix='')
@@ -73,6 +73,7 @@ def send_info_message(request):
 	form_message= InfoMailForm(label_suffix='')
 
 	args = {
+		'menu': 'mailing',
 		'form': form_message, 
 	}
 	return render(request, 'mailing/send_info_message.html', args)

@@ -14,4 +14,4 @@ class InfoMailForm(forms.Form):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.fields['signature'].widget.attrs['placeholder'] = 'С уважением,\nавторы портала - AstVisionScience'
+		self.fields['signature'].widget.attrs['placeholder'] = 'С уважением,\nавторы портала - НА-КОНКУРС.РФ'

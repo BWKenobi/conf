@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+	<!--<div class="row align-middle px-5">
+		<div class="col-md-12 text-right mb-5">
+
+			<input type="submit" value="Сформировать сертификаты" name="create_sert" data-toggle="modal" data-target="#full_creation">
+			<input type="submit" value="Разослать сертификаты" name="send_sert" id="send_sert">
+			<input type="submit" value="Удалить сертификаты" name="delete_sert" id="delete_sert">
+		</div>
+	</div>
+-->
+	<div class="text-left mt-3 px-5">
+		<b>СПИСОК УЧАСТНИКОВ</b>
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col" class="table-cel-width-5 align-middle">№</th>
+					<th scope="col" class="table-cel-width-30 align-middle">Фамилия Имя Отчетво<br>E-mail</th>
+					<th scope="col" class="table-cel-width-15 align-middle">Организация</th>
+					<th scope="col" class="table-cel-width-15 align-middle">Должность</th>
+					<th scope="col" class="table-cel-width-25 align-middle text-center">Форма участия</th>
+					<th scope="col" class="table-cel-width-10 align-middle text-center">Сертификат</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for member in members %}
+					<tr class="{%if usr == user.profile %}table-info{% endif %}">
+						<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+						<td class="align-middle"><b>{{ member.name }}</b><br><em>{{ member.email }}</em></td>
+						<td class="align-middle">{{ member.work_place }}</td>
+						<td class="align-middle">{{ member.position }}</td>
+						<td class="align-middle text-center">{{ member.status }}</td>
+						<td class="align-middle text-center">
+							{% if member.cert %}
+								№ {{ member.cert_num }}<br>
+								<a href="{{ member.cert.url }}" target="_blank">скачать</a>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	{% if users %}
+		<div class="row">
+			<div class="col-md-12 text-right pb-3 px-5">
+				<form action="" method="post"> {% csrf_token %}
+					<input type="submit" value="Выгрузить список">
+				</form>
+			</div>
+		</div>
+	{% endif %}
+
+
+	<!-- Modal -->
+	<div class="modal fade bd-example-modal-lg" id="full_creation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Формирование сертификатов для всех участников</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row align-middle mt-3 ">
+						<div class="col-md-4 mt-3">
+							{{ form.iterable.label_tag }}
+							{{ form.iterable }}
+						</div>
+						<div class="col-md-4 mt-3">
+							{{ form.divider.label_tag }}
+							{{ form.divider }}
+						</div>
+						<div class="col-md-4 mt-3">
+							{{ form.noniterable.label_tag }}
+							{{ form.noniterable }}
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+					<button type="button" class="btn btn-primary" disabled id="all_creation" data-dismiss="modal">Сформировать</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#send_message').click(function (){
+				
+				window.location.href = "{% url 'mailing:send_info_message' %}";
+			});
+		});
+
+		$(document).ready(function() {
+			$('#id_iterable').change(function (){
+				$('#all_creation').removeAttr('disabled');
+			});
+		});
+
+
+		$(document).ready(function() {
+			$('#all_creation').click(function(){
+				$('.content-blocker').show();
+				$.ajax({
+					url: "{% url 'certificates:generate_sertificates' %}",
+					data: {
+						'field1': $('#id_iterable').val(),
+						'field2': $('#id_divider').val(),
+						'field3': $('#id_noniterable').val(),
+					},
+					success: function(data){
+						result = $.parseJSON(data);
+						$('.content-blocker').hide();
+						alert("Сертификаты сформированы. Последний номер:"+result['last_num']);
+						document.location.reload();
+					}
+				});
+			});
+		});
+
+		$(document).ready(function() {
+			$('#delete_sert').click(function(){
+				window.location.href = "{% url 'certificates:del_serificates' %}";
+			});
+		});
+
+		$(document).ready(function() {
+			$('#send_sert').click(function(){
+				window.location.href = "{% url 'certificates:send_serificates' %}";
+			});
+		});
+		
+	</script>
+{% endblock %}

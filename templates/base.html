@@ -45,6 +45,12 @@
                 <a class="p-2 text-secondary text-uppercase {% if not menu %}active{% endif %}" href="{% url 'home' %}">Главная</a>
                 <a class="p-2 text-secondary text-uppercase {% if menu == 'profile' %}active{% endif %}" href="{% url 'profiles:view_edit_profile' %}">{{user.profile.get_name }}</a>
                  <a class="p-2 text-secondary text-uppercase {% if menu == 'coprofile' %}active{% endif %}" href="{% url 'coprofile:view_coprofiles' %}">Доп.участники</a>
+                 {% if user.profile.admin_access %}
+                    <a class="p-2 text-secondary text-uppercase {% if menu == 'admining' %}active{% endif %}" href="{% url 'admining' %}">Администрирование</a>
+                 {% endif %}
+                 {% if user.profile.message_accecc %}
+                    <a class="p-2 text-secondary text-uppercase {% if menu == 'mailing' %}active{% endif %}" href="{% url 'mailing:send_info_message' %}">Сообщения</a>
+                 {% endif %}
             {% endif %}
         </nav>
         
@@ -60,7 +66,7 @@
     </div>
 
         <div class="container-fluid d-inline-block p-5 mb-5 mt-5 h-100">
-            <main role="main" class="col-md-12 ml-sm-auto col-lg-12 px-0 shadow bg-light">
+            <main role="main" class="col-md-12 ml-sm-auto col-lg-12 px-0 py-5 shadow bg-light">
 
                 {% block content %}
                 {% endblock %}
@@ -69,7 +75,7 @@
 
         <footer class="footer font-small fixed-bottom bg-secondary text-light">
             <div class="float-left text-left py-3 px-5">
-                Создано при поддержке <b><a href="http://av-science.ru" class="text-white" target="_blank">ArtVisionScience</a></b>
+                Создано при поддержке <b><a href="https://на-конкурс.рф" class="text-white" target="_blank">НА-КОНКУРС.РФ</a></b>
             </div>
 
             <div class="float-right text-rigth py-3 px-5">
