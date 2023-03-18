@@ -6,7 +6,7 @@ SECRET_KEY = '*j+5^3v7hq7aa-hu9ufguz-#y*kd3uitwsi(b=9oy6uwcf%ohq'
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['conference.tdpi.ru', '127.0.0.1']
+ALLOWED_HOSTS = ['conf.ranty.ru', '127.0.0.1']
 
 DEFAULT_CHARSET = 'utf-8'
 
