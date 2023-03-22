@@ -1,7 +1,8 @@
 import os
-import datetime
 
 from datetime import date
+from datetime import time
+from datetime import datetime
 
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -22,8 +23,8 @@ from .models import Profile
 def view_edit_profile(request):
 	username = request.user.username
 
-	dte = date.today()
-	dte_deadline = date(2023,3,23)
+	dte = datetime.now()
+	dte_deadline = datetime(2023,3,23,14,00)
 	report_flag = False
 	if dte<dte_deadline:
 		report_flag = True

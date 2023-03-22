@@ -1,7 +1,8 @@
 import os
-import datetime
 
 from datetime import date
+from datetime import time
+from datetime import datetime
 
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -23,8 +24,8 @@ from profileuser.models import Profile
 def view_coprofiles(request):
 	user = request.user
 	
-	dte = date.today()
-	dte_deadline = date(2023,3,23)
+	dte = datetime.now()
+	dte_deadline = datetime(2023,3,23,14,00)
 	report_flag = False
 	if dte<dte_deadline:
 		report_flag = True
@@ -86,8 +87,8 @@ def del_coprofile(request, pk):
 def edit_coprofile(request, pk):
 	coprofile = CoProfile.objects.get(pk = pk)
 
-	dte = date.today()
-	dte_deadline = date(2023,3,23)
+	dte = datetime.now()
+	dte_deadline = datetime(2023,3,23,14,00)
 	report_flag = False
 	if dte<dte_deadline:
 		report_flag = True
