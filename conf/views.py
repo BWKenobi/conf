@@ -1,7 +1,8 @@
 import os
-import time
 from django.db.models import Q
 from datetime import date
+from datetime import time
+from datetime import datetime
 import json
 from io import BytesIO
 from django.core.files import File
@@ -43,14 +44,17 @@ class PDF(FPDF):
 	pass
 
 def home_view(request):
-	dte = date.today()
-	dte_deadline = date(2023,3,23)
+	dte = datetime.now()
+
+	dte_deadline = datetime(2023,3,23,14,00)
+
 	register_flag = False
 	if dte<dte_deadline:
 		register_flag = True
 
 	args = {
-		'register_flag': register_flag
+		'register_flag': register_flag,
+		'dte': dte
 	}
 	return render(request, 'index.html', args)
 
