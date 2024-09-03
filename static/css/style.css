@@ -4,6 +4,15 @@ body{
 	font-size: 15px !important;
 }
 
+.hide{
+	display: none;
+}
+
+label{
+	font-size: 120%;
+	font-weight: bold;
+}
+
 .errorlist{
 	color: red;
 	text-align: center;
@@ -121,4 +130,8 @@ body{
 
 .active{
 	color: #05f !important;
+}
+
+.cert-popup label{
+	min-height: 60px;
 }

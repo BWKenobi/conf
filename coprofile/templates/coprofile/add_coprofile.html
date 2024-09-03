@@ -2,10 +2,12 @@
 {% load static %}
 
 {% block content %}
-	<h4 class="display-5 text-center">Регистрация участника семинара</h4>
+	<h4 class="display-5 text-center">Регистрация участника конференции</h4>
+
 	<div class="row">
 		<div class="col-md-6 mx-auto mb-5">
-
+			<p class="text-center">Для участия в конференции в качестве докладчика, после регистрации зайдите в разделе <b>Личных данных</b> участнкиа укажите тему доклада и прикрепите файл.</p>
+			<p class="text-center text-danger">Внимание! Изменить файл и тему доклада <b>после окончания регистрации</b> будет невозможно!</p>
 			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
 				{{form.as_p}}
 

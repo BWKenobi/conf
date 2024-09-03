@@ -7,11 +7,12 @@
 			<img src="{% static 'img/register_logo.jpg'%}" class="img-fluid rounded" width="100%">
 		</div>
 	</div>
-	<h4 class="display-5 text-center">Регистрация участника семинара</h4>
+	<h4 class="display-5 text-center">Регистрация участника конференции</h4>
 	<div class="row">
 		<div class="col-md-6 mx-auto mb-5">
 			<p class="text-center">Для регистрации дополнительных участников без указания их электронной почты, зайдите в раздел <b>"ДОП. УЧАСТНИКИ"</b> в верхней части экрана.</p>
-
+			<p class="text-center">Для участия в конференции в качестве докладчика, после регистрации зайдите в раздел <b>"Личные данные"</b>, нажав на своё имя в верхнем левом углу экрана и укажите тему доклада и прикрепите файл.</p>
+			<p class="text-center text-danger">Внимание! Изменить файл и тему доклада <b>после окончания регистрации</b> будет невозможно!</p>
 
 			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
 				{{form.as_p}}
@@ -23,7 +24,7 @@
 						<a href="{% url 'home' %}">Вернуться на главную</a>
 					</div>
 					<div class="col-md-6 text-right">
-						<input type="submit" value="Зарегистрироваться">
+						<input type="submit" class="btn btn-primary" value="Зарегистрироваться">
 					</div>
 				</div>
 				</div>

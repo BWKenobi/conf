@@ -19,19 +19,43 @@
 					<th scope="col" class="table-cel-width-75 align-middle">Фамилия Имя Отчетво</th>
 					<th scope="col" class="table-cel-width-10 align-middle text-center"></th>
 					<th scope="col" class="table-cel-width-10 align-middle text-center"></th>
+					<th scope="col" class="table-cel-width-10 align-middle text-center"></th>
 				</tr>
 			</thead>
 			<tbody>
 				{% for coprofile in coprofiles %}
 					<tr class="">
 						<th scope="row" class="align-middle">{{ forloop.counter}}</th>
-						<td class="align-middle">{{ coprofile.get_full_name }}</td>
+						<td class="align-middle">{{ coprofile.get_full_name }} - <u style="text-transform: lowercase;">{{ coprofile.get_speaker_display }}</u></td>
+						<td class="align-middle">{% if coprofile.report_file %}<a href="{{ coprofile.report_file.url }}" target="_blank">скачать</a>{% endif %}</td>
 						<td class="align-middle"><a href="{% url 'coprofile:edit_coprofile' pk=coprofile.pk %}">изменить</a></td>
-						<td class="align-middle"><a href="{% url 'coprofile:del_coprofile' pk=coprofile.pk %}">удалить</a></td>
+						<td class="align-middle"><a href="{% url 'coprofile:del_coprofile' pk=coprofile.pk %}" class="del_coprofile" data-name="{{ coprofile.get_name }}">удалить</a></td>
 					</tr>
 				{% endfor %}
 			</tbody>
 		</table>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="delCoprofile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title text-danger" id="exampleModalLabel">Внимание!</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" id="del-button">Удалить</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+
+				</div>
+			</div>
+		</div>
 	</div>
 
 {% endblock %}
@@ -42,6 +66,20 @@
 		$(document).ready(function() {
 			$('#add_coprofile').click(function (){
 				window.location.href = "{% url 'coprofile:add_coprofile' %}";
+			});
+
+			$('.del_coprofile').click(function(){
+				$('#delCoprofile').modal('show');
+				url = $(this).attr('href');
+				name = $(this).attr('data-name');
+
+				$('#delCoprofile').attr('href', url);
+				$('#delCoprofile .modal-body').text('Удаление: ' + name);
+				return false;
+			});
+
+			$('#delCoprofile #del-button').click(function(){
+				window.location.href = $('#delCoprofile').attr('href');
 			});
 		});
 

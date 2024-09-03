@@ -2,22 +2,22 @@
 {% load static %}
 
 {% block content %}
-	<div class="text-center">
-		<h3>Региональный семинар</h3>
-		<h4>«Деятельность детского театрального коллектива:</h4>
-		<h4>цели, задачи, особенности функционирования</h4>
-		<h4>в связи с внедрением обновленных</h4>
-		<h4>ФГОС НОО и ФГОС ООО»</h4>
-	</div>
-
 	{% if not user.is_authenticated %}
+		<div class="text-center mt-3 pt-5">
+			<h4>Всероссийская научно-практическая конференция</h4>
 
+			<h1>«Потенциал художественного образования</h1>
+			<h1>приобщении обучающихся</h1>
+			<h1>к традициям российской культуры»</h1>
+
+			<h4 class="text-primary">25 октября 2024 года</h4>
+		</div>
 		{% if register_flag %}
 			<div class="text-center mt-5 pb-5">
 				<h4><a href="{% url 'register' %}" class="text-danger">Зарегистрироваться</a></h4>
 			</div>
 			<div class="text-center mt-5 pb-5">
-				<h4>Регистрация закончится 23 марта 2023 года в 14:00 (по московскому времени).</h4>
+				<h4>Регистрация закончится 14 октября 2024 года в 23:59 (по московскому времени).</h4>
 			</div>
 		{% else %}
 			<div class="text-center mt-5 pb-5 text-danger">
@@ -25,56 +25,120 @@
 			</div>
 		{% endif %}
 	{% else %}
-		<hr>
-		<div class="row px-5 py-2">
-			<div class="col-md-12 text-center">
-				<h5 class="text-danger text-center">Подключиться к конференции Zoom</h5>
-				<p class="text-center"><b>Идентификатор конференции:</b> 724 4911 2762</p>
-				<p class="text-center"><b>Код доступа:</b> 8Vdv3z</p>
-				<a class="text-center" href="https://us04web.zoom.us/j/72449112762?pwd=xcs8UsTcuBnm3TUuLHM2vAatrIIVRb.1" target="_blank">подключиться</a>
-			</div>
-		</div>
-		<hr>
-		<div class="mt-5 pb-5">
-			<h5 class="text-center text-info">Дата проведения: 23 марта 2023 года в 15:00</h5>
-			<h5 class="text-center">Программа мероприятия:</h5>
-			<div class="row px-5 py-2">
-				<div class="col-md-2">15:00 – 15:10 </div>
-				<div class="col-md-10">Презентация деятельности МОУ гимназии «ДШИ» им. А.А. Цветкова как региональной инновационной площадки. Директор Петрова М.В.</div>
-			</div>
-			<div class="row px-5 py-2">
-				<div class="col-md-2">15:10 – 15:30</div>
-				<div class="col-md-10">Детский театральный коллектив «Лицедеи»: цели, задачи, особенности функционирования. Руководитель театрального коллектива Житлухина В.В.</div>
-			</div>
-			<div class="row px-5 py-2">
-				<div class="col-md-2">15:30 – 15:40</div>
-				<div class="col-md-10">«Современные методы и приемы обучения театральному искусству». Выступление преподавателя Базеева Э.Р.</div>
-			</div>
-			<div class="row px-5 py-2">
-				<div class="col-md-2">15.40 – 15:50</div>
-				<div class="col-md-10">«Особенности реализации дополнительной общеразвивающей программы «Музыкальный театр». Вокальная подготовка юных актеров». Выступление преподавателя по классу вокала Шкаловой М.В.</div>
-			</div>
-			<div class="row px-5 py-2">
-				<div class="col-md-2">15:50 – 16:10</div>
-				<div class="col-md-10">Мастер-класс по развитию речи и актерскому мастерству. Руководитель театрального коллектива Житлухина В.В.</div>
-			</div>
-			<div class="row px-5 py-2">
-				<div class="col-md-2">16:10 -16:30</div>
-				<div class="col-md-10">Рубрика «Открытый микрофон» (из опыта работы школьных театров). Подведение итогов семинара.</div>
-			</div>
+		
+		<div class="text-center mt-3 pt-5 pb-5">
+			<h4>Всероссийская научно-практическая конференция</h4>
+
+			<h1>«Потенциал художественного образования</h1>
+			<h1>приобщении обучающихся</h1>
+			<h1>к традициям российской культуры»</h1>
+			<h4 class="text-primary">25 октября 2024 года</h4>
 		</div>
 
-<!-- 		<div class="text-center mt-3 pt-5">
-			<p>Всероссийская научно-практическая конференция</p>
-			<p>Время: 27 окт. 2022 10:30 Москва</p>
+		{% if zoom_flag %}
+			<div class="text-center mt-3 pt-5">
+				<p>Всероссийская научно-практическая конференция</p>
+				<p>Время: 27 окт. 2022 11:30 Москва</p>
 
-			<p>Подключиться к конференции Zoom: <a href="https://us06web.zoom.us/j/82521794656?pwd=clNSQm9YVytyeTkwYllOUHlSc2szUT09" target="blank">подключиться</a></p>
+				<p>Подключиться к конференции Zoom: <a href="https://us06web.zoom.us/j/82521794656?pwd=clNSQm9YVytyeTkwYllOUHlSc2szUT09" target="blank">подключиться</a></p>
 
-			<p>Идентификатор конференции: 825 2179 4656</p>
-			<p>Код доступа: 492169</p>
-		</div> -->
+				<p>Идентификатор конференции: 825 2179 4656</p>
+				<p>Код доступа: 492169</p>
+			</div>
+		{% endif %}
 
+		{% if user.profile.message_accecc %}
+			<div class="row align-middle px-5">
+				<div class="col-md-3 text-left mb-5">
+					<input type="button" value="Разослать оповещения" name="addfile" id="send_message" class="show-loader">
+				</div>
+				<div class="col-md-9 text-right mb-5">
 
+					<input type="submit" value="Сформировать сертификаты" name="create_sert" data-toggle="modal" data-target="#full_creation">
+					<input type="submit" value="Разослать сертификаты" name="send_sert" id="send_sert">
+					<input type="submit" value="Удалить сертификаты" name="delete_sert" id="delete_sert">
+				</div>
+			</div>
+		{% endif %}
+
+		{% if user.profile.admin_access %}
+			<div class="text-left mt-3 px-5">
+				<b>СПИСОК УЧАСТНИКОВ/ДОКЛАДЧИКОВ</b>
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col" class="table-cel-width-5 align-middle">№</th>
+							<th scope="col" class="table-cel-width-30 align-middle">Фамилия Имя Отчетво<br>Телефон<br>E-mail</th>
+							<th scope="col" class="table-cel-width-15 align-middle">Организация<br>Отдел/факультет/кафедра</th>
+							<th scope="col" class="table-cel-width-15 align-middle">Должность<br>Ученая степень/ученое звание</th>
+							<th scope="col" class="table-cel-width-25 align-middle text-center">Форма участия<br>Тема доклада</th>
+							<th scope="col" class="table-cel-width-10 align-middle text-center">Сертификат</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for member in members %}
+							<tr class="{%if usr == user.profile %}table-info{% endif %}">
+								<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+								<td class="align-middle"><b>{{ member.name }}</b><br>{{ member.phone }}<br><em>{{ member.email }}</em></td>
+								<td class="align-middle"><b>{{ member.work_place }}</b><br><em>{{ member.work_part }}</em></td>
+								<td class="align-middle"><b>{{ member.position }}</b><br><em>{{ member.degree }}</em></td>
+								<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.report_file %}<br><a href="{{ member.report_file.url }}" target="_blank">{{ member.report_name }}</a>{% endif %}</td>
+								<td class="align-middle text-center">
+									{% if member.cert %}
+										№ {{ member.cert_num }}<br>
+										<a href="{{ member.cert.url }}" target="_blank">скачать</a>
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% if users %}
+				<div class="row">
+					<div class="col-md-12 text-right pb-3">
+						<form action="" method="post"> {% csrf_token %}
+							<input type="submit" value="Выгрузить список">
+						</form>
+					</div>
+				</div>
+			{% endif %}
+			</div>
+		{% endif %}
+
+		<!-- Modal -->
+		<div class="modal fade bd-example-modal-lg" id="full_creation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Формирование сертификатов для всех участников</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="row align-middle mt-3 cert-popup">
+							<div class="col-md-4 mt-3">
+								{{ form.iterable.label_tag }}
+								{{ form.iterable }}
+							</div>
+							<div class="col-md-4 mt-3">
+								{{ form.divider.label_tag }}
+								{{ form.divider }}
+							</div>
+							<div class="col-md-4 mt-3">
+								{{ form.noniterable.label_tag }}
+								{{ form.noniterable }}
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+						<button type="button" class="btn btn-primary" disabled id="all_creation" data-dismiss="modal">Сформировать</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	{% endif %}
 {% endblock %}
 

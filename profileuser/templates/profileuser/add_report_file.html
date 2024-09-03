@@ -3,22 +3,27 @@
 {% load static %}
 
 {% block content %}
+	<div class="row">
+		<div class="col-md-6 mx-auto mb-5">
+			<img src="{% static 'img/register_logo.jpg'%}" class="img-fluid rounded" width="100%">
+		</div>
+	</div>
 	<h4 class="display-5 text-center">Данные доклада</h4>
-	<h5 class="display-5 text-center mb-5"><em>{{ coprofile.get_full_name }}</em></h5>
 	<div class="row">
 		<div class="col-md-6 mx-auto mb-5">
 			<form enctype="multipart/form-data"  action="" method="post" , autocomplete="false"> {% csrf_token %}
 				{{form.as_p}}
 
+
 				{{ file.report_file.label_tag }}
-					{% if coprofile.report_file %}
-						<p>Сейчас: <a href="{{ coprofile.report_file.url }}" target="_blank">{{ coprofile.report_file|filename }}</a></p>
-					{% endif %}
+				{% if user.profile.report_file %}
+					<p>Сейчас: <a href="{{ user.profile.report_file.url }}" target="_blank">{{ user.profile.report_file|filename }}</a></p>
+				{% endif %}
 				{{ file.report_file }}
 
 				<div class="row align-middle mt-5">
 					<div class="col-md-6 text-left">
-						<a href="{% url 'coprofile:edit_coprofile' pk=coprofile.pk %}">Вернуться</a>
+						<a href="{% url 'profiles:view_edit_profile' %}">Вернуться на мою страницу</a>
 					</div>
 					<div class="col-md-6 text-right">
 						<input type="submit" value="Сохранить">

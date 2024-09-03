@@ -1,16 +1,16 @@
 {% autoescape off %}
 Уважаем{% if sex_valid %}{% if sex %}ый{% else %}ая{% endif %}{% else %}ый(ая){% endif %} {{ name }}!
 
-Благодарим Вас за участие в семинаре.
+Благодарим Вас за участие в конференции.
 Ваш именной сертификат во вложении к этому письму.
 
 {% if addons %}
-Ссылки на скачиваение сертификатов дополнительных участников:
+Ссылки на скачиваение сертификатов дополнительных учестников:
 {% for addon in addons %}{{ addon.get_full_name}}{% if addon.certificate_file %} - {{ protocol }}://{{ domain }}{{addon.certificate_file.url}}{% endif %}
 {% endfor %}
 {% endif %}
 
-По всем организационным вопросам можно обратиться по адресу taldom.licey@gmail.com;
+По всем организационным вопросам можно обратиться по адресу nadsevr@yandex.ru;
 по техническим вопросам - info@av-science.ru
 
 

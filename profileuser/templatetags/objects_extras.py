@@ -1,3 +1,4 @@
+import os
 from django import template
 
 register = template.Library()
@@ -10,3 +11,8 @@ def lookup(d, key):
 		return None
 
 	return t
+
+
+@register.filter(name='filename')
+def filename(d):
+	return os.path.basename(d.file.name)

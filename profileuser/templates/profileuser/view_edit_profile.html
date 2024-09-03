@@ -12,12 +12,30 @@
 		<div class="col-md-6 mx-auto mb-5">
 			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
 				{{form.as_p}}
+				{% if user.profile.speaker != '3' %}
+					<div class="row align-middle mb-5 mt-5">
+						<div class="col-md-10 mx-auto ">
+							Тема доклада: <b> {{ user.profile.report_name }}</b> 
+						</div>
+						<div class="col-md-2 mx-auto ">
+							{% if user.profile.report_file %}
+								<a href="{{ user.profile.report_file.url }}" target="_blank">скачать</a>
+							{% endif %}
+						</div>
+					</div>
+				{% endif %}
+
 				
 				<div class="row align-middle">
-					<div class="col-md-6 text-left">
+					{% if user.profile.speaker != '3' %}
+					<div class="col-md-4 text-left">
+						<input type="submit" value="{% if user.profile.report_file %}Изменить{% else %}Добавить{% endif %} доклад" name="addfile">
+					</div>
+					{% endif %}
+					<div class="{% if user.profile.speaker != '3' %}col-md-4 text-center{% else %}col-md-6{% endif %}">
 						<input type="submit" value="Сменить пароль" name="passchange">
 					</div>
-					<div class="col-md-6 text-right">
+					<div class="{% if user.profile.speaker != '3' %}col-md-4{% else %}col-md-6{% endif %} text-right">
 						<input type="submit" value="Сохранить изменения" {% if not report_flag %}disabled{% endif %}>
 					</div>
 				</div>
@@ -29,4 +47,34 @@
 			</form>
 		</div>
 	</div>
+
+	{% if modal %}
+		<!-- Modal -->
+		<div class="modal fade" id="saveDone" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Изменения сохранены</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
 {% endblock %}
+
+
+{% block scripts %}
+    {{ block.super }}
+    <script type="text/javascript">
+    	$(document).ready(function(){
+    		$('#saveDone').modal('show');
+    	});
+	</script>
+{% endblock %}
+

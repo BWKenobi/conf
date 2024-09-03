@@ -9,7 +9,7 @@ from django.contrib.auth import views as auth_views
 
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 
-from .views import home_view, policy_view, admining_view, login_view, logout_view, register_view, change_password, activate
+from .views import home_view, policy_view, login_view, logout_view, register_view, change_password, activate
 from .views import change_admin_access, change_moderate_access, send_info_message
 
 
@@ -18,12 +18,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name = 'home'),
     path('policy', policy_view, name = 'policy'),
-    path('admining', admining_view, name = 'admining'),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 
 urlpatterns += [
-	path('login/', login_view, name = 'login'),
+    path('login/', login_view, name = 'login'),
     path('logout/', logout_view, name = 'logout'),
     path('register/', register_view, name = 'register'),
     path('passchange/', change_password, name = 'passchange'),
