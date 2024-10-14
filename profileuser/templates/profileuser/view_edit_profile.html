@@ -42,7 +42,7 @@
 						<input type="submit" value="Сменить пароль" name="passchange">
 					</div>
 					<div class="{% if register_flag and user.profile.speaker != '3' %}col-md-4{% else %}col-md-6{% endif %} text-right">
-						<input type="submit" value="Сохранить изменения" {% if not report_flag %}disabled{% endif %}>
+						<input type="submit" value="Сохранить изменения" {% if not register_flag %}disabled{% endif %}>
 					</div>
 				</div>
 				<div class="row align-middle">

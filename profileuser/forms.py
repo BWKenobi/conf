@@ -15,7 +15,7 @@ class ProfileUdpateForm(forms.ModelForm):
 		super().__init__(*args, **kwargs)
 		
 		dte = date.today()
-		dte_deadline = date(2024,10,14)
+		dte_deadline = date(2024,10,15)
 		report_flag = False
 		if dte<dte_deadline:
 			report_flag = True
