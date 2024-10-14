@@ -140,6 +140,8 @@ def home_view(request):
 			row_cells[0].text = str(count)
 			row_cells[0].width = Mm(10)
 			row_cells[1].text = member['name']
+			if member['report_name']:
+				row_cells[1].text += '\nТема: ' + member['report_name']
 			row_cells[1].width = Mm(120)
 			row_cells[2].text = member['email']
 			row_cells[2].width = Mm(70)
