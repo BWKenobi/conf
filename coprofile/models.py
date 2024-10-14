@@ -57,7 +57,7 @@ class CoProfile(models.Model):
 
 	speaker= models.CharField("Форма участия", max_length=1, choices=SPEAKER_TYPE, default='3')
 	report_name = models.CharField(verbose_name="Тема доклада*", max_length=250, blank=True)
-	report_file = models.FileField(verbose_name='Файл научной статьи*', blank=True, null=True, upload_to = make_upload_path)
+	report_file = models.FileField(verbose_name='Файл научной статьи  (при наличии)', blank=True, null=True, upload_to = make_upload_path)
 
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 	admin_access= models.BooleanField("Права администратора", default=False)

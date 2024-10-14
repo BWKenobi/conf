@@ -17,25 +17,31 @@
 						<div class="col-md-10 mx-auto ">
 							Тема доклада: <b> {{ user.profile.report_name }}</b> 
 						</div>
-						<div class="col-md-2 mx-auto ">
+						<div class="col-md-1 mx-auto ">
+							{% if register_flag and user.profile.report_name %}
+								<a href="{% url 'profiles:del_report_file' %}" style="color: #ff0000;">удалить</a>
+							{% endif %}
+						</div>
+						<div class="col-md-1 mx-auto ">
 							{% if user.profile.report_file %}
 								<a href="{{ user.profile.report_file.url }}" target="_blank">скачать</a>
 							{% endif %}
 						</div>
+
 					</div>
 				{% endif %}
 
 				
 				<div class="row align-middle">
-					{% if user.profile.speaker != '3' %}
+					{% if register_flag and user.profile.speaker != '3' %}
 					<div class="col-md-4 text-left">
-						<input type="submit" value="{% if user.profile.report_file %}Изменить{% else %}Добавить{% endif %} доклад" name="addfile">
+						<input type="submit" value="{% if user.profile.report_name %}Изменить{% else %}Добавить{% endif %} доклад" name="addfile">
 					</div>
 					{% endif %}
-					<div class="{% if user.profile.speaker != '3' %}col-md-4 text-center{% else %}col-md-6{% endif %}">
+					<div class="{% if register_flag and user.profile.speaker != '3' %}col-md-4 text-center{% else %}col-md-6{% endif %}">
 						<input type="submit" value="Сменить пароль" name="passchange">
 					</div>
-					<div class="{% if user.profile.speaker != '3' %}col-md-4{% else %}col-md-6{% endif %} text-right">
+					<div class="{% if register_flag and user.profile.speaker != '3' %}col-md-4{% else %}col-md-6{% endif %} text-right">
 						<input type="submit" value="Сохранить изменения" {% if not report_flag %}disabled{% endif %}>
 					</div>
 				</div>

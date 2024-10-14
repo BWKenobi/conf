@@ -157,24 +157,12 @@ def home_view(request):
 
 		return response
 
-	dte = date.today()
-	dte_deadline = date(2024,10,15)
-	dte_zoom = date(2024,10,25)
 
-	register_flag = False
-	if dte<dte_deadline:
-		register_flag = True
-
-	zoom_flag = False
-	if dte>=dte_zoom:
-		zoom_flag = True
 
 
 	args = {
 		'users': users,
 		'members': members,
-		'register_flag': register_flag,
-		'zoom_flag': zoom_flag,
 		'form': form
 	}
 	return render(request, 'index.html', args)

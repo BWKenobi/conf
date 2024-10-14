@@ -51,4 +51,4 @@ class ProfileAddReprotFileForm(forms.ModelForm):
 		for field in self.fields:
 			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
 			if not edit:
-				self.fields[field].required=True
+				self.fields[field].required=False

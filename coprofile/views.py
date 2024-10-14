@@ -161,9 +161,10 @@ def add_report_file(request, pk):
 
 				email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, e_mails)
 
-				docfile = default_storage.open(speaker.report_file.name, 'r')
+				if speaker.report_file:
+					docfile = default_storage.open(speaker.report_file.name, 'r')
 
-				email.attach_file(docfile.name)
+					email.attach_file(docfile.name)
 
 				email.send()
 			
@@ -188,3 +189,16 @@ def add_report_file(request, pk):
 		'file': file
 	}
 	return render(request, 'coprofile/add_report_file.html', args)
+
+
+@login_required(login_url='/login/')
+def del_report_file(request, pk):
+	coprofile = CoProfile.objects.get(pk = pk)
+
+	if coprofile.report_name:
+		coprofile.report_file = None
+		coprofile.report_name = ''
+		coprofile.save()
+
+
+	return redirect('coprofile:edit_coprofile', pk = pk)

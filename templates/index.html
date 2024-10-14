@@ -7,7 +7,7 @@
 			<h4>Всероссийская научно-практическая конференция</h4>
 
 			<h1>«Потенциал художественного образования</h1>
-			<h1>приобщении обучающихся</h1>
+			<h1>в приобщении обучающихся</h1>
 			<h1>к традициям российской культуры»</h1>
 
 			<h4 class="text-primary">25 октября 2024 года</h4>
@@ -30,7 +30,7 @@
 			<h4>Всероссийская научно-практическая конференция</h4>
 
 			<h1>«Потенциал художественного образования</h1>
-			<h1>приобщении обучающихся</h1>
+			<h1>в приобщении обучающихся</h1>
 			<h1>к традициям российской культуры»</h1>
 			<h4 class="text-primary">25 октября 2024 года</h4>
 		</div>
@@ -82,7 +82,7 @@
 								<td class="align-middle"><b>{{ member.name }}</b><br>{{ member.phone }}<br><em>{{ member.email }}</em></td>
 								<td class="align-middle"><b>{{ member.work_place }}</b><br><em>{{ member.work_part }}</em></td>
 								<td class="align-middle"><b>{{ member.position }}</b><br><em>{{ member.degree }}</em></td>
-								<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.report_file %}<br><a href="{{ member.report_file.url }}" target="_blank">{{ member.report_name }}</a>{% endif %}</td>
+								<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.report_file %}<br><a href="{{ member.report_file.url }}" target="_blank">{{ member.report_name }}</a>{% elif member.report_name %}<br>{{ member.report_name }}{% endif %}</td>
 								<td class="align-middle text-center">
 									{% if member.cert %}
 										№ {{ member.cert_num }}<br>
@@ -95,7 +95,7 @@
 				</table>
 			</div>
 			{% if users %}
-				<div class="row">
+				<div class="row align-middle px-5">
 					<div class="col-md-12 text-right pb-3">
 						<form action="" method="post"> {% csrf_token %}
 							<input type="submit" value="Выгрузить список">

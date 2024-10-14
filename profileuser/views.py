@@ -98,9 +98,10 @@ def add_report_file(request):
 
 				email = EmailMessage(mail_subject, message, settings.EMAIL_HOST_USER, e_mails)
 
-				docfile = default_storage.open(speaker.report_file.name, 'r')
+				if speaker.report_file:
+					docfile = default_storage.open(speaker.report_file.name, 'r')
 
-				email.attach_file(docfile.name)
+					email.attach_file(docfile.name)
 
 				email.send()
 			
@@ -124,3 +125,16 @@ def add_report_file(request):
 		'user': user
 	}
 	return render(request, 'profileuser/add_report_file.html', args)
+
+
+@login_required(login_url='/login/')
+def del_report_file(request):
+	user = request.user
+
+	if user.profile.report_name:
+		user.profile.report_file = None
+		user.profile.report_name = ''
+		user.profile.save()
+
+
+	return redirect('profiles:view_edit_profile')
