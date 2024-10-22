@@ -14,6 +14,7 @@ class CoProfileUdpateForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
+
 		dte = date.today()
 		dte_deadline = date(2024,10,14)
 		report_flag = False
@@ -24,7 +25,7 @@ class CoProfileUdpateForm(forms.ModelForm):
 			self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete':'false'})
 			self.fields[field].required=False
 
-			if not report_flag:
+			if not report_flag and not self.instance.lead.profile.admin_access:
 				self.fields[field].widget.attrs['disabled'] = 'disabled'
 
 

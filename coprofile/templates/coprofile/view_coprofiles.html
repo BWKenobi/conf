@@ -7,7 +7,7 @@
 			<b>СПИСОК ДОП.УЧАСТНИКОВ</b>
 		</div>
 		<div class="col-md-6 text-right">
-			{% if register_flag %}<input type="button" value="Добавить" name="add-coprofile" id="add_coprofile" class="show-loader">{% endif %}
+			{% if register_flag or request.user.profile.admin_access %}<input type="button" value="Добавить" name="add-coprofile" id="add_coprofile" class="show-loader">{% endif %}
 		</div>
 	</div>
 
@@ -28,8 +28,8 @@
 						<th scope="row" class="align-middle">{{ forloop.counter}}</th>
 						<td class="align-middle">{{ coprofile.get_full_name }} - <u style="text-transform: lowercase;">{{ coprofile.get_speaker_display }}</u></td>
 						<td class="align-middle text-right">{% if coprofile.report_file %}<a href="{{ coprofile.report_file.url }}" target="_blank">скачать</a>{% elif coprofile.report_name %}{{ coprofile.report_name }}{% endif %}</td>
-						<td class="align-middle text-right">{% if register_flag %}<a href="{% url 'coprofile:edit_coprofile' pk=coprofile.pk %}">изменить</a>{% endif %}</td>
-						<td class="align-middle text-right">{% if register_flag %}<a href="{% url 'coprofile:del_coprofile' pk=coprofile.pk %}" class="del_coprofile" data-name="{{ coprofile.get_name }}">удалить</a>{% endif %}</td>
+						<td class="align-middle text-right">{% if register_flag or request.user.profile.admin_access %}<a href="{% url 'coprofile:edit_coprofile' pk=coprofile.pk %}">изменить</a>{% endif %}</td>
+						<td class="align-middle text-right">{% if register_flag or request.user.profile.admin_access %}<a href="{% url 'coprofile:del_coprofile' pk=coprofile.pk %}" class="del_coprofile" data-name="{{ coprofile.get_name }}">удалить</a>{% endif %}</td>
 					</tr>
 				{% endfor %}
 			</tbody>
