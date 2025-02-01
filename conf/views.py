@@ -51,7 +51,12 @@ def home_view(request):
 	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False). \
 		order_by('-moderator_access', '-admin_access', '-speaker', 'surname', 'name', 'name2')
 
+
+
 	for user in users:
+		section = ''
+		if user.section:
+			section = user.section.name
 		member = {
 			'name': user.get_full_name(),
 			'email': user.user.email,
@@ -65,7 +70,7 @@ def home_view(request):
 			'cert_num': user.certificate_num,
 			'report_name': user.report_name,
 			'report_file': user.report_file,
-			'section': user.section.name
+			'section': section
 		}
 		members.append(member)
 		comembers = CoProfile.objects.filter(lead=user.user)
