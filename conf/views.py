@@ -35,7 +35,9 @@ from .tokens import accaunt_activation_token
 
 from profileuser.models import Profile
 from coprofile.models import CoProfile
-from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm
+from sections.models import Section
+
+from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm, SectionForm
 from certificates.forms import MakeCertificateForm
 
 class PDF(FPDF):
@@ -44,6 +46,7 @@ class PDF(FPDF):
 def home_view(request):
 	members = []
 	form = MakeCertificateForm(label_suffix='')
+	section_form = SectionForm(label_suffix='')
 
 	users = Profile.objects.all().exclude(username='admin').exclude(user__is_active=False). \
 		order_by('-moderator_access', '-admin_access', '-speaker', 'surname', 'name', 'name2')
@@ -61,7 +64,8 @@ def home_view(request):
 			'cert': user.certificate_file,
 			'cert_num': user.certificate_num,
 			'report_name': user.report_name,
-			'report_file': user.report_file
+			'report_file': user.report_file,
+			'section': user.section.name
 		}
 		members.append(member)
 		comembers = CoProfile.objects.filter(lead=user.user)
@@ -165,7 +169,8 @@ def home_view(request):
 	args = {
 		'users': users,
 		'members': members,
-		'form': form
+		'form': form,
+		'section_form': section_form
 	}
 	return render(request, 'index.html', args)
 
@@ -222,6 +227,9 @@ def register_view(request):
 			new_user.profile.position = user_form.cleaned_data['position']
 			new_user.profile.degree = user_form.cleaned_data['degree']
 			new_user.profile.speaker = user_form.cleaned_data['speaker']
+			
+			section = Section.objects.get(pk = user_form.cleaned_data['section'])
+			new_user.profile.section = section
 			new_user.profile.save()
 
 
@@ -271,6 +279,11 @@ def activate(request, uidb64, token):
 	if user and accaunt_activation_token.check_token(user, token):
 		user.is_active = True
 		user.save()
+
+		user_count = User.objects.filter(profile__section = user.profile.section, is_active = True).count()
+		if user_count > user.profile.section.count:
+			user.profile.section = None
+			user.profile.save()
 
 		login(request, user)
 		return redirect('home')

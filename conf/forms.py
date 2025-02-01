@@ -5,6 +5,7 @@ from django.contrib.auth.models import User as UserModel
 from django.contrib.auth.models import User
 	
 from profileuser.models import Profile
+from sections.models import Section
 
 User = get_user_model()
 
@@ -37,10 +38,12 @@ class UserLoginForm(forms.Form):
 
 class UserRegistrationForm(forms.ModelForm):
 	SPEAKER_TYPE = (
-		('1', 'Выступление с докладом (очно)'),
-		('4', 'Выступление с докладом (он-лайн)'),
-		('2', 'Публикация статьи'),
-		('3', 'Участие без доклада'),
+		('1', 'Выступление с докладом'),
+		('2', 'Участие без доклада'),
+	)
+
+	SECTION_TYPE = (
+		('', 'Выберите секцию'),
 	)
 
 	email = forms.EmailField(label = 'Ваш e-mail*', widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
@@ -52,11 +55,24 @@ class UserRegistrationForm(forms.ModelForm):
 	work_part = forms.CharField(label = 'Название отдела (факультет, кафедра)', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	position = forms.CharField(label = 'Занимаемая должность', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	degree = forms.CharField(label = 'Ученая степень, ученое звание', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	speaker = forms.ChoiceField(label = 'Форма участия', choices = SPEAKER_TYPE, widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	speaker = forms.ChoiceField(label = 'Форма участия*', choices = SPEAKER_TYPE, widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	section = forms.ChoiceField(label = 'Секция*', choices = SECTION_TYPE, widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	password = forms.CharField(label = 'Задайте пароль*', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
 	def __init__(self, *args, **kwargs):
 		super(UserRegistrationForm, self).__init__(*args, **kwargs)
+
+		CHOICES = (
+			('', 'Выберите секцию'),
+		)
+		sections = Section.objects.all().order_by('name')
+
+		for section in sections:
+			user_count = User.objects.filter(profile__section = section, is_active = True).count()
+			if user_count < section.count:
+				CHOICES = CHOICES + ((str(section.pk), section.name + ' - осталось мест: ' + str(section.count - user_count)),)
+
+		self.fields['section'].choices=CHOICES
 
 
 	class Meta:
@@ -78,8 +94,6 @@ class UserRegistrationForm(forms.ModelForm):
 			return data
 
 		raise forms.ValidationError('Пользователь с таким email существует!')
-
-
 
 
 class ChangePasswordForm(forms.Form):
@@ -135,5 +149,28 @@ class CustomSetPasswordForm(SetPasswordForm):
 		password1 = self.cleaned_data.get('new_password1')
 		password2 = self.cleaned_data.get('new_password1')
 		return password2
+
+
+class SectionForm(forms.Form):
+	SECTION_TYPE = (
+		('', 'Выберите секцию'),
+	)
+
+	section = forms.ChoiceField(label = '', choices = SECTION_TYPE, widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+
+	def __init__(self, *args, **kwargs):
+		super(SectionForm, self).__init__(*args, **kwargs)
+
+		CHOICES = (
+			('', 'Выберите секцию'),
+		)
+		sections = Section.objects.all().order_by('name')
+
+		for section in sections:
+			user_count = User.objects.filter(profile__section = section, is_active = True).count()
+			if user_count < section.count:
+				CHOICES = CHOICES + ((str(section.pk), section.name + ' - осталось мест: ' + str(section.count - user_count)),)
+
+		self.fields['section'].choices=CHOICES
 
 

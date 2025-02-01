@@ -34,6 +34,7 @@ urlpatterns += [
     path('certificates/', include(('certificates.urls', 'certificates'))),
     path('coprofile/', include(('coprofile.urls', 'coprofile'))),
     path('mailing/', include(('mailing.urls', 'mailing'))),
+    path('sections/', include(('sections.urls', 'sections'))),
 ]
 
 

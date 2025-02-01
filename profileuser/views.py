@@ -2,6 +2,7 @@ import os
 import datetime
 
 from datetime import date
+from django.http import HttpResponse
 
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -13,10 +14,13 @@ from django.contrib.auth import update_session_auth_hash
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage, send_mail
 
+from django.contrib.auth.models import User
+
 from .forms import ProfileUdpateForm, ProfileAddReprotForm, ProfileAddReprotFileForm
+from conf.forms import SectionForm
 
 from .models import Profile
-
+from sections.models import Section
 
 @login_required(login_url='/login/')
 def view_edit_profile(request):
@@ -138,3 +142,26 @@ def del_report_file(request):
 
 
 	return redirect('profiles:view_edit_profile')
+
+
+@login_required(login_url='/login/')
+def set_section(request):
+	user = request.user
+	pk = request.GET['pk']
+	section = Section.objects.filter(pk = pk).first()
+	if not section:
+		return HttpResponse('0')
+
+	user.profile.section = section
+	user.profile.save()
+
+	user_count = User.objects.filter(profile__section = section, is_active = True).count()
+	if user_count <= section.count:
+		return HttpResponse('1')
+
+	user.profile.section = None
+	user.profile.save()
+
+	section_form = SectionForm(label_suffix='')
+
+	return HttpResponse(render_to_string('profileuser/section_form.html', {'section_form': section_form}))

@@ -20,7 +20,8 @@ INSTALLED_APPS = [
     'profileuser',
     'certificates',
     'coprofile',
-    'mailing'
+    'mailing',
+    'sections'
 ]
 
 MIDDLEWARE = [
