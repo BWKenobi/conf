@@ -10,7 +10,9 @@ from django.core.files.base import ContentFile
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_ORIENT
+from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.shared import Mm, Pt
+from docx.enum.style import WD_STYLE_TYPE
 
 from fpdf import FPDF
 
@@ -52,11 +54,15 @@ def home_view(request):
 		order_by('-moderator_access', '-admin_access', '-speaker', 'surname', 'name', 'name2')
 
 
+	empty_section = False
 
 	for user in users:
 		section = ''
 		if user.section:
 			section = user.section.name
+		else:
+			empty_section = True
+
 		member = {
 			'name': user.get_full_name(),
 			'email': user.user.email,
@@ -76,6 +82,12 @@ def home_view(request):
 		comembers = CoProfile.objects.filter(lead=user.user)
 		if comembers:
 			for comember in comembers:
+				section = ''
+				if user.section:
+					section = comember.section.name
+				else:
+					empty_section = True
+
 				member = {
 					'name': comember.get_full_name(),
 					'email': user.user.email,
@@ -88,7 +100,8 @@ def home_view(request):
 					'cert': comember.certificate_file,
 					'cert_num': comember.certificate_num,
 					'report_name': comember.report_name,
-					'report_file': comember.report_file
+					'report_file': comember.report_file,
+					'section': section
 				}
 				members.append(member)
 	
@@ -121,44 +134,171 @@ def home_view(request):
 		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
 
-		table = document.add_table(rows=1, cols=5)
-		table.allow_autifit = False
-		table.style = 'TableGrid'
-		table.columns[0].width = Mm(10)
-		table.columns[1].width = Mm(120)
-		table.columns[2].width = Mm(70)
-		table.columns[3].width = Mm(30)
-		table.columns[4].width = Mm(27)
+		sections = Section.objects.all().order_by('name')
+		for section in sections:
+			p = document.add_paragraph()
+			p.add_run('Секция: ' + section.name).bold = True
+			p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			p.paragraph_format.space_after = 0
 
-		hdr_cells = table.rows[0].cells
-		hdr_cells[0].text = '№'
-		hdr_cells[0].width = Mm(10)
-		hdr_cells[1].text = 'ФИО'
-		hdr_cells[1].width = Mm(120)
-		hdr_cells[2].text = 'E-mail'
-		hdr_cells[2].width = Mm(70)
-		hdr_cells[3].text = 'Статус'
-		hdr_cells[3].width = Mm(30)
-		hdr_cells[4].text = 'Серт. №'
-		hdr_cells[4].width = Mm(27)
 
-		count = 1
+			table = document.add_table(rows=1, cols=5)
+			table.allow_autifit = False
+			table.style = 'TableGrid'
+			table.columns[0].width = Mm(10)
+			table.columns[1].width = Mm(120)
+			table.columns[2].width = Mm(70)
+			table.columns[3].width = Mm(30)
+			table.columns[4].width = Mm(27)
 
-		for member in members:
-			row_cells = table.add_row().cells
-			row_cells[0].text = str(count)
-			row_cells[0].width = Mm(10)
-			row_cells[1].text = member['name']
-			if member['report_name']:
-				row_cells[1].text += '\nТема: ' + member['report_name']
-			row_cells[1].width = Mm(120)
-			row_cells[2].text = member['email']
-			row_cells[2].width = Mm(70)
-			row_cells[3].text = member['status']
-			row_cells[3].width = Mm(30)
-			row_cells[4].text = member['cert_num']
-			row_cells[4].width = Mm(27)
-			count += 1
+			hdr_cells = table.rows[0].cells
+			hdr_cells[0].text = '№'
+			hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[0].width = Mm(10)
+			hdr_cells[1].text = 'ФИО, Организация, Должность'
+			hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[1].width = Mm(120)
+			hdr_cells[2].text = 'Телефон, E-mail'
+			hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[2].width = Mm(70)
+			hdr_cells[3].text = 'Статус'
+			hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[3].width = Mm(30)
+			hdr_cells[4].text = 'Серт. №'
+			hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[4].width = Mm(27)
+
+			count = 1
+
+			for member in members:
+				if member['section'] == section.name:
+					row_cells = table.add_row().cells
+					row_cells[0].text = str(count)
+					row_cells[0].paragraphs[0].runs[0].font.bold = True
+					row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					row_cells[0].width = Mm(10)
+					row_cells[1].text = member['name']
+					if member['degree']:
+						row_cells[1].text += ' (' + member['degree'] + ')'
+
+					row_cells[1].text += '\n' + member['work_place'] 
+
+					if member['work_part'] :
+						row_cells[1].text += ', ' + member['work_part']
+
+						if member['position']:
+							row_cells[1].text += ', ' +  member['position']
+
+					row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					row_cells[1].width = Mm(120)
+					row_cells[2].text = member['phone'] + '\n' + member['email']
+					row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					row_cells[2].width = Mm(70)
+					row_cells[3].text = member['status']
+					row_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					row_cells[3].width = Mm(30)
+					row_cells[4].text = member['cert_num']
+					row_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					row_cells[4].width = Mm(27)
+					count += 1
+
+			p = document.add_paragraph()
+			p.paragraph_format.space_after = 0
+
+
+		if empty_section:
+			p = document.add_paragraph()
+			p.add_run('Без секции').bold = True
+			p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			p.paragraph_format.space_after = 0
+
+
+			table = document.add_table(rows=1, cols=5)
+			table.allow_autifit = False
+			table.style = 'TableGrid'
+			table.columns[0].width = Mm(10)
+			table.columns[1].width = Mm(120)
+			table.columns[2].width = Mm(70)
+			table.columns[3].width = Mm(30)
+			table.columns[4].width = Mm(27)
+
+			hdr_cells = table.rows[0].cells
+			hdr_cells[0].text = '№'
+			hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[0].width = Mm(10)
+			hdr_cells[1].text = 'ФИО, Организация, Должность'
+			hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[1].width = Mm(120)
+			hdr_cells[2].text = 'Телефон, E-mail'
+			hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[2].width = Mm(70)
+			hdr_cells[3].text = 'Статус'
+			hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[3].width = Mm(30)
+			hdr_cells[4].text = 'Серт. №'
+			hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+			hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			hdr_cells[4].width = Mm(27)
+
+			count = 1
+
+			for member in members:
+				if member['section'] == '':
+					row_cells = table.add_row().cells
+					row_cells[0].text = str(count)
+					row_cells[0].paragraphs[0].runs[0].font.bold = True
+					row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					row_cells[0].width = Mm(10)
+					row_cells[1].text = member['name']
+					if member['degree']:
+						row_cells[1].text += ' (' + member['degree'] + ')'
+
+					row_cells[1].text += '\n' + member['work_place'] 
+
+					if member['work_part'] :
+						row_cells[1].text += ', ' + member['work_part']
+
+						if member['position']:
+							row_cells[1].text += ', ' +  member['position']
+							
+					row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					row_cells[1].width = Mm(120)
+					row_cells[2].text = member['phone'] + '\n' + member['email']
+					row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					row_cells[2].width = Mm(70)
+					row_cells[3].text = member['status']
+					row_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					row_cells[3].width = Mm(30)
+					row_cells[4].text = member['cert_num']
+					row_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+					row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+					row_cells[4].width = Mm(27)
+					count += 1
+
 
 
 

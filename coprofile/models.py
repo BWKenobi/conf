@@ -7,6 +7,9 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 
+from sections.models import Section
+
+
 def make_upload_path(instance, filename):
 	names = filename.split('.')
 	new_filename = ''
@@ -51,6 +54,8 @@ class CoProfile(models.Model):
 	work_part = models.CharField(verbose_name="Название отдела (факультет, кафедра)", max_length=250, blank=True)
 	position = models.CharField(verbose_name="Занимаемая должность", max_length=100, blank=True)
 	degree = models.CharField(verbose_name="Ученая степень, ученое звание", max_length=100, blank=True)
+
+	section = models.ForeignKey(Section, on_delete=models.CASCADE, null=True, default=None, blank=True)
 
 	certificate_num = models.CharField(verbose_name="Номер сертификата", max_length=30, blank=True)
 	certificate_file = models.FileField(verbose_name='Сертификат', blank=True, null=True, upload_to = make_certificate_path)
