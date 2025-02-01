@@ -197,8 +197,8 @@ def home_view(request):
 					if member['work_part'] :
 						row_cells[1].text += ', ' + member['work_part']
 
-						if member['position']:
-							row_cells[1].text += ', ' +  member['position']
+					if member['position']:
+						row_cells[1].text += ', ' +  member['position']
 
 					row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 					row_cells[1].width = Mm(120)
@@ -281,8 +281,8 @@ def home_view(request):
 					if member['work_part'] :
 						row_cells[1].text += ', ' + member['work_part']
 
-						if member['position']:
-							row_cells[1].text += ', ' +  member['position']
+					if member['position']:
+						row_cells[1].text += ', ' +  member['position']
 							
 					row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 					row_cells[1].width = Mm(120)
