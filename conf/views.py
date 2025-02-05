@@ -39,7 +39,7 @@ from profileuser.models import Profile
 from coprofile.models import CoProfile
 from sections.models import Section
 
-from .forms import UserLoginForm, UserRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm, SectionForm
+from .forms import UserLoginForm, UserRegistrationForm, OrgRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm, SectionForm
 from certificates.forms import MakeCertificateForm
 
 class PDF(FPDF):
@@ -60,7 +60,7 @@ def home_view(request):
 		section = ''
 		if user.section:
 			section = user.section.name
-		else:
+		elif not user.org_accecc:
 			empty_section = True
 
 		member = {
@@ -76,7 +76,8 @@ def home_view(request):
 			'cert_num': user.certificate_num,
 			'report_name': user.report_name,
 			'report_file': user.report_file,
-			'section': section
+			'section': section,
+			'org_accecc': user.org_accecc
 		}
 		members.append(member)
 		comembers = CoProfile.objects.filter(lead=user.user)
@@ -85,7 +86,7 @@ def home_view(request):
 				section = ''
 				if user.section:
 					section = comember.section.name
-				else:
+				elif not comember.org_accecc:
 					empty_section = True
 
 				member = {
@@ -101,7 +102,8 @@ def home_view(request):
 					'cert_num': comember.certificate_num,
 					'report_name': comember.report_name,
 					'report_file': comember.report_file,
-					'section': section
+					'section': section,
+					'org_accecc': comember.org_accecc
 				}
 				members.append(member)
 	
@@ -133,6 +135,89 @@ def home_view(request):
 		p = document.add_paragraph()
 		p.add_run(dte.strftime('%d.%b.%Y')).italic = True
 		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.RIGHT
+
+
+		p = document.add_paragraph()
+		p.add_run('Орг.комитет').bold = True
+		p.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		p.paragraph_format.space_after = 0
+
+
+		table = document.add_table(rows=1, cols=5)
+		table.allow_autifit = False
+		table.style = 'TableGrid'
+		table.columns[0].width = Mm(10)
+		table.columns[1].width = Mm(120)
+		table.columns[2].width = Mm(70)
+		table.columns[3].width = Mm(30)
+		table.columns[4].width = Mm(27)
+
+		hdr_cells = table.rows[0].cells
+		hdr_cells[0].text = '№'
+		hdr_cells[0].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[0].width = Mm(10)
+		hdr_cells[1].text = 'ФИО, Организация, Должность'
+		hdr_cells[1].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[1].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[1].width = Mm(120)
+		hdr_cells[2].text = 'Телефон, E-mail'
+		hdr_cells[2].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[2].width = Mm(70)
+		hdr_cells[3].text = 'Статус'
+		hdr_cells[3].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[3].width = Mm(30)
+		hdr_cells[4].text = 'Серт. №'
+		hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[4].width = Mm(27)
+
+		count = 1
+
+		for member in members:
+			if member['section'] == '' and member['org_accecc']:
+				row_cells = table.add_row().cells
+				row_cells[0].text = str(count)
+				row_cells[0].paragraphs[0].runs[0].font.bold = True
+				row_cells[0].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+				row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+				row_cells[0].width = Mm(10)
+				row_cells[1].text = member['name']
+				if member['degree']:
+					row_cells[1].text += ' (' + member['degree'] + ')'
+
+				row_cells[1].text += '\n' + member['work_place'] 
+
+				if member['work_part'] :
+					row_cells[1].text += ', ' + member['work_part']
+
+				if member['position']:
+					row_cells[1].text += ', ' +  member['position']
+						
+				row_cells[1].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+				row_cells[1].width = Mm(120)
+				row_cells[2].text = member['phone'] + '\n' + member['email']
+				row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+				row_cells[2].width = Mm(70)
+				row_cells[3].text = member['status']
+				row_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+				row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+				row_cells[3].width = Mm(30)
+				row_cells[4].text = member['cert_num']
+				row_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+				row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+				row_cells[4].width = Mm(27)
+				count += 1
+
+		p = document.add_paragraph()
+		p.paragraph_format.space_after = 0
 
 		sections = Section.objects.all().order_by('name')
 		for section in sections:
@@ -181,7 +266,7 @@ def home_view(request):
 			count = 1
 
 			for member in members:
-				if member['section'] == section.name:
+				if member['section'] == section.name and not member['org_accecc']:
 					row_cells = table.add_row().cells
 					row_cells[0].text = str(count)
 					row_cells[0].paragraphs[0].runs[0].font.bold = True
@@ -265,7 +350,7 @@ def home_view(request):
 			count = 1
 
 			for member in members:
-				if member['section'] == '':
+				if member['section'] == '' and not member['org_accecc']:
 					row_cells = table.add_row().cells
 					row_cells[0].text = str(count)
 					row_cells[0].paragraphs[0].runs[0].font.bold = True
@@ -414,6 +499,67 @@ def register_view(request):
 	return render(request, 'register.html', {'form': user_form})
 
 
+def superviser_view(request):
+	if request.method=='POST':
+		user_form = OrgRegistrationForm(request.POST)
+		if user_form.is_valid():
+			new_user = user_form.save(commit=False)
+			new_user.username = new_user.email
+			new_user.is_active = False
+			new_user.set_password(user_form.cleaned_data['password'])
+			new_user.save()
+
+			new_user.profile.name = user_form.cleaned_data['name']
+			new_user.profile.name2 = user_form.cleaned_data['name2']
+			new_user.profile.surname = user_form.cleaned_data['surname']
+			new_user.profile.work_place = user_form.cleaned_data['work_place']
+
+			new_user.profile.phone = user_form.cleaned_data['phone']
+			new_user.profile.work_part = user_form.cleaned_data['work_part']
+			new_user.profile.position = user_form.cleaned_data['position']
+			new_user.profile.degree = user_form.cleaned_data['degree']
+			new_user.profile.speaker = user_form.cleaned_data['speaker']
+			
+			new_user.profile.org_accecc = True
+			new_user.profile.save()
+
+
+			current_site = get_current_site(request)
+			protocol = 'http'
+			if request.is_secure():
+				protocol = 'https'
+
+			mail_subject = 'Активация аккаунта'
+			to_email = new_user.email
+			#if '127.0.0.1' in current_site.domain:
+			uid = urlsafe_base64_encode(force_bytes(new_user.pk))
+			#else:
+			#	uid = urlsafe_base64_encode(force_bytes(new_user.pk)).decode()
+
+			token = accaunt_activation_token.make_token(new_user)
+
+			message = render_to_string('acc_active_email.html', {'user': new_user, 'domain': current_site.domain,\
+				'uid': uid, \
+				'token': token,\
+				'protocol': protocol,\
+				'email': to_email})
+
+			message_html = render_to_string('acc_active_email_html.html', {'user': new_user, 'domain': current_site.domain,\
+				'uid': uid, \
+				'token': token,\
+				'protocol': protocol,\
+				'email': to_email})
+
+			t = send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email], fail_silently=True, html_message=message_html)
+
+			return render(request, 'confirm_email.html')
+
+		return render(request, 'superviser.html', {'form': user_form})
+
+	user_form = OrgRegistrationForm()
+	return render(request, 'superviser.html', {'form': user_form})
+
+
 def activate(request, uidb64, token):
 	try:
 		uid = force_text(urlsafe_base64_decode(uidb64))
@@ -426,9 +572,10 @@ def activate(request, uidb64, token):
 		user.save()
 
 		user_count = User.objects.filter(profile__section = user.profile.section, is_active = True).count()
-		if user_count > user.profile.section.count:
-			user.profile.section = None
-			user.profile.save()
+		if user.profile.section:
+			if user_count > user.profile.section.count:
+				user.profile.section = None
+				user.profile.save()
 
 		login(request, user)
 		return redirect('home')

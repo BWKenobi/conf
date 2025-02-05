@@ -4,15 +4,17 @@
 {% block content %}
 	{% if not request.user.is_authenticated %}
 		<div class="text-center ">
-			<p class="mb-0">МИНИСТЕРСТВО КУЛЬТУРЫ И ТУРИЗМА МОСКОВСКОЙОБЛАСТИ</p>
+			<p class="mb-2">МИНИСТЕРСТВО КУЛЬТУРЫ И ТУРИЗМА МОСКОВСКОЙОБЛАСТИ</p>
 			<p class="mb-0">Государственное автономное профессиональное</p>
 			<p class="mb-0">образовательное учреждение Московской области</p>
-			<p class="mb-5">«Московский Губернский колледж искусств»</p>
-
+			<p class="mb-2">«Московский Губернский колледж искусств»</p>
+			<p class="mb-0">Муниципальное бюджетное учреждение дополнительного образования</p>
+			<p class="mb-0">«Детская художественная школа им. Н.Н. Лаврентьевой»</p>
+			<p class="mb-5">городского округа Электросталь Московской области</p>
 
 			<h4>Областная научно-практическая конференция для художественных школ и художественных отделений ДШИ</h4>
 
-			<h1>«Художественное образование в ДХШ, художественных отделениях ДШИ: поиски и открытия»</h1>
+			<h1>«Художественное образование: сохранение традиций и новые горизонты»</h1>
 
 
 			<h4 class="text-primary">20 февраля 2025 года</h4>
@@ -33,15 +35,17 @@
 	{% else %}
 		
 		<div class="text-center pb-5">
-			<p class="mb-0">МИНИСТЕРСТВО КУЛЬТУРЫ И ТУРИЗМА МОСКОВСКОЙОБЛАСТИ</p>
+			<p class="mb-2">МИНИСТЕРСТВО КУЛЬТУРЫ И ТУРИЗМА МОСКОВСКОЙОБЛАСТИ</p>
 			<p class="mb-0">Государственное автономное профессиональное</p>
 			<p class="mb-0">образовательное учреждение Московской области</p>
-			<p class="mb-5">«Московский Губернский колледж искусств»</p>
-
+			<p class="mb-2">«Московский Губернский колледж искусств»</p>
+			<p class="mb-0">Муниципальное бюджетное учреждение дополнительного образования</p>
+			<p class="mb-0">«Детская художественная школа им. Н.Н. Лаврентьевой»</p>
+			<p class="mb-5">городского округа Электросталь Московской области</p>
 
 			<h4>Областная научно-практическая конференция для художественных школ и художественных отделений ДШИ</h4>
 
-			<h1>«Художественное образование в ДХШ, художественных отделениях ДШИ: поиски и открытия»</h1>
+			<h1>«Художественное образование: сохранение традиций и новые горизонты»</h1>
 
 
 			<h4 class="text-primary">20 февраля 2025 года</h4>
@@ -51,7 +55,7 @@
 		</div>
 
 		{% if not request.user.profile.message_accecc and not request.user.profile.admin_access and not request.user.profile.moderator_access or True %}
-			{% if not request.user.profile.section %}
+			{% if not request.user.profile.section and not request.user.profile.org_accecc %}
 				<div class="row align-middle pt-5" id="section_container">
 					<div class="col-md-6 mx-auto mb-5">
 						<p class="text-danger text-center mb-0">
@@ -107,7 +111,7 @@
 								<td class="align-middle"><b>{{ member.name }}</b><br>{{ member.phone }}<br><em>{{ member.email }}</em></td>
 								<td class="align-middle"><b>{{ member.work_place }}</b><br><em>{{ member.work_part }}</em></td>
 								<td class="align-middle"><b>{{ member.position }}</b><br><em>{{ member.degree }}</em></td>
-								<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.section %}<br>{{ member.section }}{% endif %}</td>
+								<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.org_accecc %}<br>Орг.комитет{% else %}{% if member.section %}<br>{{ member.section }}{% endif %}{% endif %}</td>
 								<td class="align-middle text-center">
 									{% if member.cert %}
 										№ {{ member.cert_num }}<br>

@@ -69,6 +69,7 @@ class CoProfile(models.Model):
 	moderator_access= models.BooleanField("Права модератора", default=False)
 	message_accecc = models.BooleanField("Права рассылки оповещений", default=False)
 
+	org_accecc = models.BooleanField("Права орг.комитета", default=False)
 
 	def __str__(self):
 		return str(self.lead) + ' (' + self.surname + ')'

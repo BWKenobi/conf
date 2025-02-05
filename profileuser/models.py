@@ -69,6 +69,8 @@ class Profile(models.Model):
 	moderator_access= models.BooleanField("Права модератора", default=False)
 	message_accecc = models.BooleanField("Права рассылки оповещений", default=False)
 
+	org_accecc = models.BooleanField("Права орг.комитета", default=False)
+
 
 	def __str__(self):
 		if self.user.is_active:
@@ -98,6 +100,8 @@ class Profile(models.Model):
 		admin = ''
 		if self.admin_access:
 			admin = ' (Администратор)'
+		elif self.org_accecc:
+			admin = ' (Орг.комитет)'
 		if self.surname:
 			if self.name2:
 				return self.surname + ' ' + self.name[0] + '.' + self.name2[0]+ '.' + admin
