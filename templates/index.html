@@ -54,26 +54,24 @@
 			{% endif %}
 		</div>
 
-		{% if not request.user.profile.message_accecc and not request.user.profile.admin_access and not request.user.profile.moderator_access or True %}
-			{% if not request.user.profile.section and not request.user.profile.org_accecc %}
-				<div class="row align-middle pt-5" id="section_container">
-					<div class="col-md-6 mx-auto mb-5">
-						<p class="text-danger text-center mb-0">
-							До подтверждения адреса Вашей электронной почты изменился состав секций.
-						</p>
-						<p class="text-danger text-center">
-							<b>Пожалуйста выберите секцию.</b>
-						</p>
-						<div id="section_form">
-							{{ section_form.as_p }}
-						</div>
+		{% if not request.user.profile.section and not request.user.profile.org_accecc %}
+			<div class="row align-middle pt-5" id="section_container">
+				<div class="col-md-6 mx-auto mb-5">
+					<p class="text-danger text-center mb-0">
+						До подтверждения адреса Вашей электронной почты изменился состав секций.
+					</p>
+					<p class="text-danger text-center">
+						<b>Пожалуйста выберите секцию.</b>
+					</p>
+					<div id="section_form">
+						{{ section_form.as_p }}
+					</div>
 
-						<div class="text-right">
-							<input type="button" value="Сохранить" id="set_section">
-						</div>
+					<div class="text-right">
+						<input type="button" value="Сохранить" id="set_section">
 					</div>
 				</div>
-			{% endif %}
+			</div>
 		{% endif %}
 
 		{% if request.user.profile.message_accecc %}
@@ -90,7 +88,7 @@
 			</div>
 		{% endif %}
 
-		{% if request.user.profile.admin_access %}
+		{% if request.user.profile.moderator_access %}
 			<div class="text-left mt-3 px-5">
 				<b>СПИСОК УЧАСТНИКОВ/ДОКЛАДЧИКОВ</b>
 				<table class="table">
