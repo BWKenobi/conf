@@ -92,6 +92,7 @@
 		{% if request.user.profile.moderator_access %}
 			<table class="table">
 				<tbody>
+
 					<tr class="filter-table">
 						<td scope="row" class="align-middle text-center" width="{{ width_column }}%" data-pk="">Все</td>
 						<td scope="row" class="align-middle text-center" width="{{ width_column }}%" data-pk="A">Орг. комитет</td>
@@ -99,6 +100,14 @@
 							<td scope="row" class="align-middle text-center" width="{{ width_column }}%" data-pk="{{ section.pk }}">{{ section }}</td>
 						{% endfor %}
 						<td scope="row" class="align-middle text-center" width="{{ width_column }}%" data-pk="B">Остальные</td>
+					</tr>
+					<tr class="filter-table filter-table-italic">
+						<td scope="row" class="align-middle text-center" width="{{ width_column }}%">{{ members|length }} чел.</td>
+						<td scope="row" class="align-middle text-center" width="{{ width_column }}%">{{ super_count }} чел.</td>
+						{% for section in sections %}
+							<td scope="row" class="align-middle text-center" width="{{ width_column }}%">{{ section_count|lookup:section.pk }} чел.</td>
+						{% endfor %}
+						<td scope="row" class="align-middle text-center" width="{{ width_column }}%">{{ none_count }} чел.</td>
 					</tr>
 				</tbody>
 			</table>
@@ -278,8 +287,8 @@
 		});
 
 		$(document).ready(function() {
-			$('.filter-table td').removeClass('active');
-			$('.filter-table td').first().addClass('active');
+			$('.filter-table').first().find('td').removeClass('active');
+			$('.filter-table').first().find('td').first().addClass('active');
 
 			$('.members').removeClass('hide');
 
