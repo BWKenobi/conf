@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load objects_extras %}
 {% load static %}
 
 {% block content %}
@@ -89,6 +90,18 @@
 		{% endif %}
 
 		{% if request.user.profile.moderator_access %}
+			<table class="table">
+				<tbody>
+					<tr class="filter-table">
+						<td scope="row" class="align-middle text-center" width="{{ width_column }}%" data-pk="">Все</td>
+						<td scope="row" class="align-middle text-center" width="{{ width_column }}%" data-pk="A">Орг. комитет</td>
+						{% for section in sections %}
+							<td scope="row" class="align-middle text-center" width="{{ width_column }}%" data-pk="{{ section.pk }}">{{ section }}</td>
+						{% endfor %}
+						<td scope="row" class="align-middle text-center" width="{{ width_column }}%" data-pk="B">Остальные</td>
+					</tr>
+				</tbody>
+			</table>
 			<div class="text-left mt-3 px-5">
 				<b>СПИСОК УЧАСТНИКОВ/ДОКЛАДЧИКОВ</b>
 				<table class="table">
@@ -104,7 +117,7 @@
 					</thead>
 					<tbody>
 						{% for member in members %}
-							<tr class="{%if usr == request.user.profile %}table-info{% endif %}">
+							<tr class="members" data-pk="{% if member.org_accecc %}A{% elif member.section_pk %}{{ member.section_pk }}{% else %}B{% endif %}">
 								<th scope="row" class="align-middle">{{ forloop.counter}}</th>
 								<td class="align-middle"><b>{{ member.name }}</b><br>{{ member.phone }}<br><em>{{ member.email }}</em></td>
 								<td class="align-middle"><b>{{ member.work_place }}</b><br><em>{{ member.work_part }}</em></td>
@@ -263,6 +276,33 @@
 				}
 			});
 		});
-		
+
+		$(document).ready(function() {
+			$('.filter-table td').removeClass('active');
+			$('.filter-table td').first().addClass('active');
+
+			$('.members').removeClass('hide');
+
+			$('.filter-table td').click(function(){
+				$('.filter-table td').removeClass('active');
+				$(this).addClass('active');
+
+				pk = $(this).attr('data-pk');
+				$('.members').removeClass('hide');
+				if (pk != ''){
+					$('.members').addClass('hide');
+					$('.members[data-pk=' + pk + ']').removeClass('hide');
+				}
+
+				cnt = 1;
+				$('.members').each(function(){
+					if (!$(this).hasClass('hide')){
+						$(this).find('th').text(cnt.toString());
+						cnt ++;
+					}
+				});
+
+			});
+		});
 	</script>
 {% endblock %}

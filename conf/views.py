@@ -58,8 +58,10 @@ def home_view(request):
 
 	for user in users:
 		section = ''
+		section_pk = ''
 		if user.section:
 			section = user.section.name
+			section_pk = user.section.pk
 		elif not user.org_accecc:
 			empty_section = True
 
@@ -77,6 +79,7 @@ def home_view(request):
 			'report_name': user.report_name,
 			'report_file': user.report_file,
 			'section': section,
+			'section_pk': section_pk,
 			'org_accecc': user.org_accecc
 		}
 		members.append(member)
@@ -84,8 +87,10 @@ def home_view(request):
 		if comembers:
 			for comember in comembers:
 				section = ''
+				section_pk = ''
 				if user.section:
 					section = comember.section.name
+					section_pk = user.section.pk
 				elif not comember.org_accecc:
 					empty_section = True
 
@@ -103,12 +108,33 @@ def home_view(request):
 					'report_name': comember.report_name,
 					'report_file': comember.report_file,
 					'section': section,
+					'section_pk': section_pk,
 					'org_accecc': comember.org_accecc
 				}
 				members.append(member)
 	
 	members =  sorted(members, key=lambda i: (i['name']))
 
+	sections = Section.objects.all().order_by('name')
+	section_count = {}
+	section_name = {}
+	super_count = 0
+	none_count = 0
+
+	for section in sections:
+		section_count[section.pk] = 0
+		section_name[section.name] = section.pk
+
+	for member in members:
+		if member['org_accecc']:
+			super_count += 1
+		elif member['section']:
+			section_count[section_name[member['section']]] += 1
+		else:
+			none_count += 1
+
+	count_column = sections.count() + 3
+	width_column = 100.0 / count_column
 
 	if request.POST:
 		dte = date.today()
@@ -400,7 +426,14 @@ def home_view(request):
 		'users': users,
 		'members': members,
 		'form': form,
-		'section_form': section_form
+		'section_form': section_form,
+		'sections': sections,
+		'section_count': section_count,
+		'super_count': super_count,
+		'none_count': none_count,
+
+		'count_column': count_column,
+		'width_column': width_column
 	}
 	return render(request, 'index.html', args)
 

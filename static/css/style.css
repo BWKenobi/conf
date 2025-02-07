@@ -135,3 +135,15 @@ label{
 .cert-popup label{
 	min-height: 60px;
 }
+
+.filter-table{
+	font-size: 80%;
+}
+
+.filter-table td{
+	cursor: pointer;
+}
+
+.filter-table .active{
+	background-color: rgba(0, 76, 255, 0.2);
+}

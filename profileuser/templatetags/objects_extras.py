@@ -16,3 +16,8 @@ def lookup(d, key):
 @register.filter(name='filename')
 def filename(d):
 	return os.path.basename(d.file.name)
+
+
+@register.filter(name='times') 
+def times(number):
+    return range(number)
