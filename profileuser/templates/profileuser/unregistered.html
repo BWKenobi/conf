@@ -20,7 +20,7 @@
 				{% for member in members %}
 					<tr class="members" data-pk="{% if member.org_accecc %}A{% elif member.section_pk %}{{ member.section_pk }}{% else %}B{% endif %}">
 						<th scope="row" class="align-middle">{{ forloop.counter}}</th>
-						<td class="align-middle"><b>{{ member.name }}</b><br>{{ member.phone }}<br><em>{{ member.user.email }}</em></td>
+						<td class="align-middle"><b>{{ member.get_full_name }}</b><br>{{ member.phone }}<br><em>{{ member.user.email }}</em></td>
 						<td class="align-middle"><b>{{ member.work_place }}</b><br><em>{{ member.work_part }}</em></td>
 						<td class="align-middle"><b>{{ member.position }}</b><br><em>{{ member.degree }}</em></td>
 						<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.org_accecc %}<br>Орг.комитет{% else %}{% if member.section %}<br>{{ member.section }}{% endif %}{% endif %}</td>
