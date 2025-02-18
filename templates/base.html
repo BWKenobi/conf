@@ -46,6 +46,7 @@
                 <a class="p-2 text-secondary text-uppercase {% if menu == 'profile' %}active{% endif %}" href="{% url 'profiles:view_edit_profile' %}">{{user.profile.get_name }}</a>
                 {% if user.profile.admin_access %}
                     <a class="p-2 text-secondary text-uppercase {% if menu == 'sections' %}active{% endif %}" href="{% url 'sections:sections' %}">Секции</a>
+                    <a class="p-2 text-secondary text-uppercase {% if menu == 'unregistered' %}active{% endif %}" href="{% url 'profiles:unregistered' %}">Неактивные</a>
                 {% endif %}
                 <!-- <a class="p-2 text-secondary text-uppercase {% if menu == 'coprofile' %}active{% endif %}" href="{% url 'coprofile:view_coprofiles' %}">Доп.участники</a> -->
             {% endif %}

@@ -145,6 +145,18 @@ def del_report_file(request):
 
 
 @login_required(login_url='/login/')
+def unregistered(request):
+	members = Profile.objects.all().exclude(username='admin'). \
+		order_by('surname', 'name', 'name2')
+
+	args = {
+		'menu': 'unregistered',
+		'members': members,
+	}
+	return render(request, 'profileuser/unregistered.html', args)
+
+
+@login_required(login_url='/login/')
 def set_section(request):
 	user = request.user
 	pk = request.GET['pk']
@@ -165,3 +177,37 @@ def set_section(request):
 	section_form = SectionForm(label_suffix='')
 
 	return HttpResponse(render_to_string('profileuser/section_form.html', {'section_form': section_form}))
+
+
+@login_required(login_url='/login/')
+def acivate(request):
+	pk = request.GET['pk']
+	profile = Profile.objects.filter(pk = pk).first()
+
+	if not profile:
+		return HttpResponse(False)
+
+	profile.user.is_active = True
+	profile.user.save()
+
+	user_count = User.objects.filter(profile__section = profile.section, is_active = True).count()
+	if profile.section:
+		if user_count > profile.section.count:
+			profile.section = None
+			profile.save()
+
+	return HttpResponse(True)
+
+
+@login_required(login_url='/login/')
+def deactivate(request):
+	pk = request.GET['pk']
+	profile = Profile.objects.filter(pk = pk).first()
+
+	if not profile:
+		return HttpResponse(False)
+
+	profile.user.is_active = False
+	profile.user.save()
+
+	return HttpResponse(True)

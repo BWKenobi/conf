@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load objects_extras %}
+{% load static %}
+
+{% block content %}
+	<div class="text-left mt-3 px-5">
+		<b>СПИСОК УЧАСТНИКОВ/ДОКЛАДЧИКОВ</b>
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col" class="table-cel-width-5 align-middle">№</th>
+					<th scope="col" class="table-cel-width-30 align-middle">Фамилия Имя Отчетво<br>Телефон<br>E-mail</th>
+					<th scope="col" class="table-cel-width-15 align-middle">Организация<br>Отдел/факультет/кафедра</th>
+					<th scope="col" class="table-cel-width-15 align-middle">Должность<br>Ученая степень/ученое звание</th>
+					<th scope="col" class="table-cel-width-25 align-middle text-center">Форма участия<br>Секция</th>
+					<th scope="col" class="table-cel-width-10 align-middle text-center">Статус</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for member in members %}
+					<tr class="members" data-pk="{% if member.org_accecc %}A{% elif member.section_pk %}{{ member.section_pk }}{% else %}B{% endif %}">
+						<th scope="row" class="align-middle">{{ forloop.counter}}</th>
+						<td class="align-middle"><b>{{ member.name }}</b><br>{{ member.phone }}<br><em>{{ member.user.email }}</em></td>
+						<td class="align-middle"><b>{{ member.work_place }}</b><br><em>{{ member.work_part }}</em></td>
+						<td class="align-middle"><b>{{ member.position }}</b><br><em>{{ member.degree }}</em></td>
+						<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.org_accecc %}<br>Орг.комитет{% else %}{% if member.section %}<br>{{ member.section }}{% endif %}{% endif %}</td>
+						<td class="align-middle text-center">
+							<input type="checkbox" name="checkbox-{{ member.pk }}" {% if member.user.is_active %}checked{% endif %} data-pk="{{ member.pk }}">
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('input[type=checkbox]').click(function(){
+				pk = $(this).attr('data-pk');
+
+				if ($(this).is(":checked"))
+					url = "{% url 'profiles:ajax_acivate' %}";
+				else
+					url = "{% url 'profiles:ajax_deactivaten' %}";
+
+				$.ajax({
+					url: url,
+					data: {
+						'pk': pk,
+					},
+					success: function(data){
+					}
+				});
+			});
+		});
+	</script>
+{% endblock %}
