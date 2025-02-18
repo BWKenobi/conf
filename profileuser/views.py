@@ -146,7 +146,7 @@ def del_report_file(request):
 
 @login_required(login_url='/login/')
 def unregistered(request):
-	members = Profile.objects.all().exclude(username='admin'). \
+	members = Profile.objects.filter(user__is_active = False).exclude(username='admin'). \
 		order_by('surname', 'name', 'name2')
 
 	args = {
