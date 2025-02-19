@@ -25,6 +25,7 @@
 						<td class="align-middle"><b>{{ member.position }}</b><br><em>{{ member.degree }}</em></td>
 						<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.org_accecc %}<br>Орг.комитет{% else %}{% if member.section %}<br>{{ member.section }}{% endif %}{% endif %}</td>
 						<td class="align-middle text-center">
+							<p>{{ member.registration_date|date:"j M Y" }}</p>
 							<input type="checkbox" name="checkbox-{{ member.pk }}" {% if member.user.is_active %}checked{% endif %} data-pk="{{ member.pk }}">
 						</td>
 					</tr>
