@@ -53,6 +53,10 @@
 			{% if request.user.profile.section %}
 				<p class="text-primary">Ваша секция: <u>{{ request.user.profile.section }}</u></p>
 			{% endif %}
+
+			{% if request.user.profile.certificate_file %}
+				<h3 class="text-center mt-5">Сертификат: <a href="{{ request.user.profile.certificate_file.url }}" target="_blank">скачать...</h3>
+			{% endif %}
 		</div>
 
 		{% if not request.user.profile.section and not request.user.profile.org_accecc %}
