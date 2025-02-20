@@ -156,7 +156,7 @@ def generate_sertificates(request):
 		pdf.add_page()
 		pdf.add_font('Chehkovskoy', '', font_url , uni=True)
 		
-		if member['status']!='3':
+		if member['status']!='2':
 			pdf.image(img_speaker_url, 0, 0, pdf.w, pdf.h)
 		else:
 			pdf.image(img_member_url, 0, 0, pdf.w, pdf.h)
