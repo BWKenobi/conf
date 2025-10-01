@@ -489,10 +489,10 @@ def register_view(request):
 			new_user.profile.work_part = user_form.cleaned_data['work_part']
 			new_user.profile.position = user_form.cleaned_data['position']
 			new_user.profile.degree = user_form.cleaned_data['degree']
-			new_user.profile.speaker = user_form.cleaned_data['speaker']
+			# new_user.profile.speaker = user_form.cleaned_data['speaker']
 			
-			section = Section.objects.get(pk = user_form.cleaned_data['section'])
-			new_user.profile.section = section
+			# section = Section.objects.get(pk = user_form.cleaned_data['section'])
+			# new_user.profile.section = section
 			new_user.profile.save()
 
 

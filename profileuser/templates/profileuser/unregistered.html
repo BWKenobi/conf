@@ -10,9 +10,9 @@
 				<tr>
 					<th scope="col" class="table-cel-width-5 align-middle">№</th>
 					<th scope="col" class="table-cel-width-30 align-middle">Фамилия Имя Отчетво<br>Телефон<br>E-mail</th>
-					<th scope="col" class="table-cel-width-15 align-middle">Организация<br>Отдел/факультет/кафедра</th>
-					<th scope="col" class="table-cel-width-15 align-middle">Должность<br>Ученая степень/ученое звание</th>
-					<th scope="col" class="table-cel-width-25 align-middle text-center">Форма участия<br>Секция</th>
+					<th scope="col" class="table-cel-width-35 align-middle">Организация<br>Отдел/факультет/кафедра</th>
+					<th scope="col" class="table-cel-width-20 align-middle">Должность<br>Ученая степень/ученое звание</th>
+					<!-- <th scope="col" class="table-cel-width-25 align-middle text-center">Форма участия<br>Секция</th> -->
 					<th scope="col" class="table-cel-width-10 align-middle text-center">Статус</th>
 				</tr>
 			</thead>
@@ -23,7 +23,7 @@
 						<td class="align-middle"><b>{{ member.get_full_name }}</b><br>{{ member.phone }}<br><em>{{ member.user.email }}</em></td>
 						<td class="align-middle"><b>{{ member.work_place }}</b><br><em>{{ member.work_part }}</em></td>
 						<td class="align-middle"><b>{{ member.position }}</b><br><em>{{ member.degree }}</em></td>
-						<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.org_accecc %}<br>Орг.комитет{% else %}{% if member.section %}<br>{{ member.section }}{% endif %}{% endif %}</td>
+						<!-- <td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.org_accecc %}<br>Орг.комитет{% else %}{% if member.section %}<br>{{ member.section }}{% endif %}{% endif %}</td> -->
 						<td class="align-middle text-center">
 							<p>{{ member.registration_date|date:"j M Y" }}</p>
 							<input type="checkbox" name="checkbox-{{ member.pk }}" {% if member.user.is_active %}checked{% endif %} data-pk="{{ member.pk }}">

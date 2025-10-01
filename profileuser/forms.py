@@ -9,13 +9,13 @@ from .models import Profile
 class ProfileUdpateForm(forms.ModelForm):
 	class Meta:
 		model = Profile
-		fields = ('surname', 'name', 'name2', 'phone', 'work_place', 'work_part', 'position', 'degree', 'speaker')
+		fields = ('surname', 'name', 'name2', 'phone', 'work_place', 'work_part', 'position', 'degree')
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		
 		dte = date.today()
-		dte_deadline = date(2025,2,20)
+		dte_deadline = date(2025,10,8)
 		report_flag = False
 		if dte<dte_deadline:
 			report_flag = True

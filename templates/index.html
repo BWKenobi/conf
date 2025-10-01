@@ -10,26 +10,48 @@
 			<p class="mb-2">«Московский Губернский колледж искусств»</p>
 
 
-			<h4>Московский областной семинар-совещание</h4>
+			<h4>семинар</h4>
 
-			<h1>«АКТУАЛЬНЫЕ ВОПРОСЫ ВЗАИМОДЕЙСТВИЯ ДШИ, ДХШ И ОРГАНИЗАЦИЙ СПО»</h1>
+			<h1>«АКТУАЛЬНЫЕ ВОПРОСЫ ВЗАИМОДЕЙСТВИЯ <br>ДШИ, ДХШ И ОРГАНИЗАЦИЙ СПО»</h1>
 
 
-			<h4 class="text-primary">7 октября 2025 года</h4>
+			<h4 class="text-primary">7 октября 2025 года в 11:00</h4>
 		</div>
 
 		{% if register_flag %}
-			<div class="text-center mt-5 pb-5">
-				<h4><a href="{% url 'register' %}" class="text-danger">Зарегистрироваться</a></h4>
+			<div class="text-center mt-5">
+				<h4><a href="{% url 'register' %}" class="text-danger" style="font-size: 200%; border: 1px solid #aaaaaa; padding: 15px; border-radius: 15px;-webkit-box-shadow: 5px 5px 8px 1px rgba(0,0,0,0.42); box-shadow: 5px 5px 8px 1px rgba(0,0,0,0.42);">Зарегистрироваться</a></h4>
 			</div>
 			<div class="text-center mt-5 pb-5">
-				<h4>Регистрация закончится 19 февраля 2025 года в 23:59 (по московскому времени).</h4>
+				<h4>Регистрация закончится 6 октября 2025 года в 23:59 (по московскому времени).</h4>
 			</div>
 		{% else %}
 			<div class="text-center mt-5 pb-5 text-danger">
-				<h4>Регистрация скоро начнется</h4>
+				<h4>Регистрация завершена</h4>
 			</div>
 		{% endif %}
+
+
+		<div class="m-5">
+			<h4 class="mb-0">Мероприятие состоится в Талдомском филиале ГАПОУ МО МГКИ по адресу:</h4>
+			<h4><b>Московская область, г.Талдом, ул.Победы, д.29.</b></h4>
+
+			<h4>
+				К рассмотрению предлагаются следующие актуальные вопросы:
+				<ol>
+					<li>Навигатор абитуриента: тенденции в СПО, подготовка к поступлению выпускников ДШИ и ДХШ. </li>
+					<li>Конкурсная деятельность как фактор творческого развития обучающихся Детских школ искусств и Детских художественных школ. </li>
+					<li>Совершенствование профессиональных компетенций преподавателей изобразительного искусства в ДШИ, ДХШ и СПО. </li>
+					<li>Открытый микрофон.</li>
+				</ol>
+			</h4>
+
+			<h4>
+				К участию в семинаре приглашаются руководители, заместители руководителей и работники учебно-методических объединений, организаций ДШИ и ДХШ.
+			</h4>
+
+			<h4 class="mt-5"> Справки по вопросам организации и проведения семинара: <b>+7 (909) 961-57-80</b></h4>
+		</div>
 	{% else %}
 		
 		<div class="text-center pb-5">
@@ -37,22 +59,48 @@
 			<p class="mb-0">образовательное учреждение Московской области</p>
 			<p class="mb-2">«Московский Губернский колледж искусств»</p>
 
-			<h4>Московский областной семинар-совещание</h4>
+			<h4>семинар</h4>
 
-			<h1>«АКТУАЛЬНЫЕ ВОПРОСЫ ВЗАИМОДЕЙСТВИЯ ДШИ, ДХШ И ОРГАНИЗАЦИЙ СПО»</h1>
+			<h1>«АКТУАЛЬНЫЕ ВОПРОСЫ ВЗАИМОДЕЙСТВИЯ <br>ДШИ, ДХШ И ОРГАНИЗАЦИЙ СПО»</h1>
 
 
-			<h4 class="text-primary">20 февраля 2025 года</h4>
-			{% if request.user.profile.section %}
+			<h4 class="text-primary">7 октября 2025 года в 11:00</h4>
+			<div class="text-center mt-5">
+				<h4 class="text-danger" style="font-size: 200%;">Вы участник семинара</h4>
+			</div>
+
+			<!-- {% if request.user.profile.section %}
 				<p class="text-primary">Ваша секция: <u>{{ request.user.profile.section }}</u></p>
 			{% endif %}
 
 			{% if request.user.profile.certificate_file %}
 				<h3 class="text-center mt-5">Сертификат: <a href="{{ request.user.profile.certificate_file.url }}" target="_blank">скачать...</a></h3>
-			{% endif %}
+			{% endif %} -->
 		</div>
+		{% if not request.user.profile.admin_access and not request.user.profile.moderator_access and not request.user.profile.message_accecc %}
+			<div class="m-5">
+				<h4 class="mb-0">Мероприятие состоится в Талдомском филиале ГАПОУ МО МГКИ по адресу:</h4>
+				<h4><b>Московская область, г.Талдом, ул.Победы, д.29.</b></h4>
 
-		{% if not request.user.profile.section and not request.user.profile.org_accecc %}
+				<h4>
+					К рассмотрению предлагаются следующие актуальные вопросы:
+					<ol>
+						<li>Навигатор абитуриента: тенденции в СПО, подготовка к поступлению выпускников ДШИ и ДХШ. </li>
+						<li>Конкурсная деятельность как фактор творческого развития обучающихся Детских школ искусств и Детских художественных школ. </li>
+						<li>Совершенствование профессиональных компетенций преподавателей изобразительного искусства в ДШИ, ДХШ и СПО. </li>
+						<li>Открытый микрофон.</li>
+					</ol>
+				</h4>
+
+				<h4>
+					К участию в семинаре приглашаются руководители, заместители руководителей и работники учебно-методических объединений, организаций ДШИ и ДХШ.
+				</h4>
+
+				<h4 class="mt-5"> Справки по вопросам организации и проведения семинара: <b>+7 (909) 961-57-80</b></h4>
+			</div>
+		{% endif %}
+
+		<!-- {% if not request.user.profile.section and not request.user.profile.org_accecc %}
 			<div class="row align-middle pt-5" id="section_container">
 				<div class="col-md-6 mx-auto mb-5">
 					<p class="text-danger text-center mb-0">
@@ -70,7 +118,7 @@
 					</div>
 				</div>
 			</div>
-		{% endif %}
+		{% endif %} -->
 
 		{% if request.user.profile.message_accecc %}
 			<div class="row align-middle px-5">
@@ -87,7 +135,7 @@
 		{% endif %}
 
 		{% if request.user.profile.moderator_access %}
-			<table class="table">
+			<!-- <table class="table">
 				<tbody>
 
 					<tr class="filter-table">
@@ -107,17 +155,17 @@
 						<td scope="row" class="align-middle text-center" width="{{ width_column }}%">{{ none_count }} чел.</td>
 					</tr>
 				</tbody>
-			</table>
+			</table> -->
 			<div class="text-left mt-3 px-5">
-				<b>СПИСОК УЧАСТНИКОВ/ДОКЛАДЧИКОВ</b>
+				<b>СПИСОК УЧАСТНИКОВ</b>
 				<table class="table">
 					<thead>
 						<tr>
 							<th scope="col" class="table-cel-width-5 align-middle">№</th>
-							<th scope="col" class="table-cel-width-30 align-middle">Фамилия Имя Отчетво<br>Телефон<br>E-mail</th>
-							<th scope="col" class="table-cel-width-15 align-middle">Организация<br>Отдел/факультет/кафедра</th>
+							<th scope="col" class="table-cel-width-35 align-middle">Фамилия Имя Отчетво<br>Телефон<br>E-mail</th>
+							<th scope="col" class="table-cel-width-35 align-middle">Организация<br>Отдел/факультет/кафедра</th>
 							<th scope="col" class="table-cel-width-15 align-middle">Должность<br>Ученая степень/ученое звание</th>
-							<th scope="col" class="table-cel-width-25 align-middle text-center">Форма участия<br>Секция</th>
+							<!-- <th scope="col" class="table-cel-width-25 align-middle text-center">Форма участия<br>Секция</th> -->
 							<th scope="col" class="table-cel-width-10 align-middle text-center">Сертификат</th>
 						</tr>
 					</thead>
@@ -128,7 +176,7 @@
 								<td class="align-middle"><b>{{ member.name }}</b><br>{{ member.phone }}<br><em>{{ member.email }}</em></td>
 								<td class="align-middle"><b>{{ member.work_place }}</b><br><em>{{ member.work_part }}</em></td>
 								<td class="align-middle"><b>{{ member.position }}</b><br><em>{{ member.degree }}</em></td>
-								<td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.org_accecc %}<br>Орг.комитет{% else %}{% if member.section %}<br>{{ member.section }}{% endif %}{% endif %}</td>
+								<!-- <td class="align-middle text-center"><b>{{ member.status }}</b>{% if member.org_accecc %}<br>Орг.комитет{% else %}{% if member.section %}<br>{{ member.section }}{% endif %}{% endif %}</td> -->
 								<td class="align-middle text-center">
 									{% if member.cert %}
 										№ {{ member.cert_num }}<br>
@@ -251,6 +299,7 @@
 
 		$(document).ready(function() {
 			$('#send_sert').click(function(){
+				$('.content-blocker').show();
 				window.location.href = "{% url 'certificates:send_serificates' %}";
 			});
 		});

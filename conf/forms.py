@@ -55,24 +55,24 @@ class UserRegistrationForm(forms.ModelForm):
 	work_part = forms.CharField(label = 'Название отдела (факультет, кафедра)', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	position = forms.CharField(label = 'Занимаемая должность', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
 	degree = forms.CharField(label = 'Ученая степень, ученое звание', widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=False)
-	speaker = forms.ChoiceField(label = 'Форма участия*', choices = SPEAKER_TYPE, widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
-	section = forms.ChoiceField(label = 'Секция*', choices = SECTION_TYPE, widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	# speaker = forms.ChoiceField(label = 'Форма участия*', choices = SPEAKER_TYPE, widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
+	# section = forms.ChoiceField(label = 'Секция*', choices = SECTION_TYPE, widget=forms.Select(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 	password = forms.CharField(label = 'Задайте пароль*', widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete':'false'}), required=True)
 
-	def __init__(self, *args, **kwargs):
-		super(UserRegistrationForm, self).__init__(*args, **kwargs)
+	# def __init__(self, *args, **kwargs):
+	# 	super(UserRegistrationForm, self).__init__(*args, **kwargs)
 
-		CHOICES = (
-			('', 'Выберите секцию'),
-		)
-		sections = Section.objects.all().order_by('name')
+	# 	CHOICES = (
+	# 		('', 'Выберите секцию'),
+	# 	)
+	# 	sections = Section.objects.all().order_by('name')
 
-		for section in sections:
-			user_count = User.objects.filter(profile__section = section, is_active = True).count()
-			if user_count < section.count:
-				CHOICES = CHOICES + ((str(section.pk), section.name + ' - осталось мест: ' + str(section.count - user_count)),)
+	# 	for section in sections:
+	# 		user_count = User.objects.filter(profile__section = section, is_active = True).count()
+	# 		if user_count < section.count:
+	# 			CHOICES = CHOICES + ((str(section.pk), section.name + ' - осталось мест: ' + str(section.count - user_count)),)
 
-		self.fields['section'].choices=CHOICES
+	# 	self.fields['section'].choices=CHOICES
 
 
 	class Meta:
