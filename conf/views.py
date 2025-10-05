@@ -66,6 +66,8 @@ def home_view(request):
 			empty_section = True
 
 		member = {
+			'pk': user.pk,
+			'status_code': user.speaker,
 			'name': user.get_full_name(),
 			'email': user.user.email,
 			'status': user.get_speaker_display(),
@@ -169,14 +171,14 @@ def home_view(request):
 		# p.paragraph_format.space_after = 0
 
 
-		table = document.add_table(rows=1, cols=4)
+		table = document.add_table(rows=1, cols=5)
 		table.allow_autifit = False
 		table.style = 'TableGrid'
 		table.columns[0].width = Mm(10)
 		table.columns[1].width = Mm(120)
-		table.columns[2].width = Mm(100)
-		# table.columns[3].width = Mm(30)
-		table.columns[3].width = Mm(27)
+		table.columns[2].width = Mm(70)
+		table.columns[3].width = Mm(30)
+		table.columns[4].width = Mm(27)
 
 		hdr_cells = table.rows[0].cells
 		hdr_cells[0].text = '№'
@@ -193,17 +195,17 @@ def home_view(request):
 		hdr_cells[2].paragraphs[0].runs[0].font.bold = True
 		hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-		hdr_cells[2].width = Mm(100)
-		# hdr_cells[3].text = 'Статус'
-		# hdr_cells[3].paragraphs[0].runs[0].font.bold = True
-		# hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-		# hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-		# hdr_cells[3].width = Mm(30)
-		hdr_cells[3].text = 'Серт. №'
+		hdr_cells[2].width = Mm(70)
+		hdr_cells[3].text = 'Статус'
 		hdr_cells[3].paragraphs[0].runs[0].font.bold = True
 		hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-		hdr_cells[3].width = Mm(27)
+		hdr_cells[3].width = Mm(30)
+		hdr_cells[4].text = 'Серт. №'
+		hdr_cells[4].paragraphs[0].runs[0].font.bold = True
+		hdr_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+		hdr_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+		hdr_cells[4].width = Mm(27)
 
 		count = 1
 
@@ -232,14 +234,14 @@ def home_view(request):
 			row_cells[2].text = profile.phone + '\n' + profile.user.email#member['phone'] + '\n' + member['email']
 			row_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 			row_cells[2].width = Mm(70)
-			# row_cells[3].text = member['status']
-			# row_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
-			# row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-			# row_cells[3].width = Mm(30)
-			row_cells[3].text = profile.certificate_num#member['cert_num']
+			row_cells[3].text = profile.get_speaker_display()
 			row_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 			row_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-			row_cells[3].width = Mm(27)
+			row_cells[3].width = Mm(30)
+			row_cells[4].text = profile.certificate_num#member['cert_num']
+			row_cells[4].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
+			row_cells[4].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+			row_cells[4].width = Mm(27)
 			count += 1
 
 		# p = document.add_paragraph()

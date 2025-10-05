@@ -211,3 +211,18 @@ def deactivate(request):
 	profile.user.save()
 
 	return HttpResponse(True)
+
+
+@login_required(login_url='/login/')
+def change_status(request):
+	pk = request.GET['pk']
+	status = request.GET['status']
+	profile = Profile.objects.filter(pk = pk).first()
+
+	if not profile:
+		return HttpResponse(False)
+
+	profile.speaker = status
+	profile.save()
+
+	return HttpResponse(True)

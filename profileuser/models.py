@@ -141,9 +141,9 @@ class Profile(models.Model):
 
 	#Статус
 	def status(self):
-		if self.speaker:
-			return 'Докладчик'
-		return 'Участник'
+		if self.speaker == '1':
+			return 'докладчик'
+		return 'участник'
 		
 
 @receiver(post_save, sender=User)
