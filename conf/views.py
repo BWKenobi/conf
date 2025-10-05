@@ -196,7 +196,7 @@ def home_view(request):
 		hdr_cells[2].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		hdr_cells[2].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 		hdr_cells[2].width = Mm(70)
-		hdr_cells[3].text = 'Статус'
+		hdr_cells[3].text = 'Форма участия'
 		hdr_cells[3].paragraphs[0].runs[0].font.bold = True
 		hdr_cells[3].paragraphs[0].paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
 		hdr_cells[3].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
