@@ -64,6 +64,10 @@ class Profile(models.Model):
 	report_name = models.CharField(verbose_name="Тема доклада", max_length=250, blank=True)
 	report_file = models.FileField(verbose_name='Файл научной статьи (при наличии)', blank=True, null=True, upload_to = make_upload_path)
 
+	agreement = models.FileField(verbose_name='Согласие на обработку персональных данных', blank=True, null=True, upload_to = make_upload_path)
+	policy_success= models.BooleanField("Согласие c Политикой обработки персональных данных", default=False)
+	cookies_agree = models.BooleanField("Согласие с куки", default=False)
+
 	registration_date = models.DateField(verbose_name="Дата регистрации", default=timezone.now)
 	admin_access= models.BooleanField("Права администратора", default=False)
 	moderator_access= models.BooleanField("Права модератора", default=False)

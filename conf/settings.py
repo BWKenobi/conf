@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'maindatas',
     'profileuser',
     'certificates',
     'coprofile',
@@ -109,7 +110,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.timeweb.ru'
 EMAIL_HOST_USER = 'conference@tdpi.ru'
-EMAIL_HOST_PASSWORD = 'YT6ul5H52hU8937A87'
+EMAIL_HOST_PASSWORD = 'M953OA0a7fAV7e8X8h'
 
 EMAIL_PORT = 2525
 EMAIL_USE_TLS = True

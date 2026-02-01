@@ -10,9 +10,11 @@
 	<h4 class="display-5 text-center">Регистрация представителя орг.комитета</h4>
 	<div class="row">
 		<div class="col-md-6 mx-auto mb-5">
-			<p class="text-center text-primary">Внимание! Изменить личные данные <b>после окончания регистрации</b> будет невозможно!</p>
+			<p class="text-center text-danger">Внимание! Изменить личные данные <b>после окончания регистрации</b> будет невозможно!</p>
 
-			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+			<h4 class="text-center">Согласия на обработку персональных данных: <a href="{% static 'agreement.docx' %}" target="_blank">Скачать бланк</a></h4>
+
+			<form action="" method="post" , autocomplete="false" enctype="multipart/form-data"> {% csrf_token %}
 				{{form.as_p}}
 				<div class="text-center mb-5">
 					Нажимая на кнопку ЗАРЕГИСТРИРОВАТЬСЯ, Вы даете согласие на <u><a href="{% url 'policy' %}" target="_blank">обработку персональных данных</a></u>.

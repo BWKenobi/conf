@@ -147,8 +147,8 @@ def generate_sertificates(request):
 
 	
 	font_url = os.path.join(settings.BASE_DIR, 'static/fonts/chekhovskoy.ttf')
-	img_speaker_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate_speaker_2025-1.jpg')
-	img_member_url = os.path.join(settings.BASE_DIR, 'static/img/sertificate_member_2025-1.jpg')
+	img_speaker_url = os.path.join(settings.BASE_DIR, 'static/img/speaker-2026.jpg')
+	img_member_url = os.path.join(settings.BASE_DIR, 'static/img/member-2026.jpg')
 
 	for member in members:
 		sertificate_str_num = str(sertificate_num)+sertificate_add

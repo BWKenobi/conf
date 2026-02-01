@@ -10,7 +10,7 @@ from django.contrib.auth import views as auth_views
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 
 from .views import home_view, policy_view, login_view, logout_view, register_view, superviser_view, change_password, activate
-from .views import change_admin_access, change_moderate_access, send_info_message
+from .views import change_admin_access, change_moderate_access, send_info_message, allow_cookies
 
 
 
@@ -22,11 +22,11 @@ urlpatterns = [
 
 
 urlpatterns += [
-    path('login/', login_view, name = 'login'),
-    path('logout/', logout_view, name = 'logout'),
-    path('register/', register_view, name = 'register'),
+    path('login', login_view, name = 'login'),
+    path('logout', logout_view, name = 'logout'),
+    path('register', register_view, name = 'register'),
     path('superviser', superviser_view, name = 'superviser'),
-    path('passchange/', change_password, name = 'passchange'),
+    path('passchange', change_password, name = 'passchange'),
 ]
 
 
@@ -52,4 +52,5 @@ urlpatterns += [
     path('ajax/change-admin-access/', change_admin_access, name = 'change_admin_access'),
     path('ajax/change-moderate-access/', change_moderate_access, name = 'change_moderate_access'),
     path('ajax/send-info-message/', send_info_message, name = 'send_info_message'),
+    path('ajax/llow-cookies/', allow_cookies, name = 'ajax_allow_cookies'),
 ]

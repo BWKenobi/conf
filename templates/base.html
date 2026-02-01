@@ -11,7 +11,7 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-        <title>Conference</title>
+        <title>Концептум</title>
 
         <link rel="apple-touch-icon" href="{% static 'img/logo_my.png' %}" sizes="180x180">
         <link rel="icon" href="{% static 'img/logo_my.png' %}" sizes="32x32" type="image/png">
@@ -40,12 +40,16 @@
         </div>
     </div>
     <div class="navbar navbar-dark fixed-top flex-md-nowrap p-0 shadow-sm pt-2 bg-light">
+        <a href="{% url 'home' %}">
+            <img src="{% static 'img/conceptum.png' %}" style="height: 45px; padding-left: 3rem; padding-bottom: 5px;">
+        </a>
+        
         <nav class="my-2 my-md-0 mr-md-3 adaptive">
             {% if user.is_authenticated %}
                 <a class="p-2 text-secondary text-uppercase {% if not menu %}active{% endif %}" href="{% url 'home' %}">Главная</a>
                 <a class="p-2 text-secondary text-uppercase {% if menu == 'profile' %}active{% endif %}" href="{% url 'profiles:view_edit_profile' %}">{{user.profile.get_name }}</a>
                 {% if user.profile.admin_access %}
-                    <!-- <a class="p-2 text-secondary text-uppercase {% if menu == 'sections' %}active{% endif %}" href="{% url 'sections:sections' %}">Секции</a> -->
+                    <a class="p-2 text-secondary text-uppercase {% if menu == 'sections' %}active{% endif %}" href="{% url 'sections:sections' %}">Секции</a>
                     <a class="p-2 text-secondary text-uppercase {% if menu == 'unregistered' %}active{% endif %}" href="{% url 'profiles:unregistered' %}">Неактивные</a>
                 {% endif %}
                 <!-- <a class="p-2 text-secondary text-uppercase {% if menu == 'coprofile' %}active{% endif %}" href="{% url 'coprofile:view_coprofiles' %}">Доп.участники</a> -->
@@ -73,21 +77,60 @@
 
         <footer class="footer font-small fixed-bottom bg-secondary text-light">
             <div class="float-left text-left py-3 px-5">
-                Создано при поддержке <b><a href="https://xn----7sb5aaldgsjs.xn--p1ai/" class="text-white" target="_blank">НА-КОНКУРС.РФ</a></b>
+                <b><a href="{% url 'policy' %}" class="text-white" target="_blank">Политика в отношении обработки персональных данных</a></b>
             </div>
+
+
 
             <div class="float-right text-rigth py-3 px-5">
               Тех.поддержка: <b><a href="tel:+79032201992" class="text-white" target="_blank">+7(903)220-19-92</a></b>
             </div>
         </footer>
     
+    <!-- Cookie Consent Banner -->
+    {% if cookie_flag %}
+        <div id="cookie-banner">
+            <div>
+                <div class="cookie-banner">
+                    <div>
+                        <p>Мы используем файлы cookie</p>
+                        <div>
+                            <p>Когда вы посещаете этот сайт, ГАПОУ МО "Московский Губернский Колледжа Искусств" может использовать общеотраслевую технологию, называемую cookie. Файлы cookie представляют собой небольшие фрагменты данных, которые временно сохраняются на вашем компьютере или мобильном устройстве и обеспечивают более эффективную работу сайта.</p>
+
+                            <p>Продолжая пользоваться этим сайтом, вы соглашаетесь на использование cookie и обработку данных в соответствии с <a class="underline text-primary hover:text-primary_hover cursor-pointer" href="{% url 'policy' %}">Политикой сайта </a> в области обработки и защиты персональных данных.</p>
+
+                            <p>Если вы не хотите использовать cookie, вы можете отключить их в настройках безопасности вашего браузера. Отключение cookie следует выполнить для каждого браузера и устройства, с помощью которого осуществляется вход на сайт.</p>
+
+                            <p>Обратите внимание, что в случае, если использование сайтом cookie-файлов отключено, некоторые возможности сайта могут быть недоступны.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button onclick="acceptCookies()">
+                        Принять
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     {% block scripts %}
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
         <script src="{% static 'js/scripts.js' %}?ver={{version}}"></script>
- 
+    
+        <script type="text/javascript">
+            function acceptCookies(){
+                $('#cookie-banner').addClass('hide-cookie');
+
+                $.ajax({
+                    url: "{% url 'ajax_allow_cookies' %}",
+                    success: function(data){
+                    }
+                });
+            }
+        </script>
     {%endblock%}
 </body>
 
