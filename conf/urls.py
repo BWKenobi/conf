@@ -36,6 +36,7 @@ urlpatterns += [
     path('coprofile/', include(('coprofile.urls', 'coprofile'))),
     path('mailing/', include(('mailing.urls', 'mailing'))),
     path('sections/', include(('sections.urls', 'sections'))),
+    path('answers/', include(('answers.urls', 'answers'))),
 ]
 
 

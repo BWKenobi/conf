@@ -38,6 +38,7 @@ from .tokens import accaunt_activation_token
 from profileuser.models import Profile
 from coprofile.models import CoProfile
 from sections.models import Section
+from answers.models import Answer
 
 from .forms import UserLoginForm, UserRegistrationForm, OrgRegistrationForm, ChangePasswordForm, CustomPasswordResetForm, CustomSetPasswordForm, SectionForm
 from certificates.forms import MakeCertificateForm
@@ -65,6 +66,11 @@ def home_view(request):
 		elif not user.org_accecc:
 			empty_section = True
 
+		try:
+			answer = Answer.objects.filter(user = user.user, done = True).first().pk
+		except:
+			answer = ''
+
 		member = {
 			'pk': user.pk,
 			'status_code': user.speaker,
@@ -82,7 +88,8 @@ def home_view(request):
 			'report_file': user.report_file,
 			'section': section,
 			'section_pk': section_pk,
-			'org_accecc': user.org_accecc
+			'org_accecc': user.org_accecc,
+			'answer': answer
 		}
 		members.append(member)
 		comembers = CoProfile.objects.filter(lead=user.user)
@@ -111,7 +118,8 @@ def home_view(request):
 					'report_file': comember.report_file,
 					'section': section,
 					'section_pk': section_pk,
-					'org_accecc': comember.org_accecc
+					'org_accecc': comember.org_accecc,
+					'answer': ''
 				}
 				members.append(member)
 	
@@ -143,7 +151,7 @@ def home_view(request):
 		document = Document()
 		section = document.sections[-1]
 		new_width, new_height = section.page_height, section.page_width
-		section.orientation = WD_ORIENT.PORTRAIT
+		section.orientation = WD_ORIENT.LANDSCAPE
 		section.page_width = Mm(297)
 		section.page_height = Mm(210)
 		section.left_margin = Mm(30)
@@ -435,7 +443,7 @@ def home_view(request):
 		'none_count': none_count,
 
 		'count_column': count_column,
-		'width_column': width_column
+		'width_column': width_column,
 	}
 	return render(request, 'index.html', args)
 

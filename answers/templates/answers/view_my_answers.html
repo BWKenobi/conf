@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-6 mx-auto mb-5">
+			<img src="{% static 'img/fb.jpg'%}" class="img-fluid rounded" width="100%">
+		</div>
+	</div>
+	<h4 class="display-5 text-center text-primary">Анкета обратной связи</h4>
+	<h5 class="display-5 text-center mb-5"><u>Внимание! Сохранение ответов возможно <b class="text-danger">ОДИН</b> раз.</u></h5>
+	<div class="row">
+		<div class="col-md-6 mx-auto mb-5">
+			<form action="" method="post" , autocomplete="false"> {% csrf_token %}
+				{{form.as_p}}
+				
+				<div class="row align-middle">
+					<div class="col-md-12 text-center">
+						<input type="submit" value="Сохранить" {% if my_answer.done %}disabled{% endif %}>
+					</div>
+				</div>
+				<div class="row align-middle">
+					<div class="col-md-12 text-center mt-5">
+						<a href="{% url 'home' %}">Вернуться на главную</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	{% if my_answer.done %}
+		<!-- Modal -->
+		<div class="modal fade" id="saveDone" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Спасибо за Ваши ответы!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+
+{% block scripts %}
+    {{ block.super }}
+    <script type="text/javascript">
+    	$(document).ready(function(){
+    		{% if my_answer.done %}
+    			$('textarea').each(function(){
+    				$(this).attr('disabled', 'disabled');
+    			});
+
+    			$('#saveDone').modal('show');
+    		{% endif %}
+    	});
+	</script>
+{% endblock %}
+

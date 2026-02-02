@@ -1,6 +1,6 @@
 {% load static %}
 
-{% with '2.6' as version %}
+{% with '2.7' as version %}
 <!DOCTYPE html>
 <html lang="ru">
     <head>
@@ -58,11 +58,15 @@
         
         {% if user.is_authenticated %}
             <div class="float-right">
+                {% if zoom_flag %}
+                    <a href="{% url 'answers:view_my_answers' %}"><img src="{% static 'img/answers.png' %}" style="height: 38px; margin-right: 10px; margin-top: -8px;"></a>
+                {% endif %}
                 <a href="https://vkvideo.ru/playlist/-1734186_2" target="_blank"><img src="{% static 'img/vk.png' %}" style="height: 38px; margin-right: 10px; margin-top: -8px;"></a>
                 <a class="btn btn-outline-secondary mr-4 mb-2 shadow-sm" href="{% url 'logout' %}">Выйти</a>
             </div>
         {% else %}
             <div class="float-right">
+
                 <a href="https://vkvideo.ru/playlist/-1734186_2" target="_blank"><img src="{% static 'img/vk.png' %}" style="height: 38px; margin-right: 12px;"></a>
                 <a class="btn btn-outline-danger mr-4 mb-2 float-right" href="{% url 'login' %}">Войти</a>
             </div>

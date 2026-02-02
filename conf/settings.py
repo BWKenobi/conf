@@ -22,7 +22,8 @@ INSTALLED_APPS = [
     'certificates',
     'coprofile',
     'mailing',
-    'sections'
+    'sections',
+    'answers',
 ]
 
 MIDDLEWARE = [

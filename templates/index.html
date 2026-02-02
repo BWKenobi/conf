@@ -49,7 +49,7 @@
 			<h4 class="mb-5">Программой конференции предусмотрены торжественное открытие и приветствие участников, пленарное заседание, работа секций: доклады, мастер – классы и круглые столы.</h4>
 
 			<h4>
-				Направления работы конференции (секции)::
+				Направления работы конференции (секции):
 				<ol>
 					<li>Пастельная графика 15 участников</li>
 					<li>Живопись 15участников</li>
@@ -73,6 +73,10 @@
 			<h4 class="mb-5">Участникам конференции высылаются <b>сертификаты</b>.</h4>
 
 			<h4>По возникающим вопросам обращаться по e-mail: <b>tlimo.taldom@gmail.com</b></h4>
+
+			<div class="text-center mt-5">
+				<h4><a href="{% static 'programm.pdf' %}" class="text-primary" style="font-size: 200%; border: 1px solid #aaaaaa; padding: 15px; border-radius: 15px;-webkit-box-shadow: 5px 5px 8px 1px rgba(0,0,0,0.42); box-shadow: 5px 5px 8px 1px rgba(0,0,0,0.42);" target="_blank">Программа конференции</a></h4>
+			</div>
 		</div>
 	{% else %}
 		<div class="text-center ">
@@ -118,7 +122,7 @@
 				<h4 class="mb-5">Программой конференции предусмотрены торжественное открытие и приветствие участников, пленарное заседание, работа секций: доклады, мастер – классы и круглые столы.</h4>
 
 				<h4>
-					Направления работы конференции (секции)::
+					Направления работы конференции (секции):
 					<ol>
 						<li>Пастельная графика 15 участников</li>
 						<li>Живопись 15участников</li>
@@ -145,6 +149,10 @@
 			</div>
 		{% endif %}
 
+		<div class="text-center mt-5">
+			<h4><a href="{% static 'programm.pdf' %}" class="text-primary" style="font-size: 200%; border: 1px solid #aaaaaa; padding: 15px; border-radius: 15px;-webkit-box-shadow: 5px 5px 8px 1px rgba(0,0,0,0.42); box-shadow: 5px 5px 8px 1px rgba(0,0,0,0.42);" target="_blank">Программа конференции</a></h4>
+		</div>
+
 		{% if not request.user.profile.section and not request.user.profile.org_accecc %}
 			<div class="row align-middle pt-5" id="section_container">
 				<div class="col-md-6 mx-auto mb-5">
@@ -166,12 +174,12 @@
 		{% endif %}
 
 		{% if request.user.profile.message_accecc %}
-			<div class="row align-middle px-5">
+			<div class="row align-middle px-5 mt-5">
 				<div class="col-md-3 text-left mb-5">
 					<input type="button" value="Разослать оповещения" name="addfile" id="send_message" class="show-loader">
 				</div>
 				<div class="col-md-9 text-right mb-5">
-
+					<input type="button" value="Скачать анкеты" name="answers" id="answers">
 					<input type="submit" value="Сформировать сертификаты" name="create_sert" data-toggle="modal" data-target="#full_creation">
 					<input type="submit" value="Разослать сертификаты" name="send_sert" id="send_sert">
 					<input type="submit" value="Удалить сертификаты" name="delete_sert" id="delete_sert">
@@ -211,7 +219,7 @@
 							<th scope="col" class="table-cel-width-25 align-middle">Организация<br>Отдел/факультет/кафедра</th>
 							<th scope="col" class="table-cel-width-15 align-middle">Должность<br>Ученая степень/ученое звание</th>
 							<th scope="col" class="table-cel-width-25 align-middle text-center">Форма участия</th>
-							<th scope="col" class="table-cel-width-10 align-middle text-center">Сертификат</th>
+							<th scope="col" class="table-cel-width-10 align-middle text-center">Сертификат<br><hr style="margin: 0; border: 1px solid;">Анкета</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -226,6 +234,10 @@
 									{% if member.cert %}
 										№ {{ member.cert_num }}<br>
 										<a href="{{ member.cert.url }}" target="_blank">скачать</a>
+									{% endif %}
+									<hr style="margin: 0; border: 1px solid;">
+									{% if member.answer %}
+										Анекта <span class="text-primary answer" style="cursor: pointer;" data-pk="{{ member.answer }}" data-name="{{ member.name }}">просмотреть</span>
 									{% endif %}
 								</td>
 							</tr>
@@ -296,6 +308,26 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Modal -->
+		<div class="modal fade bd-example-modal-lg" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Формирование сертификатов для всех участников</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	{% endif %}
 {% endblock %}
 
@@ -303,9 +335,37 @@
 	{{ block.super }}
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('.answer').click(function (){
+				pk = $(this).attr('data-pk');
+				name = $(this).attr('data-name');
+
+				$('#answerModal #exampleModalLabel').text(name);
+				$('#answerModal').modal('show');
+
+				$.ajax({
+					url: "{% url 'answers:ajax_get_answer' %}",
+					data: {
+						'pk': pk,
+					},
+					success: function(data){
+						$('#answerModal .modal-body').html(data);
+
+					}
+				});
+
+			});
+		})
+
+
+		$(document).ready(function() {
 			$('#send_message').click(function (){
-				
 				window.location.href = "{% url 'mailing:send_info_message' %}";
+			});
+		});
+
+		$(document).ready(function() {
+			$('#answers').click(function (){
+				window.location.href = "{% url 'answers:get_answers' %}";
 			});
 		});
 
@@ -314,7 +374,6 @@
 				$('#all_creation').removeAttr('disabled');
 			});
 		});
-
 
 		$(document).ready(function() {
 			$('#all_creation').click(function(){
