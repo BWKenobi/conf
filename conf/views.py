@@ -481,6 +481,11 @@ def logout_view(request):
 
 
 def register_view(request):
+	dte = date.today()
+	dte_deadline = date(2026,2,24)
+	if dte>dte_deadline:
+		return redirect('home')
+
 	if request.method=='POST':
 		user_form = UserRegistrationForm(request.POST, request.FILES)
 		if user_form.is_valid():
