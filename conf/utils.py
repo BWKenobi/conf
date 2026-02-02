@@ -4,7 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 def base_context(request):
 	dte = date.today()
-	dte_deadline = date(2026,2,23)
+	dte_deadline = date(2026,2,25)
 	dte_zoom = date(2026,2,26)
 
 	register_flag = False
