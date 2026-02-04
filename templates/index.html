@@ -173,16 +173,20 @@
 			</div>
 		{% endif %}
 
-		{% if request.user.profile.message_accecc %}
+		{% if request.user.profile.message_accecc or request.user.profile.moderator_access or request.user.profile.admin_access %}
 			<div class="row align-middle px-5 mt-5">
 				<div class="col-md-3 text-left mb-5">
-					<input type="button" value="Разослать оповещения" name="addfile" id="send_message" class="show-loader">
+					{% if request.user.profile.message_accecc %}
+						<input type="button" value="Разослать оповещения" name="addfile" id="send_message" class="show-loader">
+					{% endif %}
 				</div>
 				<div class="col-md-9 text-right mb-5">
 					<input type="button" value="Скачать анкеты" name="answers" id="answers">
-					<input type="submit" value="Сформировать сертификаты" name="create_sert" data-toggle="modal" data-target="#full_creation">
-					<input type="submit" value="Разослать сертификаты" name="send_sert" id="send_sert">
-					<input type="submit" value="Удалить сертификаты" name="delete_sert" id="delete_sert">
+					{% if request.user.profile.admin_access %}
+						<input type="submit" value="Сформировать сертификаты" name="create_sert" data-toggle="modal" data-target="#full_creation">
+						<input type="submit" value="Разослать сертификаты" name="send_sert" id="send_sert">
+						<input type="submit" value="Удалить сертификаты" name="delete_sert" id="delete_sert">
+					{% endif %}
 				</div>
 			</div>
 		{% endif %}
