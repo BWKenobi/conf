@@ -127,19 +127,23 @@ def home_view(request):
 
 	sections = Section.objects.all().order_by('name')
 	section_count = {}
+	section_count_all = {}
 	section_name = {}
 	super_count = 0
 	none_count = 0
 
 	for section in sections:
 		section_count[section.pk] = 0
+		section_count_all[section.pk] = 0
 		section_name[section.name] = section.pk
 
 	for member in members:
 		if member['org_accecc']:
 			super_count += 1
 		elif member['section']:
-			section_count[section_name[member['section']]] += 1
+			if member['status_code'] == '2':
+				section_count[section_name[member['section']]] += 1
+			section_count_all[section_name[member['section']]] += 1
 		else:
 			none_count += 1
 
@@ -439,6 +443,7 @@ def home_view(request):
 		'section_form': section_form,
 		'sections': sections,
 		'section_count': section_count,
+		'section_count_all': section_count_all,
 		'super_count': super_count,
 		'none_count': none_count,
 
@@ -625,7 +630,7 @@ def activate(request, uidb64, token):
 		user.is_active = True
 		user.save()
 
-		user_count = User.objects.filter(profile__section = user.profile.section, is_active = True).count()
+		user_count = User.objects.filter(profile__section = user.profile.section, is_active = True, profile__speaker = '2').count()
 		if user.profile.section:
 			if user_count > user.profile.section.count:
 				user.profile.section = None

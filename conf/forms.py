@@ -71,7 +71,7 @@ class UserRegistrationForm(forms.ModelForm):
 		sections = Section.objects.all().order_by('name')
 
 		for section in sections:
-			user_count = User.objects.filter(profile__section = section, is_active = True).count()
+			user_count = User.objects.filter(profile__section = section, is_active = True, profile__speaker = '2').count()
 			if user_count < section.count:
 				CHOICES = CHOICES + ((str(section.pk), section.name + ' - осталось мест: ' + str(section.count - user_count)),)
 
@@ -214,7 +214,7 @@ class SectionForm(forms.Form):
 		sections = Section.objects.all().order_by('name')
 
 		for section in sections:
-			user_count = User.objects.filter(profile__section = section, is_active = True).count()
+			user_count = User.objects.filter(profile__section = section, is_active = True, profile__speaker = '2').count()
 			if user_count < section.count:
 				CHOICES = CHOICES + ((str(section.pk), section.name + ' - осталось мест: ' + str(section.count - user_count)),)
 

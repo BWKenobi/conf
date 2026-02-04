@@ -203,7 +203,7 @@
 						<td scope="row" class="align-middle text-center" width="{{ width_column }}%">{{ members|length }} чел.</td>
 						<td scope="row" class="align-middle text-center" width="{{ width_column }}%">{{ super_count }} чел.</td>
 						{% for section in sections %}
-							<td scope="row" class="align-middle text-center" width="{{ width_column }}%">{{ section_count|lookup:section.pk }} чел.</td>
+							<td scope="row" class="align-middle text-center" width="{{ width_column }}%">{{ section_count|lookup:section.pk }} ({{ section_count_all|lookup:section.pk }} ) чел.</td>
 						{% endfor %}
 						<td scope="row" class="align-middle text-center" width="{{ width_column }}%">{{ none_count }} чел.</td>
 					</tr>
